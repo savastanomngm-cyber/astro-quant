@@ -95,6 +95,29 @@ def _run_group(label, tickers, date_str, show_tf=True):
         except Exception as e:
             print(f"  Kronos unavailable: {e}")
 
+    # Mean-reversion overlay (Renaissance-style)
+    if tickers == FUTURES:
+        print(f"\n  {'─'*55}")
+        print(f"  MEAN-REVERSION CHECK (Renaissance)")
+        print(f"  {'─'*55}")
+        try:
+            from signals_meanrev import meanrev_signal
+            for t in tickers:
+                sd = all_sigs.get((t, "daily"))
+                if not sd: continue
+                inst = __import__('astro_configs').INSTRUMENTS.get(t)
+                sym = inst.data_symbol or f'{t}=F'
+                mr = meanrev_signal(t, symbol=sym)
+                if mr and mr['signal'] != 'NEUTRAL':
+                    match = '✅' if mr['signal'] == sd['direction'] else '⚠'
+                    print(f"  {match} {t}: {mr['action']}")
+                elif mr:
+                    print(f"  - {t}: no reversal extreme (z={mr['z_score']})")
+                else:
+                    print(f"  - {t}: no data")
+        except Exception as e:
+            print(f"  Mean-rev unavailable: {e}")
+
     nq = all_sigs.get(("NQ", "daily"), {})
     if "NQ" in tickers and nq.get("match_type") != "exact":
         print(f"\n  ⚠ NQ fallback — half size on NQ")

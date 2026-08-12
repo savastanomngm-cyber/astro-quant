@@ -347,7 +347,7 @@ def persona_backtest_flow(
         pats = bp(chart_dict, dd, train_dates, horizons=[3, 5, 7])
         # Per-ticker SHORT edge thresholds: GC as commodity needs stricter filtering
         short_edge = {"GC": 0.48, "NQ": 0.38, "ES": 0.42}.get(ticker, 0.40)
-        learned_raw = lp(pats, min_n=12, max_p=0.02, min_edge=0.52, amplify_short=short_edge)
+        learned_raw = lp(pats, min_n=12, max_p=0.01, min_edge=0.52, amplify_short=short_edge)
         if not learned_raw:
             print("  No patterns learned"); return None
     except Exception as e:
@@ -542,7 +542,7 @@ def generate_live_signals(
         from pattern_engine_v3 import build_patterns as bp, learn_patterns as lp, get_state, state_key
         pats = bp(chart_dict, dd, all_dates, horizons=[3,5,7])
         short_edge = {"GC": 0.48, "NQ": 0.38, "ES": 0.42}.get(ticker, 0.40)
-        learned_raw = lp(pats, min_n=12, max_p=0.02, min_edge=0.52, amplify_short=short_edge)
+        learned_raw = lp(pats, min_n=12, max_p=0.01, min_edge=0.52, amplify_short=short_edge)
     except Exception:
         return []
 
