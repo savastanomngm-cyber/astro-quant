@@ -13,7 +13,7 @@ _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _SCRIPT_DIR)
 
 FUTURES = ["NQ", "ES", "GC"]
-ETF_TRACKERS = ["ITA", "PPA", "SOXX", "BOTZ"]
+ETF_TRACKERS = ["ITA", "PPA", "SOXX"]  # BOTZ removed — PF=0.50, DD=4540%, too young
 E = lambda d: "🟢" if d == "LONG" else "🔴" if d == "SHORT" else "⚪"
 
 def _sig(ticker, tf, date_str):

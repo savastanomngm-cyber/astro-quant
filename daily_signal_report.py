@@ -49,7 +49,7 @@ from trader_persona_schema import ALL_DIMENSIONS
 # CONFIG
 # ====================================================================
 
-TICKERS = ["NQ", "ES", "GC", "ITA", "PPA", "SOXX", "BOTZ"]
+TICKERS = ["NQ", "ES", "GC", "ITA", "PPA", "SOXX"]
 MIN_WR = 0.50
 MIN_PF = 1.0
 USE_SHORT = True

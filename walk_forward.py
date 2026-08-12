@@ -20,7 +20,7 @@ _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _SCRIPT_DIR)
 
 FUTURES = ["NQ", "ES", "GC"]
-ETFS = ["ITA", "PPA", "SOXX", "BOTZ"]
+ETFS = ["ITA", "PPA", "SOXX"]
 MEMORY_DIR = os.path.expanduser("~/.astro-quant/walkforward")
 
 def _ensure_dir():
