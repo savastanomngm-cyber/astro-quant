@@ -124,7 +124,9 @@ def generate_daily_signal(
     )
 
     try:
-        data = yf.download(f"{ticker}=F", start="2010-01-01", progress=False, auto_adjust=True)
+        inst = INSTRUMENTS.get(ticker)
+        symbol = inst.data_symbol if inst and inst.data_symbol else f"{ticker}=F"
+        data = yf.download(symbol, start="2010-01-01", progress=False, auto_adjust=True)
         if data.empty: return None
         if isinstance(data.columns, pd.MultiIndex):
             data.columns = data.columns.get_level_values(0)
