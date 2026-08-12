@@ -90,6 +90,8 @@ class KronosConfirmer:
         search_dirs = [
             os.path.expanduser("~/kronos"),
             os.path.expanduser("~/Kronos"),
+            os.path.expanduser("~/Desktop/fifa/kronos"),
+            os.path.expanduser("~/Desktop/Fifa/kronos"),
             os.path.join(os.path.dirname(__file__), "..", "kronos"),
             os.path.join(os.path.dirname(__file__), "..", "Kronos"),
         ]

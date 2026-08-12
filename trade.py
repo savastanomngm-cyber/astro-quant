@@ -67,6 +67,34 @@ def _run_group(label, tickers, date_str, show_tf=True):
         ts = f"SL={sd['sl_pct']} TP={sd['tp_pct']} {sd.get('hold_days','?')}d" if sd else ""
         print(f"  {t:<6s}: {a:<10s} {ts}{note}")
 
+    # Kronos confirmation for futures
+    if tickers == FUTURES:
+        print(f"\n  {'─'*55}")
+        print(f"  KRONOS VOL CONFIRMATION")
+        print(f"  {'─'*55}")
+        import sys, os
+        sys.path.insert(0, os.path.expanduser(os.path.join(os.path.dirname(__file__), '..', 'kronos')))
+        try:
+            from astro_matraix_kronos import KronosConfirmer
+            kc = KronosConfirmer(); kc._ensure_loaded()
+            import yfinance as yf
+            for t in tickers:
+                sd = all_sigs.get((t, "daily"))
+                if not sd: continue
+                inst = __import__('astro_configs').INSTRUMENTS.get(t)
+                sym = inst.data_symbol or f'{t}=F'
+                data = yf.download(sym, period='90d', interval='1d', progress=False, auto_adjust=True)
+                if data.empty: continue
+                df = data[['Open','High','Low','Close','Volume']].copy()
+                df.columns = ['open','high','low','close','volume']
+                r = kc.confirm_signal(t, {'direction': sd['direction'], 'conviction': sd['conviction'],
+                    'sl_pct': sd['sl_pct'], 'tp_pct': sd['tp_pct']}, df=df)
+                status = r['status']
+                e = '✓' if status == 'CONFIRMED' else '✗' if status == 'DIVERGES' else '?'
+                print(f"  {e} {t}: {status} | Kronos {r['kronos_dir']} {r['kronos_pct']:+.1f}% | Conv {r['boosted_conviction']}x")
+        except Exception as e:
+            print(f"  Kronos unavailable: {e}")
+
     nq = all_sigs.get(("NQ", "daily"), {})
     if "NQ" in tickers and nq.get("match_type") != "exact":
         print(f"\n  ⚠ NQ fallback — half size on NQ")
