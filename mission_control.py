@@ -992,7 +992,7 @@ def action_matraix_backtest():
         f"",
         f"{G}OUT-OF-SAMPLE:{X} {oos.n_trades} trades | {wr_color}WR={oos.win_rate:.1%}{X} | {pf_color}PF={oos.profit_factor:.2f}{X} | ${oos.total_dollars:,.0f}",
         f"Avg Win: ${oos.avg_win * inst.point_value:,.0f} | Avg Loss: ${oos.avg_loss * inst.point_value:,.0f}",
-        f"Sharpe: {oos.sharpe:.2f}",
+        f"Sharpe: {oos.sharpe:.2f} | Max DD: {oos.max_drawdown}%",
     ])
 
     # Show trade details

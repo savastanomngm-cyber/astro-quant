@@ -213,13 +213,23 @@ def compute_persona_trade_stats(trades: list[dict], point_value: float = 1.0) ->
     gl = abs(sum(losses))
     pf = gw / gl if gl > 0 else (999 if gw > 0 else 0)
     sd = (sum((v - mu) ** 2 for v in vals) / (n - 1)) ** 0.5 if n > 1 else 0
-    sh = mu / sd if sd > 0 else 0
+    sh = (mu / sd) * (252 ** 0.5) if sd > 0 else 0  # annualized
+    # Max drawdown
+    peak = 0; dd = 0; running = 0
+    for v in vals:
+        running += v * point_value  # use dollar P&L for DD
+        if running > peak: peak = running
+        if peak > 0: dd = max(dd, (peak - running) / peak)
+    mdd = dd
+    # Sharpe uses per-trade returns for annualization
+    sh = (mu / sd) * (252 ** 0.5) if sd > 0 else 0
     return TradeStats(
         n_trades=n, win_rate=wr,
         avg_win=sum(wins) / len(wins) if wins else 0,
         avg_loss=sum(losses) / len(losses) if losses else 0,
         total_points=tot, total_dollars=tot * point_value,
-        profit_factor=pf, sharpe=sh,
+        profit_factor=pf, sharpe=round(sh, 2),
+        max_drawdown=round(mdd * 100, 1),
     )
 
 
@@ -426,8 +436,8 @@ def persona_backtest_flow(
         print(f"  PERSONA BACKTEST RESULTS — {ticker}")
         print(f"  {'='*50}")
         print(f"  Patterns: {len(learned_raw)} → {len(personas)} personas")
-        print(f"  Val: {val_stats.n_trades} trades | WR={val_stats.win_rate:.1%} | PF={val_stats.profit_factor:.2f} | ${val_stats.total_dollars:,.0f}")
-        print(f"  OOS: {oos_stats.n_trades} trades | WR={oos_stats.win_rate:.1%} | PF={oos_stats.profit_factor:.2f} | ${oos_stats.total_dollars:,.0f}")
+        print(f"  Val: {val_stats.n_trades}t | WR={val_stats.win_rate:.1%} | PF={val_stats.profit_factor:.2f} | Sharpe={val_stats.sharpe} | DD={val_stats.max_drawdown}% | ${val_stats.total_dollars:,.0f}")
+        print(f"  OOS: {oos_stats.n_trades}t | WR={oos_stats.win_rate:.1%} | PF={oos_stats.profit_factor:.2f} | Sharpe={oos_stats.sharpe} | DD={oos_stats.max_drawdown}% | ${oos_stats.total_dollars:,.0f}")
         if test_trades:
             reasons = {}
             for t in test_trades:
