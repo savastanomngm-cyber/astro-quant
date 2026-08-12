@@ -196,10 +196,11 @@ def _load_csv(filename: str, start_year: int = 2010) -> tuple[dict, list] | None
         # Search broadly: script dir, subdirs, fifa project root, common data paths
         script_dir = os.path.dirname(os.path.abspath(__file__))
         search_dirs = [
-            ".", "data", "csv",
+            ".", "data", "csv", "csv_data",
             script_dir,
             os.path.join(script_dir, "data"),
             os.path.join(script_dir, "csv"),
+            os.path.join(script_dir, "csv_data"),
             # Walk up to find fifa project root
             os.path.join(os.path.dirname(script_dir), "data"),
             os.path.join(os.path.dirname(script_dir), "csv"),

@@ -56,14 +56,17 @@ from astro_matraix_backtest import (
 
 SNOWGURU_PATHS = {
     "NQ": [
+        "/home/user/workspace/snowguru-data/indices/nasdaq100",
         "~/fifa/Stocks-Futures-Financial-Time-series-Tick-Bar-Data/indices/nasdaq100",
         "~/Desktop/fifa/Stocks-Futures-Financial-Time-series-Tick-Bar-Data/indices/nasdaq100",
     ],
     "ES": [
+        "/home/user/workspace/snowguru-data/indices/s&p500",
         "~/fifa/Stocks-Futures-Financial-Time-series-Tick-Bar-Data/indices/s&p500",
         "~/Desktop/fifa/Stocks-Futures-Financial-Time-series-Tick-Bar-Data/indices/s&p500",
     ],
     "GC": [
+        "/home/user/workspace/snowguru-data/commodities/gold",
         "~/fifa/Stocks-Futures-Financial-Time-series-Tick-Bar-Data/commodities/gold",
         "~/Desktop/fifa/Stocks-Futures-Financial-Time-series-Tick-Bar-Data/commodities/gold",
     ],
@@ -94,26 +97,46 @@ def _find_snowguru_dir(ticker: str) -> Optional[str]:
 def _parse_snowguru_csv(filepath: str) -> pd.DataFrame:
     """
     Parse TheSnowGuru CSV. Auto-detects format from data.
+    Handles: tab-separated (single timestamp col), comma-separated (date+time cols),
+    and space-separated formats.
     """
-    # Read raw first line to check structure
+    # Read raw first line to detect format
     with open(filepath) as f:
         raw = f.readline().strip()
     
-    # Count commas vs spaces to determine separator
+    # Auto-detect separator
     commas = raw.count(',')
+    tabs = raw.count('\t')
     spaces = len(raw.split()) - 1
     
-    if commas >= 5:
+    if tabs >= 2:
+        sep = '\t'
+    elif commas >= 5:
         sep = ','
-    elif spaces >= 5:
-        sep = r'\s+'
     else:
         sep = r'\s+'
     
+    # If tab-separated with a single timestamp column → parse with header
+    if sep == '\t':
+        df = pd.read_csv(filepath, header=0, sep='\t', parse_dates=['Time'])
+        df = df.rename(columns={
+            'Time': 'time', 'Open': 'open', 'High': 'high',
+            'Low': 'low', 'Close': 'close', 'Volume': 'volume'
+        })
+        if 'time' in df.columns:
+            df['time'] = pd.to_datetime(df['time'], utc=True, format='mixed')
+            df = df.set_index('time').sort_index()
+        # Keep OHLCV only
+        cols_to_keep = [c for c in ['open', 'high', 'low', 'close', 'volume'] if c in df.columns]
+        df = df[cols_to_keep]
+        for col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors='coerce')
+        return df.dropna()
+    
+    # Non-tab: existing logic
     df_raw = pd.read_csv(filepath, header=None, sep=sep, engine="python")
     first_cell = str(df_raw.iloc[0, 0]).strip()
     
-    # Is first cell a datetime? If not, skip row 0 as header
     has_header = not (first_cell[0].isdigit() and len(first_cell) >= 10)
     
     if has_header:
@@ -122,43 +145,61 @@ def _parse_snowguru_csv(filepath: str) -> pd.DataFrame:
     ncols = df_raw.shape[1]
     
     if ncols >= 7:
-        # Format: date time O H L C V [extra...]
         df_raw.columns = ["date", "time", "open", "high", "low", "close", "volume"][:ncols]
     elif ncols == 6:
-        # Format: datetime_str O H L C V (date+time combined)
         df_raw.columns = ["dt", "open", "high", "low", "close", "volume"]
         ts_parts = df_raw["dt"].astype(str).str.split(n=1, expand=True)
         df_raw["date"] = ts_parts[0]; df_raw["time"] = ts_parts[1].fillna("00:00:00")
-    elif ncols == 2:
-        # Format: timestamp, OHLCV (2 cols, OHLCV is one string)
-        # Not handled — fall back
-        pass
     else:
         raise ValueError(f"Unexpected {ncols} columns in {filepath}. First row: {raw[:100]}")
     
-    # Validate: first date value looks like YYYY-MM-DD
     first_date = str(df_raw["date"].iloc[0]).strip()
     if not (first_date[0].isdigit() and len(first_date) >= 8):
-        # Might have Date header as row 0, already skipped. Try one more skip.
         df_raw = pd.read_csv(filepath, header=None, sep=sep, engine="python", skiprows=2)
         if ncols >= 7:
             df_raw.columns = ["date", "time", "open", "high", "low", "close", "volume"][:ncols]
     
-    # Build timestamp
     date_str = df_raw["date"].astype(str).str.strip()
     time_str = df_raw["time"].astype(str).str.strip() if "time" in df_raw.columns else pd.Series(["00:00:00"]*len(df_raw))
     df_raw["timestamp"] = pd.to_datetime(date_str + " " + time_str, utc=True, format="mixed")
     df_raw = df_raw.set_index("timestamp").sort_index()
     
-    # Keep OHLCV only
-    for col in ["open", "high", "low", "close", "volume"]:
-        if col not in df_raw.columns:
-            df_raw[col] = 0.0
-    df_raw = df_raw[["open", "high", "low", "close", "volume"]]
+    cols_to_keep = [c for c in ["open", "high", "low", "close", "volume"] if c in df_raw.columns]
+    df_raw = df_raw[cols_to_keep]
     for col in df_raw.columns:
         df_raw[col] = pd.to_numeric(df_raw[col], errors="coerce")
     
     return df_raw.dropna()
+
+
+def _fetch_yahoo(ticker: str, bs: str, start: str = None, end: str = None) -> pd.DataFrame | None:
+    """Fetch OHLCV from Yahoo Finance. Returns None on failure."""
+    import yfinance as yf
+    yf_map_interval = {
+        "1m": "1m", "5m": "5m", "15m": "15m", "30m": "30m",
+        "60m": "60m", "240m": "60m", "Daily": "1d",
+    }
+    yf_interval = yf_map_interval.get(bs, "1d")
+    yf_symbol = YF_MAP.get(ticker, f"{ticker}=F")
+    periods = {"1m": "7d", "5m": "60d", "15m": "60d", "30m": "60d", "60m": "730d"}
+    period = periods.get(yf_interval, "max")
+    
+    try:
+        data = yf.download(yf_symbol, period=period, interval=yf_interval, progress=False, auto_adjust=True)
+    except Exception:
+        return None
+    if data.empty: return None
+    if isinstance(data.columns, pd.MultiIndex):
+        data.columns = data.columns.get_level_values(0)
+    df = data[["Open", "High", "Low", "Close", "Volume"]].copy()
+    df.columns = ["open", "high", "low", "close", "volume"]
+    if df.index.tz is None:
+        df.index = df.index.tz_localize('UTC')
+    if bs == "240m" and yf_interval == "60m":
+        df = df.resample("4h").agg({"open":"first","high":"max","low":"min","close":"last","volume":"sum"}).dropna()
+    if start: df = df[df.index >= start]
+    if end: df = df[df.index <= end]
+    return df
 
 
 def load_mtf_data(
@@ -183,88 +224,73 @@ def load_mtf_data(
     """
     bs = BAR_SIZE_MAP.get(bar_size, bar_size)
     
-    # Try local TheSnowGuru data first
+    # Try local TheSnowGuru data first, then extend with Yahoo if needed
     sg_dir = _find_snowguru_dir(ticker)
+    sg_df = None
+    
     if sg_dir:
-        # Match correct bar size file
         import glob
-        # TheSnowGuru filenames contain the timeframe
         bar_patterns = []
         if bs == "Daily":
-            bar_patterns = ["*Daily*.csv", "*daily*.csv", "*day*.csv", "*1d*.csv"]
+            bar_patterns = ["*Daily*.csv", "*daily*.csv", "*day*.csv", "*1d*.csv", "*D1*.csv", "*_D1*.csv"]
         elif bs == "240m":
-            bar_patterns = ["*240m*.csv", "*4h*.csv", "*4H*.csv"]
+            bar_patterns = ["*240m*.csv", "*4h*.csv", "*4H*.csv", "*H4*.csv", "*_H4*.csv"]
         elif bs == "60m":
-            bar_patterns = ["*60m*.csv", "*1h*.csv", "*1H*.csv"]
+            bar_patterns = ["*60m*.csv", "*1h*.csv", "*1H*.csv", "*H1*.csv", "*_H1*.csv"]
         elif bs == "15m":
-            bar_patterns = ["*15m*.csv", "*15min*.csv"]
+            bar_patterns = ["*15m*.csv", "*15min*.csv", "*M15*.csv", "*_M15*.csv"]
         elif bs == "5m":
-            bar_patterns = ["*5m*.csv", "*5min*.csv"]
-        else:
-            bar_patterns = [f"*{bs}*.csv"]
+            bar_patterns = ["*5m*.csv", "*5min*.csv", "*M5*.csv", "*_M5*.csv"]
+        elif bs == "30m":
+            bar_patterns = ["*30m*.csv", "*M30*.csv", "*_M30*.csv"]
+        elif bs == "1m":
+            bar_patterns = ["*1m*.csv", "*M1*.csv", "*_M1*.csv"]
         
         for bp in bar_patterns:
             files = sorted(glob.glob(os.path.join(sg_dir, bp)))
             if files:
-                df = _parse_snowguru_csv(files[0])
-                if start:
-                    df = df[df.index >= start]
-                if end:
-                    df = df[df.index <= end]
-                if not df.empty:
-                    print(f"  Loaded {len(df)} {bs} bars from {files[0]}")
-                    return df
-        
-        # Fallback: try ANY csv in the directory
-        files = sorted(glob.glob(os.path.join(sg_dir, "*.csv")))
-        if files:
-            df = _parse_snowguru_csv(files[0])
-            if start: df = df[df.index >= start]
-            if end: df = df[df.index <= end]
-            if not df.empty:
-                print(f"  Loaded {len(df)} bars from {files[0]} (no timeframe match)")
-                return df
+                sg_df = _parse_snowguru_csv(files[0])
+                break
+        if sg_df is None:
+            files = sorted(glob.glob(os.path.join(sg_dir, "*.csv")))
+            if files:
+                sg_df = _parse_snowguru_csv(files[0])
     
-    # Fallback: Yahoo Finance
-    yf_map_interval = {
-        "1m": "1m", "5m": "5m", "15m": "15m", "30m": "30m",
-        "60m": "60m", "240m": "60m",  # Yahoo: 60m max, resample to 4H
-        "Daily": "1d",
-    }
-    yf_interval = yf_map_interval.get(bs, "1d")
-    yf_symbol = YF_MAP.get(ticker, f"{ticker}=F")
+    # Extend with Yahoo if CSV ends before requested end
+    yf_df = None
+    if end and sg_df is not None and sg_df.index.max().tz_localize(None) < pd.Timestamp(end):
+        ext_start = str(sg_df.index.max()).split(' ')[0]
+        yf_df = _fetch_yahoo(ticker, bs, start=ext_start, end=end)
+        if yf_df is not None and not yf_df.empty:
+            csv_max = sg_df.index.max()
+            if yf_df.index.tz is None and csv_max.tz is not None:
+                csv_max = csv_max.tz_localize(None)
+            elif yf_df.index.tz is not None and csv_max.tz is None:
+                csv_max = csv_max.tz_localize('UTC')
+            yf_df = yf_df[yf_df.index > csv_max]
     
-    import yfinance as yf
-    # Yahoo limits: 1m=7d, 5m/15m/30m=60d, 1h=730d
-    periods = {"1m": "7d", "5m": "60d", "15m": "60d", "30m": "60d", "60m": "730d"}
-    period = periods.get(yf_interval, "max")
+    if sg_df is not None:
+        if yf_df is not None and not yf_df.empty:
+            sg_df = pd.concat([sg_df, yf_df]).sort_index()
+            print(f"  CSV + Yahoo = {len(sg_df)} {bs} bars")
+        else:
+            print(f"  Loaded {len(sg_df)} {bs} bars from SnowGuru CSV")
+        # Filter (convert str→tz-aware timestamp to match UTC index)
+        if start:
+            t0 = pd.Timestamp(start, tz='UTC')
+            sg_df = sg_df[sg_df.index >= t0]
+        if end:
+            t1 = pd.Timestamp(end, tz='UTC')
+            sg_df = sg_df[sg_df.index <= t1]
+        if not sg_df.empty:
+            return sg_df
     
-    data = yf.download(yf_symbol, period=period, interval=yf_interval, progress=False, auto_adjust=True)
-    if data.empty:
-        raise ValueError(f"No Yahoo data for {yf_symbol} at {yf_interval}")
-    
-    if isinstance(data.columns, pd.MultiIndex):
-        data.columns = data.columns.get_level_values(0)
-    
-    df = data[["Open", "High", "Low", "Close", "Volume"]].copy()
-    df.columns = ["open", "high", "low", "close", "volume"]
-    df["amount"] = df["close"] * df["volume"]
-    
-    # Resample if needed (Yahoo only has 60m, not 240m)
-    if bs == "240m" and yf_interval == "60m":
-        df = df.resample("4h").agg({
-            "open": "first", "high": "max", "low": "min",
-            "close": "last", "volume": "sum",
-        }).dropna()
-        if "amount" in df.columns:
-            df["amount"] = df["close"] * df["volume"]
-    
-    if start:
-        df = df[df.index >= start]
-    if end:
-        df = df[df.index <= end]
-    
-    print(f"  Loaded {len(df)} {bs} bars from Yahoo for {ticker}")
+    # Pure Yahoo fallback
+    yf_df = _fetch_yahoo(ticker, bs, start=start, end=end)
+    if yf_df is not None and not yf_df.empty:
+        print(f"  Loaded {len(yf_df)} {bs} bars from Yahoo for {ticker}")
+        return yf_df
+    raise ValueError(f"No data for {ticker} at {bs}")
     return df
 
 
@@ -349,6 +375,7 @@ def build_mtf_patterns(
                 "date": bar_time.strftime("%Y-%m-%d"),
                 "bar_time": bar_time.strftime("%Y-%m-%d %H:%M"),
                 "same_day": same_day,
+                "regime": "unknown",
             })
     
     return dict(pats)
@@ -429,7 +456,7 @@ def generate_mtf_personas(
     if verbose:
         print(f"  {len(train_pats)} trainable state keys (≥{min_n} samples)")
     
-    learned = lp(train_pats, min_n=min_n, max_p=0.05, min_edge=0.52)
+    learned = lp(train_pats, min_n=min_n, max_p=0.05, min_edge=0.52, amplify_short=0.38)
     
     if verbose:
         print(f"  {len(learned)} valid patterns after filtering")
@@ -520,9 +547,9 @@ def mtf_backtest(
     personas_dict = {p.persona_id: p for p in personalities}
     
     # Simulate trading on test period
-    n_dates = len(set(df.index.strftime("%Y-%m-%d")))
+    n_dates = len(set(df.index.strftime("%Y-%m-%d") if hasattr(df.index, 'strftime') else [d.strftime("%Y-%m-%d") for d in df.index]))
     n_train_dates = int(n_dates * train_ratio)
-    all_dates = sorted(set(df.index.strftime("%Y-%m-%d")))
+    all_dates = sorted(set(df.index.strftime("%Y-%m-%d") if hasattr(df.index, 'strftime') else [d.strftime("%Y-%m-%d") for d in df.index]))
     train_end_date = all_dates[n_train_dates] if n_train_dates < len(all_dates) else all_dates[-1]
     
     trades = []
@@ -656,6 +683,132 @@ def mtf_backtest(
         total_points=total_points, total_dollars=total_dollars,
         trades=trades,
     )
+
+
+# ====================================================================
+# LIVE LOWER-TF SIGNAL GENERATOR
+# ====================================================================
+
+def generate_mtf_live_signal(
+    ticker: str = "NQ",
+    bar_size: str = "1h",
+    min_wr: float = 0.50,
+    min_pf: float = 1.0,
+    min_n: int = 12,
+    lookback_days: int = 365,
+) -> dict | None:
+    """
+    Generate today's live signal from multi-timeframe persona pipeline.
+    
+    Loads recent 1H/4H data, builds MTF patterns, generates personas,
+    and matches current astro state to produce a directional signal
+    with entry timing, SL/TP, conviction, and hold info.
+    
+    Works with any bar_size: 15m, 30m, 1h, 4h.
+    """
+    inst = INSTRUMENTS.get(ticker)
+    if not inst: return None
+    
+    # Load recent data
+    try:
+        end_dt = datetime.now().strftime("%Y-%m-%d")
+        start_dt = (datetime.now() - timedelta(days=lookback_days)).strftime("%Y-%m-%d")
+        df = load_mtf_data(ticker, bar_size=bar_size, start=start_dt, end=end_dt)
+        if df.empty: return None
+    except Exception:
+        return None
+    
+    # Generate personas from recent data
+    try:
+        personas, learned = generate_mtf_personas(
+            ticker, df, bar_size=bar_size, train_ratio=0.7,
+            min_wr=min_wr, min_pf=min_pf, min_n=min_n, verbose=False,
+        )
+    except Exception:
+        return None
+    
+    if not personas:
+        return None
+    
+    # Build personas dict and chart for state matching
+    personas_dict = {p.persona_id: p for p in personas}
+    
+    rect = load_rectified().get(ticker)
+    if not rect: return None
+    utc_dt = datetime(inst.birth_year, inst.birth_month, inst.birth_day,
+                      rect["hour"], rect["min"], rect["sec"])
+    local_dt = utc_dt + timedelta(hours=inst.birth_tz)
+    chart_dict = calculate_chart(
+        local_dt.year, local_dt.month, local_dt.day,
+        local_dt.hour, local_dt.minute, local_dt.second,
+        inst.birth_lat, inst.birth_lon, inst.birth_tz,
+    )
+    
+    # Match current astro state
+    today = datetime.now()
+    signal_utc = today.replace(hour=17)
+    try:
+        st = get_state(chart_dict, signal_utc)
+    except Exception:
+        return None
+    
+    # Try exact and prefix matching (same as daily_signal_report)
+    persona = None
+    match_type = "exact"
+    import math
+    for hb in [3, 5, 10, 20]:
+        sk = state_key(st, hb)
+        if sk in personas_dict:
+            persona = personas_dict[sk]
+            match_type = "exact"
+            break
+    
+    if not persona:
+        prefix = f"{st['main']}_{st['sub']}_{st['dist']}_"
+        candidates = [(pid, p) for pid, p in personas_dict.items() if pid.startswith(prefix)]
+        if candidates:
+            persona = max(candidates, key=lambda x: min(x[1].historical_pf, 20) * math.log(max(x[1].n_samples, 2)))[1]
+            match_type = "prefix"
+    
+    if not persona:
+        candidates = [(pid, p) for pid, p in personas_dict.items()
+                      if pid.startswith(st['main']) and f"_{st['moon_phase']}_" in pid]
+        if candidates:
+            persona = max(candidates, key=lambda x: min(x[1].historical_pf, 20) * math.log(max(x[1].n_samples, 2)))[1]
+            match_type = "main+moon"
+    
+    if not persona:
+        return None
+    
+    if persona.historical_win_rate < min_wr: return None
+    if persona.historical_pf < min_pf: return None
+    # Respect GC SHORT fix
+    if ticker == "GC" and persona.pattern_direction == "SHORT": return None
+    
+    # Compute signal
+    pf_val = max(0.5, persona.historical_pf)
+    tp_mult = min(6.0, max(1.2, 1.5 + math.log(pf_val + 0.5)))
+    stop_pct = persona.stop_tightness
+    
+    return {
+        "ticker": ticker,
+        "date": today.strftime("%Y-%m-%d"),
+        "direction": persona.pattern_direction,
+        "conviction": round(persona.conviction_mult, 2),
+        "sl_pct": f"{stop_pct:.1%}",
+        "tp_pct": f"{stop_pct * tp_mult:.1%}",
+        "hold_bars": persona.max_hold_days,
+        "position_pct": f"{persona.position_size_pct:.0%}",
+        "persona_id": persona.persona_id,
+        "pf": round(persona.historical_pf, 2),
+        "wr": f"{persona.historical_win_rate:.0%}",
+        "n_samples": persona.n_samples,
+        "bar_size": bar_size,
+        "entry_timing": _entry_timing(persona),
+        "timeframe": _timeframe_for_persona(persona),
+        "note": _execution_note(persona),
+        "match_type": match_type,
+    }
 
 
 # ====================================================================

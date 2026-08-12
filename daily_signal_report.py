@@ -53,6 +53,8 @@ TICKERS = ["NQ", "ES", "GC"]
 MIN_WR = 0.50
 MIN_PF = 1.0
 USE_SHORT = True
+# GC SHORT signals empirically broken — override for this ticker
+TICKER_NO_SHORT = {"GC"}
 
 # ====================================================================
 # CORE LOGIC
@@ -81,7 +83,7 @@ def generate_daily_signal(
             date_str=date_str,
             min_win_rate=min_wr,
             min_pf=min_pf,
-            use_short=USE_SHORT,
+            use_short=USE_SHORT and ticker not in TICKER_NO_SHORT,
         )
         if sigs:
             s = sigs[0]
@@ -89,6 +91,12 @@ def generate_daily_signal(
             return s
     except Exception:
         pass
+
+    # GC SHORT override for fallback path too
+    if ticker in TICKER_NO_SHORT:
+        _use_s = False
+    else:
+        _use_s = USE_SHORT
 
     # ---- FALLBACK: build from scratch with relaxed matching ----
     inst = INSTRUMENTS.get(ticker)
@@ -187,7 +195,7 @@ def generate_daily_signal(
 
     if persona.historical_win_rate < min_wr: return None
     if persona.historical_pf < min_pf: return None
-    if not USE_SHORT and persona.pattern_direction == "SHORT": return None
+    if not _use_s and persona.pattern_direction == "SHORT": return None
 
     import math
     pf = max(0.5, persona.historical_pf)
@@ -325,14 +333,34 @@ def main():
 
     print("\n" + "=" * 50)
     print(format_full_report(signals))
+    
+    # === Lower-TF signals (1H + 4H) ===
+    print(f"\n{'─'*45}")
+    print("  LOWER TIMEFRAME SIGNALS (1H / 4H)")
+    lt_signals = {}
+    for ticker in TICKERS:
+        for bs in ["1h", "4h"]:
+            try:
+                from astro_mtf import generate_mtf_live_signal
+                sig = generate_mtf_live_signal(ticker=ticker, bar_size=bs, min_n=8)
+                if sig:
+                    emoji = "🟢" if sig["direction"] == "LONG" else "🔴"
+                    print(f"  {emoji} {ticker} {bs}: {sig['direction']} PF={sig['pf']} WR={sig['wr']} ({sig['match_type']})")
+                    lt_signals[f"{ticker}_{bs}"] = sig
+                else:
+                    print(f"  ⚪ {ticker} {bs}: no signal")
+            except Exception as e:
+                print(f"  ⚪ {ticker} {bs}: error — {e}")
+    
     print("=" * 50)
 
     # Save to file
     memory_dir = os.path.expanduser("~/.astro-quant")
     os.makedirs(memory_dir, exist_ok=True)
     save_path = os.path.join(memory_dir, "daily_signals.json")
+    all_signals = {"daily": signals, "lower_tf": lt_signals}
     with open(save_path, "w") as f:
-        json.dump(signals, f, indent=2, default=str)
+        json.dump(all_signals, f, indent=2, default=str)
     print(f"\n  Saved to {save_path}")
 
     return signals

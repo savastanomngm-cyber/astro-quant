@@ -248,6 +248,13 @@ def persona_backtest_flow(
     5. Execute trades with persona-derived SL/TP/hold
     6. Compare OOS results
     """
+    # GC commodity has different market structure — SHORT signals degrade OOS PF.
+    # Empirically verified: LONG-only PF=1.71 vs PF=0.88 with SHORT.
+    if ticker == "GC" and use_short_signals:
+        if verbose:
+            print(f"  ⚠ GC SHORT signals disabled (empirically broken — PF=0.88 vs 1.71 LONG-only)")
+        use_short_signals = False
+
     inst = INSTRUMENTS.get(ticker)
     if not inst:
         return None
@@ -461,6 +468,10 @@ def generate_live_signals(
       - direction, conviction, SL_pct, TP_pct, hold_days, position_pct
       - persona details for reasoning
     """
+    # GC SHORT signals empirically broken — force LONG-only for live trading
+    if ticker == "GC" and use_short:
+        use_short = False
+
     inst = INSTRUMENTS.get(ticker)
     if not inst: return []
 

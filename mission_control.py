@@ -154,7 +154,7 @@ except ImportError:
     HMM_AVAILABLE = False
 
 try:
-    from astro_mtf import mtf_backtest, load_mtf_data, MTFResult
+    from astro_mtf import mtf_backtest, load_mtf_data, MTFResult, generate_mtf_live_signal
     MTF_AVAILABLE = True
 except ImportError:
     MTF_AVAILABLE = False
@@ -1428,6 +1428,34 @@ def action_mtf_backtest():
 
     _pause()
 
+# ---------------------------------------------------------------
+# ACTION: MTF Live Signals
+# ---------------------------------------------------------------
+def action_mtf_live():
+    """Generate today's lower-TF signals (1H + 4H) for all tickers."""
+    box("LOWER-TF LIVE SIGNALS (1H / 4H)", color=C)
+    if not MTF_AVAILABLE:
+        box(lines=["astro_mtf module not found."], color=Y)
+        _pause(); return
+    
+    for ticker in ["NQ", "ES", "GC"]:
+        print(f"\n  {ticker}:")
+        for bs in ["1h", "4h"]:
+            try:
+                sig = generate_mtf_live_signal(ticker=ticker, bar_size=bs, min_n=8)
+                if sig:
+                    d = sig["direction"]
+                    emoji = f"{G}●{X}" if d == "LONG" else f"{R}●{X}"
+                    print(f"    {emoji} {bs}: {d} PF={sig['pf']} WR={sig['wr']} | "
+                          f"SL={sig['sl_pct']} TP={sig['tp_pct']} | "
+                          f"{sig['hold_bars']}b hold | {sig['match_type']}")
+                else:
+                    print(f"    ○ {bs}: no signal")
+            except Exception as e:
+                print(f"    ○ {bs}: error — {e}")
+    _pause()
+
+
 def action_settings():
     global SETTINGS
     box("SETTINGS", color=C)
@@ -1478,6 +1506,7 @@ def interactive_menu():
             ("M7", "Kronos Volatility Analysis (predicts vol regime, adjusts stops)"),
             ("M8", "HMM Regime Detection (learn market regime from trades, filter signals)"),
             ("M9", "Multi-Timeframe Backtest (15m/1H/4H persona backtest)"),
+            ("M10", "MTF Live Signals (today's 1H/4H persona signals)"),
             ("",   ""),
             ("8",  "Settings"),
             ("0",  "Exit"),
@@ -1523,6 +1552,8 @@ def interactive_menu():
             action_hmm_regime()
         elif choice == "M9":
             action_mtf_backtest()
+        elif choice == "M10":
+            action_mtf_live()
         elif choice == "0":
             print(f"\n  {G}Mission Control shutting down. {stats['total_runs']} runs archived.{X}")
             break
