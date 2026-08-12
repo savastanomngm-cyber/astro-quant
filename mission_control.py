@@ -1029,7 +1029,8 @@ def action_matraix_live():
     print(f"\n  {G}Computing live signal...{X}")
     sigs = generate_live_signals(
         ticker=ticker, date_str=date_str or None,
-        min_win_rate=min_wr, min_pf=min_pf, use_short=True,
+        min_win_rate=min_wr, min_pf=min_pf,
+        use_short=(ticker != "GC"),  # GC SHORT empirically broken
     )
 
     if not sigs:
@@ -1135,6 +1136,25 @@ def action_matraix_live():
         ]
         box(f"LIVE SIGNAL — {s['ticker']} {s['date']}", lines)
 
+    # Lower-TF confirmation
+    print(f"\n  {Y}── LOWER-TF CONFIRMATION ──{X}")
+    from astro_mtf import generate_mtf_live_signal as _mtf
+    for bs in ["1h", "4h"]:
+        mtf_sig = _mtf(ticker=ticker, bar_size=bs, min_n=8)
+        if mtf_sig:
+            e = "🟢" if mtf_sig["direction"] == "LONG" else "🔴"
+            print(f"    {e} {bs}: {mtf_sig['direction']} PF={mtf_sig['pf']} WR={mtf_sig['wr']} ({mtf_sig['match_type']})")
+        else:
+            print(f"    ⚪ {bs}: no signal")
+    
+    # Position sizing summary
+    g = 1 if s["direction"] == "LONG" else 0
+    for bs in ["1h", "4h"]:
+        ms = _mtf(ticker=ticker, bar_size=bs, min_n=8)
+        if ms and ms["direction"] == "LONG": g += 1
+    size = "FULL" if g == 3 else "HALF" if g >= 2 else "MONITOR"
+    print(f"\n    → Position: {G if size=='FULL' else Y}{size}{X} ({g}/3 green)")
+    
     _pause()
 
 
@@ -1157,7 +1177,7 @@ def action_daily_telegram_report():
         print(f"  {ticker}...", end=" ")
         sigs = generate_live_signals(
             ticker=ticker, date_str=date_str or None,
-            min_win_rate=min_wr, min_pf=min_pf, use_short=True,
+            min_win_rate=min_wr, min_pf=min_pf, use_short=(ticker != "GC"),  # GC SHORT empirically broken
         )
 
         if sigs:
@@ -1507,6 +1527,7 @@ def interactive_menu():
             ("M8", "HMM Regime Detection (learn market regime from trades, filter signals)"),
             ("M9", "Multi-Timeframe Backtest (15m/1H/4H persona backtest)"),
             ("M10", "MTF Live Signals (today's 1H/4H persona signals)"),
+            ("MT",  "MASTER TRADE — all signals + sizing (python3 trade.py)"),
             ("",   ""),
             ("8",  "Settings"),
             ("0",  "Exit"),
