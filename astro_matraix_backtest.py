@@ -298,7 +298,7 @@ def persona_backtest_flow(
         data = None
         for attempt in range(3):
             try:
-                data = yf.download(symbol, start=yahoo_start, progress=False, auto_adjust=True)
+                data = yf.download(symbol, start=yahoo_start, progress=False)
                 if data is not None and not data.empty:
                     break
             except Exception:
@@ -312,12 +312,20 @@ def persona_backtest_flow(
         all_dates = []
         for idx, row in data.iterrows():
             ds = idx.strftime("%Y-%m-%d")
-            o, h, l, c = float(row["Open"]), float(row["High"]), float(row["Low"]), float(row["Close"])
+            try:
+                o = float(row["Open"]); h = float(row["High"])
+                l = float(row["Low"]); c = float(row["Close"])
+            except (ValueError, TypeError, KeyError):
+                continue
             if o <= 0 or c <= 0: continue
             dd[ds] = {"open": o, "high": h, "low": l, "close": c}
             all_dates.append(ds)
     except Exception as e:
-        print(f"  Yahoo error: {e}"); return None
+        import traceback
+        if verbose: 
+            print(f"  Yahoo error: {e}")
+            traceback.print_exc()
+        return None
 
     dates = [d for d in all_dates if d >= yahoo_start]
     n = len(dates)
@@ -513,7 +521,7 @@ def generate_live_signals(
         import time as _t2
         for attempt in range(3):
             try:
-                data = yf.download(symbol, start="2010-01-01", progress=False, auto_adjust=True)
+                data = yf.download(symbol, start="2010-01-01", progress=False)
                 if data is not None and not data.empty: break
             except: pass
             if attempt < 2: _t2.sleep(2 + attempt)
