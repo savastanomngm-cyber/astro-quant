@@ -1575,6 +1575,8 @@ def interactive_menu():
             action_mtf_backtest()
         elif choice == "M10":
             action_mtf_live()
+        elif choice == "MT":
+            import subprocess; subprocess.run([sys.executable, "trade.py"])
         elif choice == "0":
             print(f"\n  {G}Mission Control shutting down. {stats['total_runs']} runs archived.{X}")
             break
