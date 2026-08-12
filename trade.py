@@ -13,7 +13,10 @@ _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _SCRIPT_DIR)
 
 FUTURES = ["NQ", "ES", "GC"]
-ETFS    = ["ITA", "PPA", "AIQ", "SHLD"]
+ETF_DEFENSE = ["ITA", "PPA"]
+ETF_HEDGE  = ["GURU", "QAI"]
+ETF_TECH   = ["SOXX", "ARKK", "BOTZ", "CIBR", "AIQ", "SHLD"]
+ALL_ETF = ETF_DEFENSE + ETF_HEDGE + ETF_TECH
 E = lambda d: "🟢" if d == "LONG" else "🔴" if d == "SHORT" else "⚪"
 
 def _sig(ticker, tf, date_str):
@@ -102,7 +105,7 @@ def main():
         print(f"\n{'▓'*55}")
         print(f"  ETF TRACKERS")
         print(f"{'▓'*55}")
-        _run_group("ETFS", ETFS, ds, show_tf=False)
+        _run_group("ETFS", ALL_ETF, ds, show_tf=False)
 
     print(f"\n  v0.63 — {label}")
 

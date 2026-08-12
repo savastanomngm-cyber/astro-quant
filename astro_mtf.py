@@ -73,7 +73,9 @@ SNOWGURU_PATHS = {
 }
 
 YF_MAP = {"NQ": "NQ=F", "ES": "ES=F", "GC": "GC=F",
-          "ITA": "ITA", "PPA": "PPA", "AIQ": "AIQ", "SHLD": "SHLD"}
+          "ITA": "ITA", "PPA": "PPA", "AIQ": "AIQ", "SHLD": "SHLD",
+          "GURU": "GURU", "ARKK": "ARKK", "SOXX": "SOXX",
+          "BOTZ": "BOTZ", "CIBR": "CIBR", "QAI": "QAI"}
 
 BAR_SIZE_MAP = {
     "1m": "1m", "5m": "5m", "15m": "15m", "30m": "30m",

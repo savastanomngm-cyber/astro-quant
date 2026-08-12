@@ -101,6 +101,24 @@ TICKER_DATA_SOURCES: dict[str, list[tuple[str, DataSource]]] = {
     "SHLD": [
         ("Daily Yahoo", YahooSource(symbol="SHLD")),
     ],
+    "GURU": [
+        ("Daily Yahoo", YahooSource(symbol="GURU")),
+    ],
+    "ARKK": [
+        ("Daily Yahoo", YahooSource(symbol="ARKK")),
+    ],
+    "SOXX": [
+        ("Daily Yahoo", YahooSource(symbol="SOXX")),
+    ],
+    "BOTZ": [
+        ("Daily Yahoo", YahooSource(symbol="BOTZ")),
+    ],
+    "CIBR": [
+        ("Daily Yahoo", YahooSource(symbol="CIBR")),
+    ],
+    "QAI": [
+        ("Daily Yahoo", YahooSource(symbol="QAI")),
+    ],
 }
 
 
@@ -169,6 +187,42 @@ INSTRUMENTS: dict[str, InstrumentDef] = {
         birth_year=2023, birth_month=9, birth_day=14,
         birth_lat=40.7128, birth_lon=-74.006, birth_tz=-4,
         point_value=1.0, default_sl=3, default_tp=10, default_hold=7,
+    ),
+    "GURU": InstrumentDef(
+        ticker="GURU", data_symbol="GURU",
+        birth_year=2012, birth_month=6, birth_day=5,
+        birth_lat=40.7128, birth_lon=-74.006, birth_tz=-4,
+        point_value=1.0, default_sl=5, default_tp=12, default_hold=30,
+    ),
+    "ARKK": InstrumentDef(
+        ticker="ARKK", data_symbol="ARKK",
+        birth_year=2014, birth_month=10, birth_day=31,
+        birth_lat=40.7128, birth_lon=-74.006, birth_tz=-4,
+        point_value=1.0, default_sl=5, default_tp=12, default_hold=14,
+    ),
+    "SOXX": InstrumentDef(
+        ticker="SOXX", data_symbol="SOXX",
+        birth_year=2001, birth_month=7, birth_day=13,
+        birth_lat=40.7128, birth_lon=-74.006, birth_tz=-4,
+        point_value=1.0, default_sl=5, default_tp=15, default_hold=10,
+    ),
+    "BOTZ": InstrumentDef(
+        ticker="BOTZ", data_symbol="BOTZ",
+        birth_year=2016, birth_month=9, birth_day=13,
+        birth_lat=40.7128, birth_lon=-74.006, birth_tz=-4,
+        point_value=1.0, default_sl=3, default_tp=10, default_hold=7,
+    ),
+    "CIBR": InstrumentDef(
+        ticker="CIBR", data_symbol="CIBR",
+        birth_year=2015, birth_month=7, birth_day=7,
+        birth_lat=40.7128, birth_lon=-74.006, birth_tz=-4,
+        point_value=1.0, default_sl=3, default_tp=10, default_hold=7,
+    ),
+    "QAI": InstrumentDef(
+        ticker="QAI", data_symbol="QAI",
+        birth_year=2009, birth_month=3, birth_day=25,
+        birth_lat=40.7128, birth_lon=-74.006, birth_tz=-4,
+        point_value=1.0, default_sl=3, default_tp=8, default_hold=21,
     ),
 }
 
