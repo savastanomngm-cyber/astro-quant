@@ -1474,7 +1474,7 @@ def action_settings():
 def interactive_menu():
     while True:
         stats = memory.stats()
-        box("ASTRO-QUANT MISSION CONTROL V50.1", [
+        box("ASTRO-QUANT MISSION CONTROL V0.62", [
             f"Architecture: QuantMind + MiroFish + MatrAIx  |  Runs: {stats['total_runs']} archived",
             f"Memory: {memory.memory_dir}",
             "",
