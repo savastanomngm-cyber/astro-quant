@@ -294,18 +294,21 @@ def persona_backtest_flow(
     if verbose: print(f"  Loading Yahoo data...")
     try:
         import time as _time
-        symbol = inst.data_symbol if hasattr(inst, 'data_symbol') else f"{ticker}=F"
+        symbol = inst.data_symbol if (hasattr(inst, 'data_symbol') and inst.data_symbol) else f"{ticker}=F"
         data = None
         for attempt in range(3):
             try:
-                data = yf.download(symbol, start=yahoo_start, progress=False)
+                tkr = yf.Ticker(symbol)
+                data = tkr.history(start=yahoo_start)
                 if data is not None and not data.empty:
                     break
             except Exception:
                 if attempt < 2:
                     _time.sleep(2 + attempt * 2)
         if data is None or data.empty:
+            if verbose: print(f"  No data for {symbol}")
             return None
+        if verbose: print(f"  Got {len(data)} rows")
         if isinstance(data.columns, pd.MultiIndex):
             data.columns = data.columns.get_level_values(0)
         dd = {}
@@ -521,7 +524,8 @@ def generate_live_signals(
         import time as _t2
         for attempt in range(3):
             try:
-                data = yf.download(symbol, start="2010-01-01", progress=False)
+                tkr2 = yf.Ticker(symbol)
+                data = tkr2.history(start="2010-01-01")
                 if data is not None and not data.empty: break
             except: pass
             if attempt < 2: _t2.sleep(2 + attempt)
