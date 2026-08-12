@@ -1,5 +1,9 @@
 {
   "NQ": {"hour": 22, "min": 8, "sec": 0, "score": 6615.0},
   "ES": {"hour": 23, "min": 16, "sec": 0, "score": 10564.0},
-  "GC": {"hour": 2, "min": 40, "sec": 0, "score": 7437.0}
+  "GC": {"hour": 2, "min": 40, "sec": 0, "score": 7437.0},
+  "ITA": {"hour": 9, "min": 30, "sec": 0, "score": 5000.0},
+  "PPA": {"hour": 9, "min": 30, "sec": 0, "score": 5000.0},
+  "AIQ": {"hour": 9, "min": 30, "sec": 0, "score": 5000.0},
+  "SHLD": {"hour": 9, "min": 30, "sec": 0, "score": 5000.0}
 }

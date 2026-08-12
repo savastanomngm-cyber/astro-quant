@@ -283,7 +283,8 @@ def persona_backtest_flow(
     # === 2. Price data ===
     if verbose: print(f"  Loading Yahoo data...")
     try:
-        data = yf.download(f"{ticker}=F", start=yahoo_start, progress=False, auto_adjust=True)
+        symbol = inst.data_symbol if hasattr(inst, 'data_symbol') else f"{ticker}=F"
+        data = yf.download(symbol, start=yahoo_start, progress=False, auto_adjust=True)
         if data.empty: return None
         if isinstance(data.columns, pd.MultiIndex):
             data.columns = data.columns.get_level_values(0)
@@ -434,7 +435,7 @@ def persona_backtest_flow(
             print(f"  Exit reasons: {reasons}")
 
     # === 7. Build result ===
-    source_ref = SourceRef(kind=DataSourceKind.YAHOO, symbol=f"{ticker}=F")
+    source_ref = SourceRef(kind=DataSourceKind.YAHOO, symbol=symbol)
     return BacktestResult(
         as_of=datetime.now(), ticker=ticker, source=source_ref,
         chart_provenance=ChartProvenance(method="persona_matraix_v1"),
@@ -488,7 +489,7 @@ def generate_live_signals(
 
     # Load patterns
     try:
-        data = yf.download(f"{ticker}=F", start="2010-01-01", progress=False, auto_adjust=True)
+        data = yf.download(symbol, start="2010-01-01", progress=False, auto_adjust=True)
         if data.empty: return []
         if isinstance(data.columns, pd.MultiIndex): data.columns = data.columns.get_level_values(0)
         dd = {}

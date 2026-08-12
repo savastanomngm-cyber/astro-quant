@@ -12,7 +12,7 @@ from datetime import datetime
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _SCRIPT_DIR)
 
-TICKERS = ["NQ", "ES", "GC"]
+TICKERS = ["NQ", "ES", "GC", "ITA", "PPA", "AIQ", "SHLD"]
 E = lambda d: "🟢" if d == "LONG" else "🔴" if d == "SHORT" else "⚪"
 
 def _sig(ticker, tf, date_str):

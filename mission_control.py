@@ -214,7 +214,7 @@ def action_rectify():
         box(lines=["rectify_v3 not found. Skipping."], color=Y)
         _pause()
         return
-    for t in ["NQ", "ES", "GC"]:
+    for t in ["NQ", "ES", "GC", "ITA", "PPA", "AIQ", "SHLD"]:
         if t not in ASSET_EVENTS:
             continue
         info = {

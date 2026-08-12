@@ -89,6 +89,18 @@ TICKER_DATA_SOURCES: dict[str, list[tuple[str, DataSource]]] = {
         ("Repo Daily (H1)", RepoDailySource(kind=DataSourceKind.REPO_H1, timeframe="H1")),
         ("Repo Daily (M30)", RepoDailySource(kind=DataSourceKind.REPO_M30, timeframe="M30")),
     ],
+    "ITA": [
+        ("Daily Yahoo", YahooSource(symbol="ITA")),
+    ],
+    "PPA": [
+        ("Daily Yahoo", YahooSource(symbol="PPA")),
+    ],
+    "AIQ": [
+        ("Daily Yahoo", YahooSource(symbol="AIQ")),
+    ],
+    "SHLD": [
+        ("Daily Yahoo", YahooSource(symbol="SHLD")),
+    ],
 }
 
 
@@ -99,6 +111,7 @@ TICKER_DATA_SOURCES: dict[str, list[tuple[str, DataSource]]] = {
 class InstrumentDef(BaseModel, frozen=True, extra="forbid"):
     """Rectified chart + trading params for one instrument."""
     ticker: str
+    data_symbol: str = ""  # Yahoo Finance symbol (empty=use ticker=F for futures)
     # Birth event
     birth_year: int
     birth_month: int
@@ -131,6 +144,31 @@ INSTRUMENTS: dict[str, InstrumentDef] = {
         birth_year=1974, birth_month=12, birth_day=31,
         birth_lat=40.7128, birth_lon=-74.006, birth_tz=-5,
         point_value=100.0, default_sl=50, default_tp=150, default_hold=7,
+    ),
+    # ── New ETF trackers ──
+    "ITA": InstrumentDef(
+        ticker="ITA", data_symbol="ITA",  # iShares US Aerospace & Defense
+        birth_year=2006, birth_month=5, birth_day=5,
+        birth_lat=40.7128, birth_lon=-74.006, birth_tz=-4,
+        point_value=1.0, default_sl=5, default_tp=15, default_hold=10,
+    ),
+    "PPA": InstrumentDef(
+        ticker="PPA", data_symbol="PPA",  # Invesco Aerospace & Defense
+        birth_year=2005, birth_month=10, birth_day=26,
+        birth_lat=40.7128, birth_lon=-74.006, birth_tz=-4,
+        point_value=1.0, default_sl=5, default_tp=15, default_hold=10,
+    ),
+    "AIQ": InstrumentDef(
+        ticker="AIQ", data_symbol="AIQ",  # Global X AI & Technology
+        birth_year=2018, birth_month=5, birth_day=16,
+        birth_lat=40.7128, birth_lon=-74.006, birth_tz=-4,
+        point_value=1.0, default_sl=3, default_tp=10, default_hold=7,
+    ),
+    "SHLD": InstrumentDef(
+        ticker="SHLD", data_symbol="SHLD",  # Global X Defense Tech
+        birth_year=2023, birth_month=9, birth_day=14,
+        birth_lat=40.7128, birth_lon=-74.006, birth_tz=-4,
+        point_value=1.0, default_sl=3, default_tp=10, default_hold=7,
     ),
 }
 
