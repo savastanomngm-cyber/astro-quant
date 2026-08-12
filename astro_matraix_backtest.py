@@ -293,9 +293,19 @@ def persona_backtest_flow(
     # === 2. Price data ===
     if verbose: print(f"  Loading Yahoo data...")
     try:
+        import time as _time
         symbol = inst.data_symbol if hasattr(inst, 'data_symbol') else f"{ticker}=F"
-        data = yf.download(symbol, start=yahoo_start, progress=False, auto_adjust=True)
-        if data.empty: return None
+        data = None
+        for attempt in range(3):
+            try:
+                data = yf.download(symbol, start=yahoo_start, progress=False, auto_adjust=True)
+                if data is not None and not data.empty:
+                    break
+            except Exception:
+                if attempt < 2:
+                    _time.sleep(2 + attempt * 2)
+        if data is None or data.empty:
+            return None
         if isinstance(data.columns, pd.MultiIndex):
             data.columns = data.columns.get_level_values(0)
         dd = {}
@@ -499,8 +509,15 @@ def generate_live_signals(
 
     # Load patterns
     try:
-        data = yf.download(symbol, start="2010-01-01", progress=False, auto_adjust=True)
-        if data.empty: return []
+        data = None
+        import time as _t2
+        for attempt in range(3):
+            try:
+                data = yf.download(symbol, start="2010-01-01", progress=False, auto_adjust=True)
+                if data is not None and not data.empty: break
+            except: pass
+            if attempt < 2: _t2.sleep(2 + attempt)
+        if data is None or data.empty: return []
         if isinstance(data.columns, pd.MultiIndex): data.columns = data.columns.get_level_values(0)
         dd = {}
         all_dates = []
