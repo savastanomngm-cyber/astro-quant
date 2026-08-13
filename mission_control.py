@@ -332,40 +332,27 @@ def action_backtest():
 def action_backtest_custom():
     box("CUSTOM DATE BACKTEST", color=C)
     ticker = _ask("Ticker (NQ/ES/GC): ", "NQ").upper()
-    if ticker not in TICKER_DATA_SOURCES:
+    if ticker not in INSTRUMENTS:
         print("Invalid."); _pause(); return
-
-    # Show sources
-    all_sources = TICKER_DATA_SOURCES[ticker]
-    print("Available sources:")
-    for i, (label, _) in enumerate(all_sources, 1):
-        print(f"  {i}. {label}")
-    src_idx = _ask_int("Choose source number", 1) - 1
-    if src_idx < 0 or src_idx >= len(all_sources):
-        print("Invalid."); _pause(); return
-    label, source = all_sources[src_idx]
 
     inst = INSTRUMENTS[ticker]
     start_date = _ask_date("Start date (YYYY-MM-DD)", "2010-01-01")
     end_date = _ask_date("End date (YYYY-MM-DD)", "2026-08-07")
     split_ratio = _ask_float("Train fraction (0.0-1.0)", 0.6)
 
-    cfg = BacktestCfg(
-        ticker=ticker,
-        source=source,
-        train_ratio=split_ratio,
-        date_start=start_date,
-        date_end=end_date,
-        point_value=inst.point_value,
-    )
-
-    print(f"  Running backtest on {ticker} ({label})...")
-    result = backtest_flow(cfg)
+    print(f"  Running backtest on {ticker} ({start_date}→{end_date})...")
+    try:
+        from astro_matraix_backtest import persona_backtest_flow
+        result = persona_backtest_flow(
+            ticker=ticker, yahoo_start=start_date,
+            train_ratio=split_ratio, min_win_rate=0.50, min_pf=1.0,
+            use_short_signals=True, verbose=False,
+        )
+    except Exception as e:
+        print(f"  {R}Error: {e}{X}"); _pause(); return
 
     if not result:
         print("  No valid result."); _pause(); return
-
-    rid = memory.archive_run(result)
 
     oos = result.out_of_sample
     table(
@@ -377,7 +364,7 @@ def action_backtest_custom():
             f"{oos.profit_factor:.2f}" if oos.n_trades > 0 else "n/a",
             f"${oos.total_dollars:,.0f}" if oos.n_trades > 0 else "n/a",
         ]],
-        title=f"{ticker} – Custom Backtest ({label})  [run: {rid}]",
+        title=f"{ticker} – Custom Backtest ({start_date}→{end_date})",
     )
     _pause()
 
