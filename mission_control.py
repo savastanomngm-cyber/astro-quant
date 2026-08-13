@@ -1084,12 +1084,19 @@ def action_matraix_live():
                             save_hmm_params(params, ticker)
 
                     if params and not (abs(params.A[0][0] - 0.70) < 0.001 and abs(params.A[3][3] - 0.30) < 0.001):
-                        # Only filter if we have trained (non-default) params
-                        # Use the signal direction to build a mock observation
-                        from astro_hmm import observation_index as _oi
-                        mock_obs = [_oi(s['direction'], s['direction'] == 'LONG', 0.01)]
-                        info = predict_regime(params, mock_obs)
-                        regime = info['current_regime']
+                        # Decode regime from REAL OOS trade history (Viterbi), not fake token
+                        from astro_hmm import observation_index as _oi, viterbi as _viterbi, REGIMES as _HMM_REGIMES
+                        from astro_matraix_backtest import persona_backtest_flow as _pbf
+                        _result = _pbf(ticker=ticker, train_ratio=0.6, min_win_rate=0.50,
+                                       min_pf=1.0, use_short_signals=(ticker != "GC"), verbose=False)
+                        if _result and _result.oos_trades:
+                            obs = [_oi(t.direction, t.net_points > 0,
+                                       min(abs(t.gross_points)/100.0, 0.05))
+                                   for t in _result.oos_trades[-20:]]
+                            path, _ = _viterbi(params, obs)
+                            regime = _HMM_REGIMES[path[-1]]
+                        else:
+                            regime = "BULL"  # fallback
                         rc_map = {"BULL": G, "BEAR": R, "RANGE": Y, "CHOP": C}
                         rc = rc_map.get(regime, X)
 
@@ -1528,6 +1535,7 @@ def interactive_menu():
             ("M9", "Multi-Timeframe Backtest (15m/1H/4H persona backtest)"),
             ("M10", "MTF Live Signals (today's 1H/4H persona signals)"),
             ("MT",  "MASTER TRADE — all signals + sizing (python3 trade.py)"),
+            ("WF",  "Walk-Forward Retrain (weekly — relearn patterns + HMM)"),
             ("",   ""),
             ("8",  "Settings"),
             ("0",  "Exit"),
@@ -1577,6 +1585,8 @@ def interactive_menu():
             action_mtf_live()
         elif choice == "MT":
             import subprocess; subprocess.run([sys.executable, "trade.py"])
+        elif choice == "WF":
+            import subprocess; subprocess.run([sys.executable, "walk_forward.py"])
         elif choice == "0":
             print(f"\n  {G}Mission Control shutting down. {stats['total_runs']} runs archived.{X}")
             break
