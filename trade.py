@@ -45,7 +45,9 @@ def _run_group(label, tickers, date_str, show_tf=True):
             s = _sig(t, tf, date_str)
             all_sigs[(t, tf)] = s
             if s:
-                print(f"  {t:<6} {tf:<7} {E(s['direction'])} {s['direction']:<6} {s['pf']:<8} {s['wr']:<7} {s['conviction']:<6} {s['sl_pct']:<8} {s['tp_pct']:<8} {str(s.get('hold_days', s.get('hold_bars','?'))):<6} {s.get('match_type','?')}")
+                moon = s.get("moon_applies", "")
+                moon_tag = f" 🌙→{moon}" if moon else ""
+                print(f"  {t:<6} {tf:<7} {E(s['direction'])} {s['direction']:<6} {s['pf']:<8} {s['wr']:<7} {s['conviction']:<6} {s['sl_pct']:<8} {s['tp_pct']:<8} {str(s.get('hold_days', s.get('hold_bars','?'))):<6} {s.get('match_type','?')}{moon_tag}")
             else:
                 print(f"  {t:<6} {tf:<7} ⚪  NO SIGNAL")
 

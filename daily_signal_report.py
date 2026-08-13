@@ -199,6 +199,15 @@ def generate_daily_signal(
     if persona.historical_pf < min_pf: return None
     if not _use_s and persona.pattern_direction == "SHORT": return None
 
+    # Moon's application filter (Rectification Manual: Moon→Jupiter/Venus
+    # favorable; Moon→Saturn/Mars caution; void = neutral)
+    moon_applies = st.get("moon_applies", "void")
+    moon_mult = 1.0
+    if moon_applies in ("Jupiter", "Venus"):
+        moon_mult = 1.15
+    elif moon_applies in ("Saturn", "Mars"):
+        moon_mult = 0.85
+
     import math
     pf = max(0.5, persona.historical_pf)
     tp_mult = min(6.0, max(1.2, 1.5 + math.log(pf + 0.5)))
@@ -208,7 +217,8 @@ def generate_daily_signal(
         "ticker": ticker,
         "date": today.strftime("%Y-%m-%d"),
         "direction": persona.pattern_direction,
-        "conviction": round(persona.conviction_mult, 2),
+        "conviction": round(persona.conviction_mult * moon_mult, 2),
+        "moon_applies": moon_applies,
         "sl_pct": f"{stop_pct:.1%}",
         "tp_pct": f"{stop_pct * tp_mult:.1%}",
         "hold_days": persona.max_hold_days,

@@ -69,6 +69,54 @@ def load_rectified() -> dict:
 
 
 # ====================================================================
+# MOON'S APPLICATION
+# ====================================================================
+
+_PLANET_NAMES = {
+    swe.SUN: "Sun", swe.MOON: "Moon", swe.MERCURY: "Mercury", swe.VENUS: "Venus",
+    swe.MARS: "Mars", swe.JUPITER: "Jupiter", swe.SATURN: "Saturn",
+}
+
+_PTOL_ASPECTS = [0, 60, 90, 120, 180]  # conjunction, sextile, square, trine, opposition
+
+
+def _moon_applying_to(jd: float, moon_lon: float) -> str:
+    """
+    Find which planet the Moon applies to next (Ptolemaic aspect).
+    Moon moves ~13°/day. Scan forward up to 3 days for the next exact aspect.
+    Returns planet name (e.g. "Jupiter") or "void".
+    Per Rectification Manual: Moon's separation/application is a core temporal indicator.
+    """
+    # Get current positions of all classical planets
+    planet_lons = {}
+    for pid, name in _PLANET_NAMES.items():
+        if pid == swe.MOON:
+            continue
+        try:
+            lon = swe.calc_ut(jd, pid, swe.FLG_SWIEPH)[0][0] % 360
+            planet_lons[name] = lon
+        except Exception:
+            continue
+
+    # Moon speed ~13.176°/day. Scan in 2h steps up to 72h.
+    best = None  # (hours, name)
+    for step_hours in range(1, 37):  # 2h steps = up to 72h
+        t = jd + step_hours * 2 / 24.0
+        m_lon = (moon_lon + step_hours * 2 * 13.176 / 24.0) % 360
+        for name, p_lon in planet_lons.items():
+            for asp in _PTOL_ASPECTS:
+                target = (p_lon + asp) % 360
+                diff = abs(m_lon - target) % 360
+                if diff > 180:
+                    diff = 360 - diff
+                if diff < 1.0:  # within 1° of exact aspect
+                    if best is None or step_hours < best[0]:
+                        best = (step_hours, name)
+
+    return best[1] if best else "void"
+
+
+# ====================================================================
 # STATE COMPUTATION
 # ====================================================================
 
@@ -108,6 +156,9 @@ def get_state(chart, utc_dt):
     moon_phase_idx = int(moon_phase_angle / 45) % 8  # 0-7 (New → Last Quarter)
     moon_sign = int(moon_lon / 30)
 
+    # Moon's application: which planet the Moon will next aspect by Ptolemaic aspect
+    moon_applies = _moon_applying_to(jd, moon_lon)
+
     # Regime detection: compare current price to 200-day moving average
     # (computed externally and passed in, or flagged as unknown)
     regime = "unknown"
@@ -119,6 +170,7 @@ def get_state(chart, utc_dt):
         "house": house,
         "moon_phase": f"MP{moon_phase_idx}",
         "moon_sign": moon_sign,
+        "moon_applies": moon_applies,
         "prof_bound": prof_bound,
         "sect": chart.get("sect", "Diurnal"),
         "bull_bear": regime,

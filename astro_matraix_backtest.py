@@ -573,15 +573,30 @@ def generate_live_signals(
     if persona.historical_pf < min_pf: return []
     if not use_short and persona.pattern_direction == "SHORT": return []
 
+    # Moon's application filter (per Rectification Manual: Moon applying to
+    # Jupiter/Venus = favorable; Saturn/Mars = caution)
+    moon_applies = st.get("moon_applies", "void")
+    moon_mult = 1.0
+    moon_note = ""
+    if moon_applies in ("Jupiter", "Venus"):
+        moon_mult = 1.15; moon_note = f"Moon→{moon_applies} (favorable)"
+    elif moon_applies in ("Saturn", "Mars"):
+        moon_mult = 0.85; moon_note = f"Moon→{moon_applies} (caution)"
+    elif moon_applies == "void":
+        moon_mult = 1.0; moon_note = "Moon void-of-course"
+
     # Build signal
     pf = max(0.5, persona.historical_pf)
     tp_mult = min(6.0, max(1.2, 1.5 + math.log(pf + 0.5)))
+    adj_conviction = round(persona.conviction_mult * moon_mult, 2)
 
     return [{
         "ticker": ticker,
         "date": today.strftime("%Y-%m-%d"),
         "direction": persona.pattern_direction,
-        "conviction": round(persona.conviction_mult, 2),
+        "conviction": adj_conviction,
+        "moon_applies": moon_applies,
+        "moon_note": moon_note,
         "sl_pct": f"{persona.stop_tightness:.1%}",
         "tp_pct": f"{persona.stop_tightness * tp_mult:.1%}",
         "hold_days": persona.max_hold_days,
