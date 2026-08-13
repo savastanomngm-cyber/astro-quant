@@ -135,6 +135,46 @@ def _run_group(label, tickers, date_str, show_tf=True):
         except Exception as e:
             print(f"  Mean-rev unavailable: {e}")
 
+    # 0DTE filter
+    if tickers == FUTURES:
+        print(f"\n  {'─'*55}")
+        print(f"  0DTE ELIGIBILITY")
+        print(f"  {'─'*55}")
+        try:
+            from signals_0dte import evaluate_0dte
+            from astro_hmm import load_hmm_params, predict_regime, observation_index
+            for t in tickers:
+                sd = all_sigs.get((t, "daily"))
+                if not sd: 
+                    print(f"  - {t}: no signal")
+                    continue
+                # Get HMM regime
+                regime = "default"
+                try:
+                    h = load_hmm_params(t)
+                    if h and abs(h.A[0][0]-0.70) > 0.001:
+                        regime = predict_regime(h, [observation_index(sd['direction'], True, 0.01)])["current_regime"]
+                except: pass
+                # Kronos status (rerun lightly — we already have it above, but keep independent)
+                kron = None
+                try:
+                    inst = __import__('astro_configs').INSTRUMENTS.get(t)
+                    sym = inst.data_symbol or f'{t}=F'
+                    import yfinance as yf
+                    data = yf.Ticker(sym).history(period='90d')
+                    if not data.empty:
+                        df = data[['Open','High','Low','Close','Volume']].copy()
+                        df.columns = ['open','high','low','close','volume']
+                        kron = __import__('astro_matraix_kronos', fromlist=['KronosConfirmer']).KronosConfirmer()
+                        kron = kc.confirm_signal(t, {'direction':sd['direction'],'conviction':sd['conviction']}, df=df)
+                except: pass
+                moon = sd.get("moon_applies", "void")
+                r = evaluate_0dte(sd, kron, {"regime": regime}, moon)
+                tag = f"{'✅ 0DTE OK' if r['ok'] else '❌ block'}"
+                print(f"  {tag} {t}: {r['suggested']} | {r['reason']}")
+        except Exception as e:
+            print(f"  0DTE unavailable: {e}")
+
     nq = all_sigs.get(("NQ", "daily"), {})
     if "NQ" in tickers and nq.get("match_type") != "exact":
         print(f"\n  ⚠ NQ fallback — half size on NQ")
