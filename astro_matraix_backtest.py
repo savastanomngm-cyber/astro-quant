@@ -494,126 +494,23 @@ def generate_live_signals(
     use_short: bool = True,
 ) -> list[dict]:
     """
-    Generate today's trading signals using persona-weighted system.
-
-    Returns list of signal dicts with:
-      - direction, conviction, SL_pct, TP_pct, hold_days, position_pct
-      - persona details for reasoning
+    Generate today's trading signals.
+    Delegates to daily_signal_report.generate_daily_signal which has full
+    fallback matching (exact/prefix/main+moon/main/moon) + Moon filter.
     """
     # GC SHORT signals empirically broken — force LONG-only for live trading
     if ticker == "GC" and use_short:
         use_short = False
 
-    inst = INSTRUMENTS.get(ticker)
-    if not inst: return []
-
-    try: from pattern_engine_v3 import load_rectified
-    except: return []
-    rect = load_rectified().get(ticker)
-    if not rect: return []
-
-    utc_dt = datetime(inst.birth_year, inst.birth_month, inst.birth_day, rect["hour"], rect["min"], rect["sec"])
-    local_dt = utc_dt + timedelta(hours=inst.birth_tz)
-    from astro_core_v2 import calculate_chart
-    chart_dict = calculate_chart(local_dt.year, local_dt.month, local_dt.day, local_dt.hour, local_dt.minute, local_dt.second, inst.birth_lat, inst.birth_lon, inst.birth_tz)
-    chart_snap = chart_to_snapshot(ticker=ticker, chart_dict=chart_dict, birth_utc=utc_dt, tz_offset=inst.birth_tz, lat=inst.birth_lat, lon=inst.birth_lon)
-
-    # Load patterns
     try:
-        data = None
-        import time as _t2
-        for attempt in range(3):
-            try:
-                tkr2 = yf.Ticker(symbol)
-                data = tkr2.history(start="2010-01-01")
-                if data is not None and not data.empty: break
-            except: pass
-            if attempt < 2: _t2.sleep(2 + attempt)
-        if data is None or data.empty: return []
-        if isinstance(data.columns, pd.MultiIndex): data.columns = data.columns.get_level_values(0)
-        dd = {}
-        all_dates = []
-        for idx, row in data.iterrows():
-            ds = idx.strftime("%Y-%m-%d")
-            o, h, l, c = float(row["Open"]), float(row["High"]), float(row["Low"]), float(row["Close"])
-            if o <= 0 or c <= 0: continue
-            dd[ds] = {"open": o, "high": h, "low": l, "close": c}
-            all_dates.append(ds)
-        from pattern_engine_v3 import build_patterns as bp, learn_patterns as lp, get_state, state_key
-        pats = bp(chart_dict, dd, all_dates, horizons=[3,5,7])
-        short_edge = {"GC": 0.48, "NQ": 0.38, "ES": 0.42}.get(ticker, 0.40)
-        learned_raw = lp(pats, min_n=12, max_p=0.01, min_edge=0.52, amplify_short=short_edge)
+        from daily_signal_report import generate_daily_signal as _gds
+        sig = _gds(ticker, date_str=date_str, min_wr=min_win_rate, min_pf=min_pf)
+        if sig:
+            # wrap in list to satisfy callers expecting list
+            return [sig]
     except Exception:
-        return []
-
-    personas = generate_trader_personas_from_learned(learned_raw, ticker, chart_snap)
-    personas_dict = {p.persona_id: p for p in personas}
-
-    # Today's state
-    if date_str:
-        today = datetime.strptime(date_str, "%Y-%m-%d")
-    else:
-        today = datetime.now()
-    signal_utc = today.replace(hour=17)
-    st = get_state(chart_dict, signal_utc)
-    sk = state_key(st, 7)
-    persona = personas_dict.get(sk)
-
-    if not persona:
-        for pid, p in personas_dict.items():
-            if pid.startswith(f"{st['main']}_{st['sub']}_{st['dist']}_"):
-                persona = p
-                break
-
-    if not persona:
-        return []
-
-    # Filter
-    if persona.historical_win_rate < min_win_rate: return []
-    if persona.historical_pf < min_pf: return []
-    if not use_short and persona.pattern_direction == "SHORT": return []
-
-    # Moon's application filter (per Rectification Manual: Moon applying to
-    # Jupiter/Venus = favorable; Saturn/Mars = caution)
-    moon_applies = st.get("moon_applies", "void")
-    moon_mult = 1.0
-    moon_note = ""
-    if moon_applies in ("Jupiter", "Venus"):
-        moon_mult = 1.15; moon_note = f"Moon→{moon_applies} (favorable)"
-    elif moon_applies in ("Saturn", "Mars"):
-        moon_mult = 0.85; moon_note = f"Moon→{moon_applies} (caution)"
-    elif moon_applies == "void":
-        moon_mult = 1.0; moon_note = "Moon void-of-course"
-
-    # Build signal
-    pf = max(0.5, persona.historical_pf)
-    tp_mult = min(6.0, max(1.2, 1.5 + math.log(pf + 0.5)))
-    adj_conviction = round(persona.conviction_mult * moon_mult, 2)
-
-    return [{
-        "ticker": ticker,
-        "date": today.strftime("%Y-%m-%d"),
-        "direction": persona.pattern_direction,
-        "conviction": adj_conviction,
-        "moon_applies": moon_applies,
-        "moon_note": moon_note,
-        "sl_pct": f"{persona.stop_tightness:.1%}",
-        "tp_pct": f"{persona.stop_tightness * tp_mult:.1%}",
-        "hold_days": persona.max_hold_days,
-        "position_pct": f"{persona.position_size_pct:.0%}",
-        "persona_id": persona.persona_id[:40],
-        "risk_tolerance": persona.risk_tolerance,
-        "pf": round(persona.historical_pf, 2),
-        "wr": f"{persona.historical_win_rate:.0%}",
-        "n_samples": persona.n_samples,
-        # Entry execution
-        "entry_timing": _entry_timing(persona),
-        "entry_style": persona.entry_trigger_style,
-        "exit_style": persona.exit_trigger_style,
-        "decision_speed": persona.decision_speed,
-        "timeframe": _timeframe_for_persona(persona),
-        "note": _execution_note(persona),
-    }]
+        pass
+    return []
 
 
 # ====================================================================
