@@ -209,35 +209,76 @@ def _ask_float(prompt, default):
 # ACTION: Rectification (unchanged — uses rectify_v3)
 # ---------------------------------------------------------------
 def action_rectify():
-    box("RECTIFICATION", color=C)
-    if not rectify_ticker:
-        box(lines=["rectify_v3 not found. Skipping."], color=Y)
-        _pause()
-        return
-    for t in ["NQ", "ES", "GC", "ITA", "PPA", "SOXX"]:
-        if t not in ASSET_EVENTS:
+    """Grid-search birth time by pattern quality score (fast — patterns computed once)."""
+    box("RECTIFICATION — Grid Search (pattern quality)", color=C)
+    import time as _time, math
+
+    for t in ["NQ", "ES", "GC"]:
+        inst = INSTRUMENTS.get(t)
+        if not inst:
             continue
-        info = {
-            "NQ": (1996, 10, 26, 41.8781, -87.6298, -5),
-            "ES": (1997, 9, 9, 41.8781, -87.6298, -5),
-            "GC": (1974, 12, 31, 40.7128, -74.006, -5),
-        }
-        y, m, d, lat, lon, tz = info[t]
-        birth_date = datetime(y, m, d)
-        ut, score, det = rectify_ticker(t, birth_date, lat, lon, tz, step=4)
-        local_dt = ut + timedelta(hours=tz)
-        chart = calculate_chart(
-            local_dt.year, local_dt.month, local_dt.day,
-            local_dt.hour, local_dt.minute, local_dt.second,
-            lat, lon, tz,
-        )
-        box(f"{t} – Rectified", [
-            f"UTC: {ut.strftime('%Y-%m-%d %H:%M:%S')}",
-            f"Local: {local_dt.strftime('%Y-%m-%d %H:%M:%S')}",
-            f"Asc: {chart['ascendant']['longitude']:.2f}° {SIGN_NAMES[chart['ascendant']['sign']]}",
-            f"MC: {chart['midheaven']['longitude']:.2f}°  Sect: {chart['sect']}",
-            f"Total error: {score:.1f} days",
-        ])
+
+        # Load price data once
+        symbol = inst.data_symbol if inst.data_symbol else f"{t}=F"
+        try:
+            import yfinance as yf; tkr = yf.Ticker(symbol)
+            data = tkr.history(start="2010-01-01")
+            if data.empty: raise ValueError("empty")
+        except Exception:
+            box(title=f"{t} — no data", lines=[], color=Y)
+            continue
+
+        dd = {}; all_dates = []
+        for idx, row in data.iterrows():
+            ds = idx.strftime("%Y-%m-%d")
+            try:
+                o, h, l, c = float(row["Open"]), float(row["High"]), float(row["Low"]), float(row["Close"])
+            except Exception: continue
+            if o <= 0 or c <= 0: continue
+            dd[ds] = {"open": o, "high": h, "low": l, "close": c}
+            all_dates.append(ds)
+        if len(all_dates) < 200: continue
+
+        birth_dt = datetime(inst.birth_year, inst.birth_month, inst.birth_day, 12, 0)
+        best_score = -1; best_hour = None; results = []
+
+        t0 = _time.time()
+        for hour in range(0, 24, 4):  # 4-hour bands (fast — 6 points per ticker)
+            local_dt = birth_dt.replace(hour=hour)
+            chart_dict = calculate_chart(
+                local_dt.year, local_dt.month, local_dt.day,
+                local_dt.hour, local_dt.minute, local_dt.second,
+                inst.birth_lat, inst.birth_lon, inst.birth_tz,
+            )
+            pats = build_patterns(chart_dict, dd, all_dates, horizons=[3, 5, 7])
+            learned = learn_patterns(pats, min_n=12, max_p=0.02, min_edge=0.52)
+            if not learned: continue
+            n_sig = sum(1 for p in learned.values() if p["p_value"] < 0.01)
+            avg_pf = sum(p.get("profit_factor", 0) for p in learned.values()) / max(1, len(learned))
+            avg_wr = sum(p["win_rate"] for p in learned.values()) / max(1, len(learned))
+            avg_n = sum(p["n_samples"] for p in learned.values()) / max(1, len(learned))
+            score = avg_pf * avg_wr * math.sqrt(max(n_sig, 1)) * math.log(max(avg_n, 2))
+            results.append((hour, score, len(learned), n_sig, avg_pf, avg_wr))
+            if score > best_score:
+                best_score = score; best_hour = hour
+
+        elapsed = _time.time() - t0
+        # Show top 3 times
+        results.sort(key=lambda x: x[1], reverse=True)
+        top = results[:3]
+        saved = rectify_ticker(t, birth_dt, inst.birth_lat, inst.birth_lon, inst.birth_tz) if rectify_ticker else None
+        saved_hr = f"{saved[0].hour:02d}:{saved[0].minute:02d}" if saved else "N/A"
+
+        lines = [
+            f"Best time: {best_hour:02d}:00 UTC  (score: {best_score:.1f})",
+            f"Saved:     {saved_hr} UTC",
+            f"Elapsed:   {elapsed:.1f}s for 24 hour-bands",
+            "", f"{B}Top 3 times:{X}",
+        ]
+        for h, sc, npat, nsig, pf, wr in top:
+            lines.append(f"  [{h:02d}:00] pats={npat} sig={nsig} pf={pf:.2f} wr={wr:.1%} score={sc:.1f}")
+        box(f"{t} — Grid Search Results", lines, color=G if best_score > 0 else Y)
+
     _pause()
 
 
@@ -632,14 +673,14 @@ def action_pattern_explorer():
     if not learned:
         print("No valid patterns."); _pause(); return
 
-    sorted_pats = sorted(learned.values(), key=lambda x: x["score"], reverse=True)
+    sorted_pats = sorted(learned.items(), key=lambda x: x[1]["score"], reverse=True)
     table(
         ["Pattern", "Dir", "WR%", "AvgMv%", "N", "p-value", "Score"],
         [[
-            p["key"], p["direction"],
-            f"{p['win_rate']*100:.1f}%", f"{p['avg_move']*100:.3f}%",
-            p["n_samples"], f"{p['p_value']:.2e}", f"{p['score']:.2f}",
-        ] for p in sorted_pats[:20]],
+            pname[:60], pdata["direction"],
+            f"{pdata['win_rate']*100:.1f}%", f"{pdata['avg_move']*100:.3f}%",
+            pdata["n_samples"], f"{pdata['p_value']:.2e}", f"{pdata['score']:.2f}",
+        ] for pname, pdata in sorted_pats[:20]],
         aligns=["<", "<", ">", ">", ">", ">", ">"],
         title=f"Top Patterns for {ticker}",
     )
@@ -1337,7 +1378,11 @@ def action_hmm_regime():
         )[:3]
         obs_str = ", ".join("{}({:.0%})".format(o[1], o[0]) for o in top)
         rc = {"BULL": G, "BEAR": R, "RANGE": Y, "CHOP": C}.get(r, X)
-        print("  {0}{1}{2}: pi={3:.1%} | {4}".format(rc, r, X, params.pi[i], obs_str))
+        # NOTE: params.pi is the STATIC initial-state prior, not the live
+        # "current" probability. Label it honestly to avoid confusion with
+        # the "Current Regime" section below (which uses forward-decoded
+        # probabilities from recent OOS trades).
+        print("  {0}{1}{2}: prior_pi={3:.1%} | {4}".format(rc, r, X, params.pi[i], obs_str))
 
     print("\n  {0}── Current Regime ──{1}".format(Y, X))
     try:
@@ -1498,6 +1543,30 @@ def action_settings():
 # ---------------------------------------------------------------
 # MAIN MENU
 # ---------------------------------------------------------------
+# ---------------------------------------------------------------
+# MENU WRAPPERS (thin delegates to the standalone scripts)
+# ---------------------------------------------------------------
+def action_master_trade():
+    """Run trade.py — the single daily command."""
+    import subprocess
+    subprocess.run([sys.executable, "trade.py"])
+    _pause()
+
+
+def action_walkforward():
+    """Run walk_forward.py — weekly retrain."""
+    import subprocess
+    subprocess.run([sys.executable, "walk_forward.py"])
+    _pause()
+
+
+def action_journal():
+    """Open the trade journal (dashboard by default)."""
+    import subprocess
+    subprocess.run([sys.executable, "journal.py"])
+    _pause()
+
+
 def interactive_menu():
     while True:
         stats = memory.stats()
@@ -1515,83 +1584,73 @@ def interactive_menu():
             "",
             "Select an option:",
         ])
-        opts = [
-            ("1",  "Multi-Source Backtest"),
-            ("2",  "Custom Date Backtest"),
-            ("3",  "Dynamic Campaign (regime filters)"),
-            ("4",  "Dynamic Filter Status"),
-            ("5",  "Pattern Explorer"),
-            ("6",  "Run History"),
-            ("7",  "Run Rectification"),
-            ("",   ""),
-            ("M1", "MatrAIx Persona Explorer (51-dim profiles)"),
-            ("M2", "MatrAIx Market Simulation (OASIS-style)"),
-            ("M3", "MatrAIx Cohort Report (population analysis)"),
-            ("M4", "MatrAIx Persona Backtest (close the loop — real trades)"),
-            ("M5", "Live MatrAIx Signal (today's persona-weighted signal)"),
-            ("M6", "Daily Telegram Report (all 3 tickers → Telegram)"),
-            ("M7", "Kronos Volatility Analysis (predicts vol regime, adjusts stops)"),
-            ("M8", "HMM Regime Detection (learn market regime from trades, filter signals)"),
-            ("M9", "Multi-Timeframe Backtest (15m/1H/4H persona backtest)"),
-            ("M10", "MTF Live Signals (today's 1H/4H persona signals)"),
-            ("MT",  "MASTER TRADE — all signals + sizing (python3 trade.py)"),
-            ("WF",  "Walk-Forward Retrain (weekly — relearn patterns + HMM)"),
-            ("",   ""),
-            ("8",  "Settings"),
-            ("0",  "Exit"),
+        # Menu is DATA, not code. Sections group related actions; each entry
+        # maps a key → (label, handler). Adding/removing a feature is one line.
+        menu = [
+            ("TRADE — daily", [
+                ("1", "Today's Signals (all tickers + sizing)", action_master_trade),
+                ("2", "Historical Backtest", action_backtest),
+                ("3", "Custom Date Backtest", action_backtest_custom),
+                ("4", "Walk-Forward Retrain (weekly)", action_walkforward),
+                ("J", "Trade Journal", action_journal),
+            ]),
+            ("ANALYZE", [
+                ("5", "Pattern Explorer", action_pattern_explorer),
+                ("6", "HMM Regime Detection", action_hmm_regime),
+                ("7", "Kronos Volatility Analysis", action_kronos_backtest),
+                ("8", "Run Rectification", action_rectify),
+                ("9", "Dynamic Campaign (regime filters)", action_dynamic_campaign),
+                ("A", "Dynamic Filter Status", action_dynamic_status),
+                ("B", "Run History", action_run_history),
+            ]),
+            ("LIVE OPS", [
+                ("T", "Telegram Report", action_daily_telegram_report),
+            ]),
+            ("RESEARCH", [
+                ("R1", "Persona Explorer", action_matraix_personas),
+                ("R2", "Market Simulation", action_matraix_simulation),
+                ("R3", "Cohort Report", action_matraix_cohort),
+                ("R4", "Persona Backtest", action_matraix_backtest),
+                ("R5", "Persona Live Signal", action_matraix_live),
+                ("R6", "Multi-Timeframe Backtest", action_mtf_backtest),
+                ("R7", "MTF Live Signals", action_mtf_live),
+            ]),
+            ("SETTINGS", [
+                ("S", "Settings", action_settings),
+            ]),
         ]
         print()
-        for num, desc in opts:
-            print(f"  {B}[{num}]{X}  {desc}")
+        for section, entries in menu:
+            print(f"  {C}{section}{X}")
+            for num, desc, _fn in entries:
+                print(f"    {B}[{num}]{X}  {desc}")
+        print(f"    {B}[0]{X}  Exit")
 
         choice = _ask("\n  Select option: ", "0")
         choice = choice.upper()
 
-        if choice == "1":
-            action_backtest()
-        elif choice == "2":
-            action_backtest_custom()
-        elif choice == "3":
-            action_dynamic_campaign()
-        elif choice == "4":
-            action_dynamic_status()
-        elif choice == "5":
-            action_pattern_explorer()
-        elif choice == "6":
-            action_run_history()
-        elif choice == "7":
-            action_rectify()
-        elif choice == "8":
-            action_settings()
-        elif choice == "M1":
-            action_matraix_personas()
-        elif choice == "M2":
-            action_matraix_simulation()
-        elif choice == "M3":
-            action_matraix_cohort()
-        elif choice == "M4":
-            action_matraix_backtest()
-        elif choice == "M5":
-            action_matraix_live()
-        elif choice == "M6":
-            action_daily_telegram_report()
-        elif choice == "M7":
-            action_kronos_backtest()
-        elif choice == "M8":
-            action_hmm_regime()
-        elif choice == "M9":
-            action_mtf_backtest()
-        elif choice == "M10":
-            action_mtf_live()
-        elif choice == "MT":
-            import subprocess; subprocess.run([sys.executable, "trade.py"])
-        elif choice == "WF":
-            import subprocess; subprocess.run([sys.executable, "walk_forward.py"])
-        elif choice == "0":
+        # Flatten menu into a dispatch table, then look up the handler.
+        dispatch = {num: fn for _s, entries in menu for num, _d, fn in entries}
+
+        if choice == "0":
             print(f"\n  {G}Mission Control shutting down. {stats['total_runs']} runs archived.{X}")
             break
-        else:
-            print(f"  {Y}Invalid selection.{X}")
+        elif choice in dispatch:
+            dispatch[choice]()
+            continue
+
+        # Legacy aliases (back-compat for muscle memory): keep accepting old keys
+        # but route them to the same grouped handlers.
+        _legacy = {
+            "M1": "R1", "M2": "R2", "M3": "R3", "M4": "R4", "M5": "R5",
+            "M6": "T", "M7": "7", "M8": "6", "M9": "R6", "M10": "R7",
+            "MT": "1", "WF": "4",
+        }
+        if choice in _legacy and _legacy[choice] in dispatch:
+            dispatch[_legacy[choice]]()
+            continue
+
+        print(f"  {Y}Invalid selection.{X}")
 
 
 # ---------------------------------------------------------------
