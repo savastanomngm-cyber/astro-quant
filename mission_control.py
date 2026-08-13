@@ -279,6 +279,23 @@ def action_rectify():
             lines.append(f"  [{h:02d}:00] pats={npat} sig={nsig} pf={pf:.2f} wr={wr:.1%} score={sc:.1f}")
         box(f"{t} — Grid Search Results", lines, color=G if best_score > 0 else Y)
 
+        # Save best time back to rectified_times_v3.json (persists across sessions)
+        import json
+        json_path = os.path.join(os.path.dirname(__file__), "rectified_times_v3.json")
+        existing = {}
+        if os.path.exists(json_path):
+            try:
+                with open(json_path) as jf:
+                    existing = json.load(jf)
+            except: pass
+        existing[t] = {"hour": best_hour, "min": 0, "sec": 0, "score": round(best_score, 1)}
+        try:
+            with open(json_path, "w") as jf:
+                json.dump(existing, jf, indent=2)
+            print(f"  {G}✓ Saved {t} best time ({best_hour:02d}:00) to rectified_times_v3.json{X}")
+        except Exception as e:
+            print(f"  {Y}Could not save: {e}{X}")
+
     _pause()
 
 
@@ -1498,9 +1515,40 @@ def action_walkforward():
 
 
 def action_journal():
-    """Open the trade journal (dashboard by default)."""
+    """Trade journal — log entries, close trades, view dashboard, stats."""
     import subprocess
-    subprocess.run([sys.executable, "journal.py"])
+    while True:
+        box("TRADE JOURNAL", color=C)
+        print(f"  {B}[L]{X} Log a trade        {B}[C]{X} Close a trade")
+        print(f"  {B}[S]{X} Skip a signal      {B}[V]{X} View dashboard")
+        print(f"  {B}[X]{X} Stats               {B}[E]{X} Export CSV")
+        print(f"  {B}[0]{X} Back to main menu")
+        choice = _ask("\n  Journal action: ", "0").upper()
+        if choice == "0": break
+        elif choice == "L":
+            ticker = _ask("Ticker (NQ/ES/GC): ", "NQ").upper()
+            direction = _ask("Direction (LONG/SHORT): ", "LONG").upper()
+            conv = _ask("Conviction (e.g. 1.0): ", "1.0")
+            sl = _ask("SL (e.g. 5%): ", "?")
+            tp = _ask("TP (e.g. 15%): ", "?")
+            hold = _ask("Hold days: ", "?")
+            subprocess.run([sys.executable, "journal.py", "log", ticker, direction, conv, sl, tp, hold])
+        elif choice == "C":
+            ticker = _ask("Ticker (NQ/ES/GC): ", "NQ").upper()
+            pnl = _ask("P&L (e.g. +1250 or -400): ", "0")
+            reason = _ask("Exit reason (optional): ", "manual")
+            subprocess.run([sys.executable, "journal.py", "close", ticker, pnl, reason])
+        elif choice == "S":
+            ticker = _ask("Ticker (NQ/ES/GC): ", "NQ").upper()
+            subprocess.run([sys.executable, "journal.py", "skip", ticker])
+        elif choice == "V":
+            subprocess.run([sys.executable, "journal.py"])
+        elif choice == "X":
+            subprocess.run([sys.executable, "journal.py", "stats"])
+        elif choice == "E":
+            subprocess.run([sys.executable, "journal.py", "export"])
+        else:
+            print(f"  {Y}Invalid choice{X}")
     _pause()
 
 
