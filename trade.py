@@ -36,6 +36,21 @@ def _run_group(label, tickers, date_str, show_tf=True):
     regimes = {t: _hmm(t) for t in tickers}
     print(f"  HMM: {' │ '.join(f'{t}:{r}' for t,r in regimes.items())}")
     print()
+
+    # Macro regime + eclipse (Regulus)
+    if tickers == FUTURES:
+        try:
+            from signals_macro import macro_regime, recent_eclipse
+            mr = macro_regime(datetime.now())
+            ecl = recent_eclipse(datetime.now())
+            macro_line = f"  🌐 Macro: {mr['regime']} — {mr['bias']}"
+            if ecl:
+                macro_line += f" | 🌑 Eclipse {ecl['date']}"
+            print(macro_line)
+            print()
+        except Exception:
+            pass
+
     tfs = ["daily", "1h", "4h"] if show_tf else ["daily"]
     print(f"  {'TICKER':<6} {'TF':<7} {'DIR':<8} {'PF':<8} {'WR':<7} {'CONV':<6} {'SL':<8} {'TP':<8} {'HOLD':<6} {'MATCH'}")
     print(f"  {'─'*6} {'─'*7} {'─'*8} {'─'*8} {'─'*7} {'─'*6} {'─'*8} {'─'*8} {'─'*6} {'─'*9}")
