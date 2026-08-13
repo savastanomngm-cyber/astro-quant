@@ -25,11 +25,23 @@ def _sig(ticker, tf, date_str):
 
 def _hmm(ticker):
     try:
-        from astro_hmm import load_hmm_params, predict_regime, observation_index
+        from astro_hmm import load_hmm_params
+        from astro_matraix_backtest import persona_backtest_flow
+        from astro_hmm import observation_index
         h = load_hmm_params(ticker)
-        if h and abs(h.A[0][0] - 0.70) > 0.001:
-            return predict_regime(h, [observation_index("LONG", True, 0.01)])["current_regime"]
-    except: pass
+        if not h or abs(h.A[0][0] - 0.70) < 0.001:
+            return "default"
+        # Decode the REAL recent OOS trade history (like M8), not a fake token
+        r = persona_backtest_flow(ticker=ticker, verbose=False)
+        if r and r.oos_trades:
+            obs = [observation_index(t.direction, t.net_points > 0,
+                                     min(abs(t.gross_points)/100.0, 0.05))
+                   for t in r.oos_trades[-20:]]
+            from astro_hmm import viterbi, REGIMES
+            path, _ = viterbi(h, obs)
+            return REGIMES[path[-1]]
+    except Exception:
+        pass
     return "default"
 
 def _run_group(label, tickers, date_str, show_tf=True):
@@ -69,6 +81,30 @@ def _run_group(label, tickers, date_str, show_tf=True):
     print(f"\n  {'─'*55}")
     print(f"  POSITION SIZING")
     print(f"  {'─'*55}")
+
+    # Pre-compute Kronos verdicts for futures so sizing can use them
+    kronos_map = {}
+    if tickers == FUTURES:
+        import sys as _s, os as _o
+        _s.path.insert(0, _o.path.expanduser(_o.path.join(_o.path.dirname(__file__), '..', 'kronos')))
+        try:
+            from astro_matraix_kronos import KronosConfirmer
+            kc = KronosConfirmer(); kc._ensure_loaded()
+            import yfinance as yf
+            for t in tickers:
+                sd = all_sigs.get((t, "daily"))
+                if not sd: continue
+                inst = __import__('astro_configs').INSTRUMENTS.get(t)
+                sym = inst.data_symbol or f'{t}=F'
+                data = yf.Ticker(sym).history(period='90d')
+                if data.empty: continue
+                df = data[['Open','High','Low','Close','Volume']].copy()
+                df.columns = ['open','high','low','close','volume']
+                kronos_map[t] = kc.confirm_signal(t, {'direction':sd['direction'],'conviction':sd['conviction'],
+                    'sl_pct':sd['sl_pct'],'tp_pct':sd['tp_pct']}, df=df)
+        except Exception:
+            pass
+
     for t in tickers:
         g = sum(1 for tf in tfs if (s:=all_sigs.get((t,tf))) and s["direction"]=="LONG")
         y = sum(1 for tf in tfs if not all_sigs.get((t,tf)))
@@ -79,38 +115,41 @@ def _run_group(label, tickers, date_str, show_tf=True):
         elif g == 1 and y >= 1: a = "MONITOR"
         elif r > g: a = "SIT OUT (SHORT dominates)"
         else: a = "SIT OUT"
-        note = " ⚠BEAR" if regimes.get(t) == "BEAR" else ""
+
+        # Fold in HMM + Kronos
+        regime = regimes.get(t, "default")
+        kron = kronos_map.get(t)
+        note = ""
+        if regime == "BEAR":
+            note += " ⚠BEAR"
+            if a == "FULL": a = "HALF"
+        elif regime == "CHOP":
+            note += " ⚠CHOP"
+            if a == "FULL": a = "HALF"
+        if kron:
+            if kron["status"] == "DIVERGES":
+                note += " ⚠KRONOS-DIVERGES"
+                a = "MONITOR" if a in ("FULL","HALF") else "SIT OUT"
+            elif kron["status"] == "UNRELIABLE":
+                note += " ⚠KRONOS-UNRELIABLE"
+
         sd = all_sigs.get((t, "daily"))
         ts = f"SL={sd['sl_pct']} TP={sd['tp_pct']} {sd.get('hold_days','?')}d" if sd else ""
-        print(f"  {t:<6s}: {a:<10s} {ts}{note}")
+        print(f"  {t:<6s}: {a:<22s} {ts}{note}")
 
     # Kronos confirmation for futures
     if tickers == FUTURES:
         print(f"\n  {'─'*55}")
         print(f"  KRONOS VOL CONFIRMATION")
         print(f"  {'─'*55}")
-        import sys, os
-        sys.path.insert(0, os.path.expanduser(os.path.join(os.path.dirname(__file__), '..', 'kronos')))
-        try:
-            from astro_matraix_kronos import KronosConfirmer
-            kc = KronosConfirmer(); kc._ensure_loaded()
-            import yfinance as yf
-            for t in tickers:
-                sd = all_sigs.get((t, "daily"))
-                if not sd: continue
-                inst = __import__('astro_configs').INSTRUMENTS.get(t)
-                sym = inst.data_symbol or f'{t}=F'
-                data = yf.download(sym, period='90d', interval='1d', progress=False, auto_adjust=True)
-                if data.empty: continue
-                df = data[['Open','High','Low','Close','Volume']].copy()
-                df.columns = ['open','high','low','close','volume']
-                r = kc.confirm_signal(t, {'direction': sd['direction'], 'conviction': sd['conviction'],
-                    'sl_pct': sd['sl_pct'], 'tp_pct': sd['tp_pct']}, df=df)
-                status = r['status']
-                e = '✓' if status == 'CONFIRMED' else '✗' if status == 'DIVERGES' else '?'
-                print(f"  {e} {t}: {status} | Kronos {r['kronos_dir']} {r['kronos_pct']:+.1f}% | Conv {r['boosted_conviction']}x")
-        except Exception as e:
-            print(f"  Kronos unavailable: {e}")
+        for t in tickers:
+            r = kronos_map.get(t)
+            if not r:
+                print(f"  ? {t}: no Kronos")
+                continue
+            status = r['status']
+            e = '✓' if status == 'CONFIRMED' else '✗' if status == 'DIVERGES' else '?'
+            print(f"  {e} {t}: {status} | Kronos {r['kronos_dir']} {r['kronos_pct']:+.1f}% | Conv {r['boosted_conviction']}x")
 
     # Mean-reversion overlay (Renaissance-style)
     if tickers == FUTURES:

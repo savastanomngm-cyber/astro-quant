@@ -239,18 +239,30 @@ class KronosConfirmer:
                 sample_count=sample_count,
             )
 
-            # Compute predicted direction
+            # Compute predicted direction using MEDIAN across sample paths (robust)
             current_close = float(x_df_clean["close"].iloc[-1])
-            predicted_close = float(pred_df["close"].iloc[-1])
+            closes_over_path = [
+                float(pred_df["close"].iloc[i]) for i in range(len(pred_df))
+            ]
+            import statistics
+            predicted_close = statistics.median(closes_over_path)
             predicted_pct = (predicted_close / current_close - 1.0) * 100
             predicted_dir = "up" if predicted_pct > 0 else "down"
 
+            # Outlier guard: if magnitude is absurd, flag unreliable
+            if abs(predicted_pct) > 8.0:
+                return {
+                    "direction": predicted_dir,
+                    "pct_change": round(predicted_pct, 2),
+                    "confidence": round(min(confidence, 0.5), 2),
+                    "pred_close": round(predicted_close, 2),
+                    "current_close": round(current_close, 2),
+                    "pred_len": pred_len,
+                    "sample_count": sample_count,
+                    "unreliable": True,
+                }
+
             # Compute confidence from prediction path statistics
-            # More samples = more robust prediction
-            closes_over_path = [
-                float(pred_df["close"].iloc[i])
-                for i in range(len(pred_df))
-            ]
             up_bars = sum(1 for c in closes_over_path if c > current_close)
             confidence = up_bars / max(1, len(closes_over_path))
 
@@ -307,6 +319,19 @@ class KronosConfirmer:
 
         astro_dir = astro_signal["direction"]
         kronos_dir = kronos_result["direction"]
+
+        # If Kronos is unreliable (absurd magnitude), treat as neutral — don't override astro
+        if kronos_result.get("unreliable"):
+            return {
+                "status": "UNRELIABLE",
+                "kronos_dir": kronos_dir,
+                "kronos_pct": kronos_result["pct_change"],
+                "kronos_confidence": kronos_result["confidence"],
+                "boosted_conviction": astro_signal.get("conviction", 0.5),
+                "astro_dir": astro_dir,
+                "astro_wr": astro_signal.get("wr", "?"),
+                "astro_pf": astro_signal.get("pf", "?"),
+            }
 
         # Determine agreement
         astro_up = astro_dir == "LONG"
