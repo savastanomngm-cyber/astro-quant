@@ -286,88 +286,25 @@ def action_rectify():
 # ACTION: Multi-Source Backtest (NOW uses backtest_flow + batch_run)
 # ---------------------------------------------------------------
 def action_backtest():
-    box("MULTI-SOURCE BACKTEST", color=C)
+    """Run persona_backtest_flow on Yahoo data (the reliable default)."""
+    box("HISTORICAL BACKTEST", color=C)
 
     for ticker in ["NQ", "ES", "GC"]:
-        inst = INSTRUMENTS.get(ticker)
-        if not inst:
-            continue
-
-        sources = TICKER_DATA_SOURCES.get(ticker, [])
-        if not sources:
-            continue
-
-        # Build typed configs — store labels alongside
-        labeled_cfgs = []
-        for label, source in sources:
-            try:
-                labeled_cfgs.append((label, BacktestCfg(
-                    ticker=ticker,
-                    source=source,
-                    train_ratio=0.6,
-                    date_start="2010-01-01",
-                    point_value=inst.point_value,
-                )))
-            except Exception as e:
-                box(lines=[f"Config error ({label}): {e}"], color=Y)
-
-        if not labeled_cfgs:
-            box(lines=["No valid configs built."], color=Y)
-            continue
-
-        print(f"\n  {G}Running {len(labeled_cfgs)} source backtests for {ticker}...{X}")
-
-        # Run concurrently via batch_run (each input = cfg dict)
-        inputs = [{"cfg": c} for _, c in labeled_cfgs]
-
-        async def _run():
-            async def _wrapper(**kwargs):
-                return backtest_flow(kwargs["cfg"])
-
-            return await batch_run(_wrapper, inputs, max_concurrency=3)
-
-        batch = asyncio.run(_run())
-
-        valid = [r for r in batch.results if r is not None]
-        if not valid:
-            box(lines=[f"No results for {ticker}."], color=Y)
-            continue
-
-        # Archive each result
-        run_ids = []
-        for r in valid:
-            try:
-                rid = memory.archive_run(r)
-                run_ids.append(rid)
-            except Exception as e:
-                print(f"  {Y}Archive error: {e}{X}")
-
-        # Show table — match results back to source labels
-        # We know the order: cfgs[i] ← labeled_cfgs[i][0] (label)
-        rows = []
-        source_labels = [label for label, _ in labeled_cfgs]
-        for i, r in enumerate(valid):
-            oos = r.out_of_sample
-            label = source_labels[i] if i < len(source_labels) else "?"
-            rows.append([
-                label,
-                f"{r.sl_points:.0f}",
-                f"{r.tp_points:.0f}",
-                f"{r.hold_days}",
-                str(r.validation.n_trades),
-                f"{r.validation.win_rate:.1%}",
-                f"{r.validation.profit_factor:.2f}",
-                f"${r.validation.total_dollars:,.0f}",
-                f"{oos.profit_factor:.2f}" if oos.n_trades > 0 else "n/a",
-                f"${oos.total_dollars:,.0f}" if oos.n_trades > 0 else "n/a",
-            ])
-
-        table(
-            ["Source", "SL", "TP", "H", "Val N", "Val WR", "Val PF", "Val $", "OOS PF", "OOS $"],
-            rows,
-            aligns=["<", ">", ">", ">", ">", ">", ">", ">", ">", ">"],
-            title=f"{ticker} – Backtest Results (archived: {len(run_ids)} runs)",
-        )
+        print(f"\n  {G}Running backtest on {ticker}...{X}")
+        try:
+            from astro_matraix_backtest import persona_backtest_flow
+            result = persona_backtest_flow(
+                ticker=ticker, yahoo_start="2010-01-01",
+                train_ratio=0.6, min_win_rate=0.50, min_pf=1.0,
+                use_short_signals=True, verbose=False,
+            )
+            if result:
+                oos = result.out_of_sample
+                print(f"  {G}✓{X} {ticker}: {oos.n_trades}t | WR={oos.win_rate:.1%} | PF={oos.profit_factor:.2f} | Sharpe={oos.sharpe} | DD={oos.max_drawdown}% | ${oos.total_dollars:,.0f}")
+            else:
+                print(f"  {Y}No result for {ticker}{X}")
+        except Exception as e:
+            print(f"  {R}Error: {e}{X}")
 
     _pause()
 

@@ -21,7 +21,7 @@ def _sig(ticker, tf, date_str):
         from daily_signal_report import generate_daily_signal
         return generate_daily_signal(ticker, date_str=date_str, min_wr=0.50, min_pf=1.0)
     from astro_mtf import generate_mtf_live_signal
-    return generate_mtf_live_signal(ticker, bar_size=tf, min_wr=0.50, min_pf=1.0, min_n=8)
+    return generate_mtf_live_signal(ticker, bar_size=tf, min_wr=0.50, min_pf=1.0, min_n=8, lookback_days=730)
 
 def _hmm(ticker):
     try:
