@@ -74,23 +74,8 @@ def generate_daily_signal(
     
     Returns dict with signal fields, or None if no valid signal found.
     """
-    from astro_matraix_backtest import generate_live_signals as gls
-
-    # ---- TRY STANDARD GENERATOR FIRST (exact match) ----
-    try:
-        sigs = gls(
-            ticker=ticker,
-            date_str=date_str,
-            min_win_rate=min_wr,
-            min_pf=min_pf,
-            use_short=USE_SHORT and ticker not in TICKER_NO_SHORT,
-        )
-        if sigs:
-            s = sigs[0]
-            s["match_type"] = "exact"
-            return s
-    except Exception:
-        pass
+    # (No delegation to generate_live_signals — that would recurse infinitely
+    # since generate_live_signals now delegates back here.)
 
     # GC SHORT override for fallback path too
     if ticker in TICKER_NO_SHORT:
@@ -98,7 +83,7 @@ def generate_daily_signal(
     else:
         _use_s = USE_SHORT
 
-    # ---- FALLBACK: build from scratch with relaxed matching ----
+    # ---- Build from scratch with relaxed matching ----
     inst = INSTRUMENTS.get(ticker)
     if not inst:
         return None
@@ -126,8 +111,16 @@ def generate_daily_signal(
     try:
         inst = INSTRUMENTS.get(ticker)
         symbol = inst.data_symbol if inst and inst.data_symbol else f"{ticker}=F"
-        data = yf.download(symbol, start="2010-01-01", progress=False, auto_adjust=True)
-        if data.empty: return None
+        data = None
+        import time as _t
+        for attempt in range(3):
+            try:
+                tkr = yf.Ticker(symbol)
+                data = tkr.history(start="2010-01-01")
+                if data is not None and not data.empty: break
+            except: pass
+            if attempt < 2: _t.sleep(2 + attempt)
+        if data is None or data.empty: return None
         if isinstance(data.columns, pd.MultiIndex):
             data.columns = data.columns.get_level_values(0)
         dd = {}; all_dates = []
