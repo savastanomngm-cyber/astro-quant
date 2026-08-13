@@ -116,7 +116,7 @@ def _run_group(label, tickers, date_str, show_tf=True):
         elif r > g: a = "SIT OUT (SHORT dominates)"
         else: a = "SIT OUT"
 
-        # Fold in HMM + Kronos
+        # Fold in HMM + Kronos + Moon application
         regime = regimes.get(t, "default")
         kron = kronos_map.get(t)
         note = ""
@@ -133,7 +133,17 @@ def _run_group(label, tickers, date_str, show_tf=True):
             elif kron["status"] == "UNRELIABLE":
                 note += " ⚠KRONOS-UNRELIABLE"
 
+        # Moon application overlay (Rectification Manual, dynamic_filters_v1 §6):
+        # applying to a malefic (Mars/Saturn) → caution (half size);
+        # applying to a benefic (Jupiter/Venus) → no reduction.
         sd = all_sigs.get((t, "daily"))
+        moon = (sd or {}).get("moon_applies", "")
+        if moon in ("Saturn", "Mars"):
+            note += " ⚠MOON-MALEFIC"
+            if a == "FULL": a = "HALF"
+        elif moon in ("Jupiter", "Venus"):
+            note += " ☾MOON-BENEFIC"
+
         ts = f"SL={sd['sl_pct']} TP={sd['tp_pct']} {sd.get('hold_days','?')}d" if sd else ""
         print(f"  {t:<6s}: {a:<22s} {ts}{note}")
 
@@ -148,7 +158,14 @@ def _run_group(label, tickers, date_str, show_tf=True):
                 print(f"  ? {t}: no Kronos")
                 continue
             status = r['status']
-            e = '✓' if status == 'CONFIRMED' else '✗' if status == 'DIVERGES' else '?'
+            if status == 'CONFIRMED':
+                e = '✓'
+            elif status == 'DIVERGES':
+                e = '✗'
+            elif status == 'UNRELIABLE':
+                e = '!'
+            else:  # KRONOS_UNAVAILABLE / NO_DATA — no opinion, defer to astro
+                e = '·'
             print(f"  {e} {t}: {status} | Kronos {r['kronos_dir']} {r['kronos_pct']:+.1f}% | Conv {r['boosted_conviction']}x")
 
     # Mean-reversion overlay (Renaissance-style)
@@ -233,7 +250,7 @@ def main():
         print(f"{'▓'*55}")
         _run_group("ETFS", ETF_TRACKERS, ds, show_tf=False)
 
-    print(f"\n  v0.63 — {label}")
+    print(f"\n  v0.64 — {label}")
 
 if __name__ == "__main__":
     main()
