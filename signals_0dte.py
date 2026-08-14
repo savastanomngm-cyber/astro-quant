@@ -25,7 +25,7 @@ def evaluate_0dte(signal: dict, kronos: dict, hmm: dict, moon_applies: str) -> d
     match_type = signal.get("match_type", "?")
 
     # 1. Conviction
-    if conviction < 0.8:
+    if conviction < 0.6:
         reasons.append(f"conviction {conviction} < 0.8")
 
     # 2. Kronos
@@ -43,9 +43,11 @@ def evaluate_0dte(signal: dict, kronos: dict, hmm: dict, moon_applies: str) -> d
     elif regime == "CHOP":
         reasons.append("HMM CHOP")
 
-    # 4. Moon applying to malefic
-    if moon_applies in ("Saturn", "Mars"):
-        reasons.append(f"Moon→{moon_applies} (malefic)")
+    # 4. Moon applying to malefic — SOFT warning (don't auto-block; it was
+    #    blocking every day since Moon is often applying to Mars)
+    moon_malefic = moon_applies in ("Saturn", "Mars")
+    if moon_malefic:
+        reasons.append(f"Moon→{moon_applies} (malefic, soft)")
 
     # 5. Match quality
     if match_type in ("moon", "main+moon"):
