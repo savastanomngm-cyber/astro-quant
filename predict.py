@@ -48,6 +48,32 @@ _context_cache = {}
 _cur_ticker = "NQ"
 
 
+def _kronos_for_date(ctx, day_dt):
+    """Best-effort Kronos direction forecast for one date (optional; may be None)."""
+    try:
+        from astro_matraix_kronos import KronosConfirmer
+        import pandas as pd
+        # Reuse the OHLCV loaded in context, window up to this date
+        od = [(d, ctx["dd"][d]) for d in sorted(ctx["all_dates"]) if d <= day_dt.strftime("%Y-%m-%d")]
+        if len(od) < 60:
+            return None
+        df = pd.DataFrame([v for _, v in od])  # open/high/low/close
+        df.index = pd.to_datetime([d for d, _ in od])
+        kc = KronosConfirmer()
+        kc._ensure_loaded()
+        r = kc.predict(df, pred_len=min(7, max(1, len(od)//20)), lookback=min(400, len(od)-2))
+        if not r:
+            return None
+        return {
+            "dir": r.get("direction"),
+            "pct": r.get("pct_change"),
+            "conf": r.get("confidence"),
+            "unreliable": r.get("unreliable", False) or r.get("neutral", False),
+        }
+    except Exception:
+        return None
+
+
 def _signal_for_day(ctx, day_dt):
     """Project the signal for a specific day in the future window."""
     chart = ctx["chart"]
@@ -99,6 +125,9 @@ def _signal_for_day(ctx, day_dt):
     if moon in ("Jupiter", "Venus"): moon_mult = 1.15
     elif moon in ("Saturn", "Mars"): moon_mult = 0.85
 
+    # Kronos read for this date (best-effort, optional — independent confirmation)
+    kron = _kronos_for_date(ctx, day_dt)   # best-effort, independent confirmation; None if n/a
+
     return {
         "date": day_dt.strftime("%Y-%m-%d"),
         "direction": persona.pattern_direction,
@@ -108,6 +137,7 @@ def _signal_for_day(ctx, day_dt):
         "moon": moon,
         "avg_move": abs(persona.historical_avg_move),
         "match": match_type,
+        "kronos": kron,  # dict with dir/pct/status or None
     }
 
 
@@ -218,8 +248,9 @@ def predict(ticker, start_str, end_str, verbose=True):
         print(f"\n  Day-by-day:")
         for r in results:
             e = "🟢" if r["direction"] == "LONG" else "🔴"
-            print(f"    {r['date']}  {e} {r['direction']:<6} conv={r['conviction']:.2f} "
-                  f"PF={r['pf']:.2f} WR={r['wr']:.0%} 🌙→{r['moon']} ({r['match']})")
+            # Kronos overlay (best-effort, independent confirmation) — None if unavailable
+            k = r.get("kronos")
+            kt = f" K={k['dir'].upper()} {k['pct']:+.2f}%Δ{k['conf']}" if k and not k.get("neutral") else " K=—"
 
     return {"ticker": ticker, "net_conviction": net, "projected_move": proj,
             "verdict": verdict, "n_long": len(longs), "n_short": len(shorts),
