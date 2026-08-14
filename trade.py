@@ -159,6 +159,24 @@ def _run_group(label, tickers, date_str, show_tf=True):
         print(f"  {t:<6}  {sd.get('timeframe','daily')}")
         print(f"    ▶ Enter: {sd.get('entry_timing','?')}")
         print(f"    ⏱ Hold:  {sd.get('hold_days','?')}d | SL {sd.get('sl_pct','?')} | TP {sd.get('tp_pct','?')} | Pos {sd.get('position_pct','?')}")
+        # Real contract sizing (micro vs mini) for a given account size
+        try:
+            from sizing import display_for
+            acct = float(os.environ.get("ACCOUNT_SIZE", 25000))
+            inst = __import__('astro_configs').INSTRUMENTS.get(t)
+            px = None
+            try:
+                import yfinance as yf
+                sym = inst.data_symbol or f'{t}=F'
+                px = float(yf.Ticker(sym).history(period='2d')['Close'].iloc[-1])
+            except Exception:
+                pass
+            if px:
+                sl = float(sd['sl_pct'].rstrip('%')) / 100.0
+                acct_line = display_for(t, px, sl, 0.0, acct)
+                print(f"    💰 ${acct:,.0f} acct → {acct_line}")
+        except Exception:
+            pass
         note = sd.get('note')
         if note:
             print(f"    ℹ {note}")

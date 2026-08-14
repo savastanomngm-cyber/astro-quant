@@ -112,6 +112,16 @@ def generate_daily_signal(ticker, date_str=None, min_wr=0.50, min_pf=1.0):
     pf = max(0.5, persona.historical_pf)
     tp_mult = min(6.0, max(1.2, 1.5 + math.log(pf + 0.5)))
     stop_pct = persona.stop_tightness
+    # Cap stop/TP at realistic futures levels via ATR sizing:
+    # actual index futures stops are ~1-2 ATR, and TP at 2R — NOT the persona's
+    # 5-8% stop / unbounded 21% TP (which is unwritable for real accounts).
+    try:
+        from sizing import atr_pct, compute_stop_tp
+        closes = [dd[d]["close"] for d in sorted(all_dates) if d in dd][-60:]
+        atr = atr_pct(closes, 14)
+        stop_pct, tp_pct = compute_stop_tp(stop_pct, atr, rt_ratio=2.0)
+    except Exception:
+        stop_pct, tp_pct = min(stop_pct, 0.02), stop_pct * 2.0
     # Real persona-derived execution guidance (previously hardcoded/empty)
     from astro_matraix_backtest import _entry_timing, _timeframe_for_persona, _execution_note
     try:
