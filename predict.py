@@ -53,22 +53,24 @@ def _kronos_for_date(ctx, day_dt):
     try:
         from astro_matraix_kronos import KronosConfirmer
         import pandas as pd
-        # Reuse the OHLCV loaded in context, window up to this date
         od = [(d, ctx["dd"][d]) for d in sorted(ctx["all_dates"]) if d <= day_dt.strftime("%Y-%m-%d")]
         if len(od) < 60:
             return None
-        df = pd.DataFrame([v for _, v in od])  # open/high/low/close
+        df = pd.DataFrame([{"open": v["open"], "high": v["high"], "low": v["low"],
+                            "close": v["close"], "volume": 0.0} for _, v in od])
         df.index = pd.to_datetime([d for d, _ in od])
         kc = KronosConfirmer()
         kc._ensure_loaded()
-        r = kc.predict(df, pred_len=min(7, max(1, len(od)//20)), lookback=min(400, len(od)-2))
-        if not r:
+        # Mirror trade.py: use confirm_signal to get the same status vocabulary
+        mock = {"direction": "LONG", "conviction": 0.68, "hold_days": 5,
+                "sl_pct": "1%", "tp_pct": "5%"}
+        c = kc.confirm_signal(ctx.get("ticker", "NQ"), mock, df=df)
+        if not c:
             return None
         return {
-            "dir": r.get("direction"),
-            "pct": r.get("pct_change"),
-            "conf": r.get("confidence"),
-            "unreliable": r.get("unreliable", False) or r.get("neutral", False),
+            "status": c.get("status"),
+            "dir": c.get("kronos_dir"),
+            "pct": c.get("kronos_pct"),
         }
     except Exception:
         return None
@@ -249,9 +251,18 @@ def predict(ticker, start_str, end_str, verbose=True):
     for r in results:
             e = "🟢" if r["direction"] == "LONG" else "🔴"
             k = r.get("kronos")
-            kt = f" K={k['dir'].upper()} {k['pct']:+.2f}%Δ{k['conf']}" if k and not k.get("neutral") else " K=—"
+            if k and k.get("status") == "CONFIRMED":
+                ks = "✓ CONFIRMED"
+            elif k and k.get("status") == "DIVERGES":
+                ks = "✗ DIVERGES"
+            elif k and k.get("status") == "NEUTRAL":
+                ks = "○ NEUTRAL"
+            else:
+                ks = "· no Kronos"
+            kdir = ("up" if (k and k.get("pct") and k["pct"] >= 0) else "down") if k else ""
+            kpct = f" {kdir} {k['pct']:+.1f}%" if k and k.get("pct") is not None else ""
             print(f"    {r['date']}  {e} {r['direction']:<6} conv={r['conviction']:.2f} "
-                  f"PF={r['pf']:.2f} WR={r['wr']:.0%} 🌙→{r['moon']} ({r['match']}){kt}")
+                  f"PF={r['pf']:.2f} WR={r['wr']:.0%} 🌙→{r['moon']} ({r['match']})  {ks}{kpct}")
 
     return {"ticker": ticker, "net_conviction": net, "projected_move": proj,
             "verdict": verdict, "n_long": len(longs), "n_short": len(shorts),
