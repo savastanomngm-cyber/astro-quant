@@ -101,8 +101,12 @@ def load_csv_data(ticker, bar_size="1h"):
 # MTF PATTERN BUILDING
 # ====================================================================
 
-def build_mtf_patterns(chart_dict, df, bar_size="1h", horizons=(5, 10, 20)):
-    """Build patterns from MTF data."""
+def build_mtf_patterns(chart_dict, df, bar_size="1h", horizons=(3, 5, 7)):
+    """Build patterns from MTF data.
+
+    horizons are DAY counts (like the daily engine: 3/5/7 days), converted to
+    bar indices via bars-per-day so 5-day holds work on hourly/custom bars.
+    """
     from collections import defaultdict
     pats = defaultdict(list)
     df = df.copy()
@@ -111,24 +115,32 @@ def build_mtf_patterns(chart_dict, df, bar_size="1h", horizons=(5, 10, 20)):
             df.index = pd.to_datetime(df.index)
         except:
             return {}
-    n = len(df)
-    if n < 100:
-        return {}
-    for i in range(n - max(horizons) - 1):
-        timestamp = df.index[i]
-        signal_utc = timestamp.to_pydatetime()
-        try:
-            st = get_state(chart_dict, signal_utc)
-        except:
-            continue
-        entry_open = df.iloc[i + 1]["open"]
-        for hz in horizons:
-            exit_idx = i + 1 + hz
+    # bars-per-day inferred from index spacing (hourly=24, 15m=96, 4h=6, daily=1)
+    if len(df) >= 2:
+        delta = (df.index[1] - df.index[0]).total_seconds()
+        bpd = round(86400.0 / delta) if delta > 0 else 24
+    else:
+        bpd = 24
+    for hz_day in horizons:
+        hz_bars = max(1, int(hz_day * bpd))
+        n = len(df)
+        if n < 100:
+            return {}
+        for i in range(n - hz_bars - 1):
+            timestamp = df.index[i]
+            signal_utc = timestamp.to_pydatetime()
+            try:
+                st = get_state(chart_dict, signal_utc)
+            except:
+                continue
+            entry_open = df.iloc[i + 1]["open"]
+            exit_idx = i + 1 + hz_bars
             if exit_idx >= n:
                 continue
             exit_close = df.iloc[exit_idx]["close"]
             r = exit_close / entry_open - 1.0 if entry_open > 0 else 0.0
-            sk = state_key(st, hz)
+            # state_key uses DAYS so MTF personas align with daily personas
+            sk = state_key(st, hz_day)
             pats[sk].append({"return": r, "regime": "unknown", "date": timestamp.strftime("%Y-%m-%d")})
     return dict(pats)
 
