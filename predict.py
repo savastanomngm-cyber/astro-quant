@@ -61,8 +61,10 @@ def _kronos_for_date(ctx, day_dt, ticker=None):
         if len(od) < 60:
             return None
         df = pd.DataFrame([{"open": v["open"], "high": v["high"], "low": v["low"],
-                            "close": v["close"], "volume": 0.0} for _, v in od])
+                            "close": v["close"], "volume": 1.0,
+                            "amount": v["close"] * 1.0} for _, v in od])
         df.index = pd.to_datetime([d for d, _ in od])
+        df = df[["open", "high", "low", "close", "volume", "amount"]]
         kc = _kc_cache.get(tk)
         if kc is None:
             kc = KronosConfirmer()
@@ -268,9 +270,12 @@ def predict(ticker, start_str, end_str, verbose=True):
                 ks = "○ NEUTRAL"
             else:
                 ks = "· no Kronos"
-            kdir = ("up" if (k and k.get("pct") and k["pct"] >= 0) else "down") if k else ""
-            kpct = f" {kdir} {k['pct']:+.1f}%" if k and k.get("pct") is not None else ""
-            kconv = f" | Conv {k['conv']}x" if k and k.get("conv") is not None else ""
+            if k and k.get("status"):
+                kdir = "up" if (k.get("pct") or 0) >= 0 else "down"
+                kpct = f" {kdir} {k['pct']:+.1f}%" if k.get("pct") is not None else ""
+                kconv = f" | Conv {k['conv']}x" if k.get("conv") is not None else ""
+            else:
+                kpct = ""; kconv = ""
             print(f"    {r['date']}  {e} {r['direction']:<6} conv={r['conviction']:.2f} "
                   f"PF={r['pf']:.2f} WR={r['wr']:.0%} 🌙→{r['moon']} ({r['match']})  {ks}{kpct}{kconv}")
 
