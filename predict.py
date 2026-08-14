@@ -48,37 +48,40 @@ _context_cache = {}
 _cur_ticker = "NQ"
 
 
-def _kronos_for_date(ctx, day_dt):
+_kc_cache = {}   # module-level: ticker -> (confirmer) to share across prediction dates
+
+
+def _kronos_for_date(ctx, day_dt, ticker=None):
     """Best-effort Kronos direction forecast for one date (optional; may be None)."""
     try:
         from astro_matraix_kronos import KronosConfirmer
         import pandas as pd
+        tk = ticker or ctx.get("ticker") or _cur_ticker
         od = [(d, ctx["dd"][d]) for d in sorted(ctx["all_dates"]) if d <= day_dt.strftime("%Y-%m-%d")]
         if len(od) < 60:
             return None
         df = pd.DataFrame([{"open": v["open"], "high": v["high"], "low": v["low"],
                             "close": v["close"], "volume": 0.0} for _, v in od])
         df.index = pd.to_datetime([d for d, _ in od])
-        # Reuse a single cached confirmer (shared across all prediction dates)
-        # so Kronos predicts in the same session/window as trade.py
-        if not hasattr(__builtins__, '_predict_kc'):
+        kc = _kc_cache.get(tk)
+        if kc is None:
             kc = KronosConfirmer()
             kc._ensure_loaded()
-            __builtins__._predict_kc = kc
-        else:
-            kc = __builtins__._predict_kc
+            _kc_cache[tk] = kc
         mock = {"direction": "LONG", "conviction": 0.68, "hold_days": 5,
                 "sl_pct": "1%", "tp_pct": "5%"}
-        c = kc.confirm_signal(ctx.get("ticker", "NQ"), mock, df=df)
-        if not c:
+        c = kc.confirm_signal(tk, mock, df=df)
+        if not c or not c.get("status"):
             return None
         return {
             "status": c.get("status"),
             "dir": c.get("kronos_dir"),
             "pct": c.get("kronos_pct"),
-            "conv": c.get("boosted_conviction"),  # the Conv 1.1x multiplier
+            "conv": c.get("boosted_conviction"),
         }
-    except Exception:
+    except Exception as e:
+        import traceback
+        print(f"    [kronos skip] {type(e).__name__}: {str(e)[:80]}")
         return None
 
 
@@ -134,7 +137,7 @@ def _signal_for_day(ctx, day_dt):
     elif moon in ("Saturn", "Mars"): moon_mult = 0.85
 
     # Kronos read for this date (best-effort, optional — independent confirmation)
-    kron = _kronos_for_date(ctx, day_dt)   # best-effort, independent confirmation; None if n/a
+    kron = _kronos_for_date(ctx, day_dt, _cur_ticker)   # best-effort; None if n/a
 
     return {
         "date": day_dt.strftime("%Y-%m-%d"),
