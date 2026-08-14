@@ -248,6 +248,7 @@ def predict(ticker, start_str, end_str, verbose=True):
         print(f"\n  Day-by-day:")
         for r in results:
             e = "🟢" if r["direction"] == "LONG" else "🔴"
+            e = "🟢" if r["direction"] == "LONG" else "🔴"
             # Kronos overlay (best-effort, independent confirmation) — None if unavailable
             k = r.get("kronos")
             kt = f" K={k['dir'].upper()} {k['pct']:+.2f}%Δ{k['conf']}" if k and not k.get("neutral") else " K=—"
