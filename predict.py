@@ -244,9 +244,9 @@ def predict(ticker, start_str, end_str, verbose=True):
     print(f"  Net conviction bias: {net:+.2f}  |  Projected move: {proj:+.3%} (window)")
     print(f"  → {vc}{verdict}{X}")
 
-    if verbose:
-        print(f"\n  Day-by-day:")
-        for r in results:
+    # Day-by-day always prints regardless of verbose
+    print(f"\n  Day-by-day:")
+    for r in results:
             e = "🟢" if r["direction"] == "LONG" else "🔴"
             e = "🟢" if r["direction"] == "LONG" else "🔴"
             # Kronos overlay (best-effort, independent confirmation) — None if unavailable
