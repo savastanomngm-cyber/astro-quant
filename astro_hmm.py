@@ -195,7 +195,7 @@ def train_from_persona_trades(ticker, persona_result, n_regimes=4, n_iterations=
         win = net > 0
         pct = abs(gross) / 100.0
         obs_seq.append(observation_index(direction, win, min(pct, 0.05)))
-    if len(obs_seq) < 20:
+    if len(obs_seq) < 10:
         if verbose:
             print(f"  Not enough trades ({len(obs_seq)}) for HMM training — using defaults")
         return default_hmm_params()
