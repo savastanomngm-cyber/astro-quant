@@ -112,6 +112,14 @@ def generate_daily_signal(ticker, date_str=None, min_wr=0.50, min_pf=1.0):
     pf = max(0.5, persona.historical_pf)
     tp_mult = min(6.0, max(1.2, 1.5 + math.log(pf + 0.5)))
     stop_pct = persona.stop_tightness
+    # Real persona-derived execution guidance (previously hardcoded/empty)
+    from astro_matraix_backtest import _entry_timing, _timeframe_for_persona, _execution_note
+    try:
+        entry_timing = _entry_timing(persona)
+        timeframe = _timeframe_for_persona(persona)
+        note = _execution_note(persona)
+    except Exception:
+        entry_timing, timeframe, note = "market_open", "daily", ""
     return {
         "ticker": ticker, "date": today.strftime("%Y-%m-%d"),
         "direction": persona.pattern_direction,
@@ -126,8 +134,8 @@ def generate_daily_signal(ticker, date_str=None, min_wr=0.50, min_pf=1.0):
         "pf": round(persona.historical_pf, 2),
         "wr": f"{persona.historical_win_rate:.0%}",
         "n_samples": persona.n_samples,
-        "entry_timing": "market_open",
-        "timeframe": "daily",
-        "note": "",
+        "entry_timing": entry_timing,
+        "timeframe": timeframe,
+        "note": note,
         "match_type": match_type,
     }

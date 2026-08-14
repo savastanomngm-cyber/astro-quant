@@ -147,6 +147,22 @@ def _run_group(label, tickers, date_str, show_tf=True):
         ts = f"SL={sd['sl_pct']} TP={sd['tp_pct']} {sd.get('hold_days','?')}d" if sd else ""
         print(f"  {t:<6s}: {a:<22s} {ts}{note}")
 
+    # Execution guidance (persona-derived: entry timing, timeframe, hold, note)
+    print(f"\n  {'─'*55}")
+    print(f"  PERSONA EXECUTION GUIDANCE")
+    print(f"  {'─'*55}")
+    for t in tickers:
+        sd = all_sigs.get((t, "daily"))
+        if not sd:
+            print(f"  {t:<6}: no daily signal")
+            continue
+        print(f"  {t:<6}  {sd.get('timeframe','daily')}")
+        print(f"    ▶ Enter: {sd.get('entry_timing','?')}")
+        print(f"    ⏱ Hold:  {sd.get('hold_days','?')}d | SL {sd.get('sl_pct','?')} | TP {sd.get('tp_pct','?')} | Pos {sd.get('position_pct','?')}")
+        note = sd.get('note')
+        if note:
+            print(f"    ℹ {note}")
+
     # Kronos confirmation for futures
     if tickers == FUTURES:
         print(f"\n  {'─'*55}")
