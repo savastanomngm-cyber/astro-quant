@@ -1539,6 +1539,30 @@ def action_journal():
     _pause()
 
 
+def action_predict():
+    """Forward-looking prediction for a date range."""
+    box("PREDICT DATE RANGE", color=C)
+    ticker = _ask("Ticker (NQ/ES/GC): ", "NQ").upper()
+    if ticker not in INSTRUMENTS:
+        print("Invalid."); _pause(); return
+    default_start = datetime.now().strftime("%Y-%m-%d")
+    default_end = (datetime.now() + timedelta(days=14)).strftime("%Y-%m-%d")
+    start = _ask_date("Start date (YYYY-MM-DD)", default_start)
+    end = _ask_date("End date (YYYY-MM-DD)", default_end)
+
+    if start >= end:
+        print(f"  {Y}End date must be after start date.{X}"); _pause(); return
+
+    try:
+        from predict import predict as _predict
+        _predict(ticker, start, end, verbose=True)
+    except Exception as e:
+        import traceback
+        print(f"  {R}Prediction failed: {e}{X}")
+        traceback.print_exc()
+    _pause()
+
+
 def interactive_menu():
     while True:
         stats = memory.stats()
@@ -1563,6 +1587,7 @@ def interactive_menu():
                 ("1", "Today's Signals (all tickers + sizing)", action_master_trade),
                 ("2", "Historical Backtest", action_backtest),
                 ("3", "Custom Date Backtest", action_backtest_custom),
+                ("P", "Predict Date Range (forward forecast)", action_predict),
                 ("4", "Walk-Forward Retrain (weekly)", action_walkforward),
                 ("J", "Trade Journal", action_journal),
             ]),
