@@ -50,10 +50,13 @@ def load_mtf_data(ticker, bar_size="1h", start="2023-01-01", end=None):
     yf_interval = interval_map.get(bar_size, "60m")
     if end is None:
         end = datetime.now().strftime("%Y-%m-%d")
-    data = yf.Ticker(symbol).history(start=start, end=end, interval=yf_interval)
-    if data is None or data.empty:
-        # Try without auto_adjust
-        data = yf.download(symbol, start=start, end=end, interval=yf_interval, progress=False)
+    # Suppress yfinance's noisy stderr (e.g. "possibly delisted", "1h data not
+    # available...") — CSV is the primary source; Yahoo is a quiet fallback.
+    import io, contextlib, sys as _sys
+    with contextlib.redirect_stderr(io.StringIO()), contextlib.redirect_stdout(io.StringIO()):
+        data = yf.Ticker(symbol).history(start=start, end=end, interval=yf_interval)
+        if data is None or data.empty:
+            data = yf.download(symbol, start=start, end=end, interval=yf_interval, progress=False)
     if data is None or data.empty:
         return pd.DataFrame()
     if isinstance(data.columns, pd.MultiIndex):
@@ -81,9 +84,20 @@ def load_csv_data(ticker, bar_size="1h"):
     }
     files = csv_map.get(ticker, {})
     fn = files.get(bar_size)
-    if not fn or not os.path.exists(fn):
+    # No exact file for this bar_size — resample from an available finer file
+    # (e.g. 4h from the 1h CSV, 8h from 1h, etc.)
+    resample_from = None
+    if not fn:
+        for finer in ("1h", "30m"):
+            finer_fn = files.get(finer)
+            if finer_fn and os.path.exists(finer_fn):
+                resample_from = (finer, finer_fn)
+                break
+    if (not fn or not os.path.exists(fn)) and not resample_from:
         return None
-    df = pd.read_csv(fn)
+    source_fn = fn if (fn and os.path.exists(fn)) else resample_from[1]
+    source_bar = bar_size if (fn and os.path.exists(fn)) else resample_from[0]
+    df = pd.read_csv(source_fn)
     # Standardize index: handle 'Date', 'time', or 'datetime' timestamp column
     for icol in ("Date", "time", "datetime", "timestamp"):
         if icol in df.columns:
@@ -94,6 +108,20 @@ def load_csv_data(ticker, bar_size="1h"):
     df = df.rename(columns={c: c.lower() for c in df.columns if c in ("Open","High","Low","Close","Volume")})
     if df.index.isnull().any():
         df = df.dropna(subset=[df.index.name])
+    # Resample to requested bar size if larger than source
+    if resample_from and bar_size not in ("1h", "60m"):
+        rule = {"4h": "4h", "8h": "8h", "12h": "12h"}.get(bar_size, "4h")
+        try:
+            df = df.resample(rule).agg({
+                "open": "first", "high": "max", "low": "min", "close": "last",
+            })
+            if "volume" in df.columns:
+                vol = df["volume"]
+                df = df.drop(columns=["volume"])
+                df["volume"] = vol.resample(rule).sum()
+            df = df.dropna(subset=["close"])
+        except Exception:
+            pass
     return df
 
 
