@@ -246,6 +246,19 @@ def _run_group(label, tickers, date_str, show_tf=True):
                 r = evaluate_0dte(sd, kron, {"regime": regime}, moon)
                 tag = f"{'✅ 0DTE OK' if r['ok'] else '❌ block'}"
                 print(f"  {tag} {t}: {r['suggested']} | {r['reason']}")
+                # Paper 0DTE option pick when gate passes (PAPER ONLY)
+                if r['ok']:
+                    try:
+                        from signals_0dte_execute import build_0dte
+                        acct = float(os.environ.get("ACCOUNT_SIZE", 25000))
+                        e = build_0dte(t, r['suggested'] or sd['direction'], acct)
+                        if 'error' in e:
+                            print(f"       (no option: {e['error']})")
+                        else:
+                            print(f"       → {e['option']} Δ{e['delta']} ${e['mid_premium']} x{e['contracts']} "
+                                  f"debit ${e['debit_total']:,.0f} [{e['premium_pct_account']}% acct] PAPER")
+                    except Exception as ex:
+                        print(f"       (0DTE pick failed: {ex})")
         except Exception as e:
             print(f"  0DTE unavailable: {e}")
 
