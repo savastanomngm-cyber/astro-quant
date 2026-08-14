@@ -164,6 +164,8 @@ def _run_group(label, tickers, date_str, show_tf=True):
                 e = '✗'
             elif status == 'UNRELIABLE':
                 e = '!'
+            elif status == 'NEUTRAL':
+                e = '○'  # too near zero — no opinion, defer to astro
             else:  # KRONOS_UNAVAILABLE / NO_DATA — no opinion, defer to astro
                 e = '·'
             print(f"  {e} {t}: {status} | Kronos {r['kronos_dir']} {r['kronos_pct']:+.1f}% | Conv {r['boosted_conviction']}x")

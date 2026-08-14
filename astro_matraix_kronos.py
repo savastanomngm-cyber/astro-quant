@@ -150,7 +150,7 @@ class KronosConfirmer:
         lookback: int = 400,
         temperature: float = 0.6,
         top_p: float = 0.9,
-        sample_count: int = 5,
+        sample_count: int = 10,
     ) -> dict | None:
         """
         Run Kronos prediction on OHLCV data.
@@ -244,15 +244,32 @@ class KronosConfirmer:
             closes_over_path = [
                 float(pred_df["close"].iloc[i]) for i in range(len(pred_df))
             ]
-            import statistics
-            predicted_close = statistics.median(closes_over_path)
+            # DECISION ON THE FORECAST ENDPOINT, not the median bar: the official
+            # predictor averages sample_count paths internally, so pred_df is a
+            # single stable mean path. The signal you actually realize over a
+            # hold-h-days trade is the final forecast close (iloc[-1]).
+            predicted_close = float(pred_df["close"].iloc[-1])
             predicted_pct = (predicted_close / current_close - 1.0) * 100
             predicted_dir = "up" if predicted_pct > 0 else "down"
 
-            # Compute confidence from prediction path statistics
-            # (MUST happen BEFORE the outlier guard, which also reports confidence)
-            up_bars = sum(1 for c in closes_over_path if c > current_close)
-            confidence = up_bars / max(1, len(closes_over_path))
+            # Confidence from the trend portion of the path (2nd half), not all bars.
+            trend = closes_over_path[len(closes_over_path) // 2:]
+            up_bars = sum(1 for c in trend if c > current_close)
+            confidence = up_bars / max(1, len(trend))
+
+            # Materiality deadband: forecasts near zero are sampling noise.
+            # Sub-0.5% moves must NOT drive CONFIRMED/DIVERGES decisions.
+            if abs(predicted_pct) < 0.5:
+                return {
+                    "direction": predicted_dir,
+                    "pct_change": round(predicted_pct, 2),
+                    "confidence": round(confidence, 2),
+                    "pred_close": round(predicted_close, 2),
+                    "current_close": round(current_close, 2),
+                    "pred_len": pred_len,
+                    "sample_count": sample_count,
+                    "neutral": True,   # no opinion — defer to astro
+                }
 
             # Outlier guard: if magnitude is absurd, flag unreliable
             if abs(predicted_pct) > 8.0:
@@ -326,6 +343,20 @@ class KronosConfirmer:
 
         astro_dir = astro_signal["direction"]
         kronos_dir = kronos_result["direction"]
+
+        # Neutrally-sized forecast (sub-0.5% move): no opinion — defer to astro
+        if kronos_result.get("neutral"):
+            return {
+                "status": "NEUTRAL",
+                "kronos_dir": kronos_dir,
+                "kronos_pct": kronos_result["pct_change"],
+                "kronos_confidence": kronos_result["confidence"],
+                "boosted_conviction": astro_signal.get("conviction", 0.5),
+                "astro_dir": astro_signal["direction"],
+                "astro_wr": astro_signal.get("wr", "?"),
+                "astro_pf": astro_signal.get("pf", "?"),
+                "reason": "Kronos forecast too near zero to confirm/diverge — defer to astro",
+            }
 
         # If Kronos is unreliable (absurd magnitude), treat as neutral — don't override astro
         if kronos_result.get("unreliable"):
