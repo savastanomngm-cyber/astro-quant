@@ -59,9 +59,14 @@ def _kronos_for_date(ctx, day_dt):
         df = pd.DataFrame([{"open": v["open"], "high": v["high"], "low": v["low"],
                             "close": v["close"], "volume": 0.0} for _, v in od])
         df.index = pd.to_datetime([d for d, _ in od])
-        kc = KronosConfirmer()
-        kc._ensure_loaded()
-        # Mirror trade.py: use confirm_signal to get the same status vocabulary
+        # Reuse a single cached confirmer (shared across all prediction dates)
+        # so Kronos predicts in the same session/window as trade.py
+        if not hasattr(__builtins__, '_predict_kc'):
+            kc = KronosConfirmer()
+            kc._ensure_loaded()
+            __builtins__._predict_kc = kc
+        else:
+            kc = __builtins__._predict_kc
         mock = {"direction": "LONG", "conviction": 0.68, "hold_days": 5,
                 "sl_pct": "1%", "tp_pct": "5%"}
         c = kc.confirm_signal(ctx.get("ticker", "NQ"), mock, df=df)
@@ -71,6 +76,7 @@ def _kronos_for_date(ctx, day_dt):
             "status": c.get("status"),
             "dir": c.get("kronos_dir"),
             "pct": c.get("kronos_pct"),
+            "conv": c.get("boosted_conviction"),  # the Conv 1.1x multiplier
         }
     except Exception:
         return None
@@ -261,8 +267,9 @@ def predict(ticker, start_str, end_str, verbose=True):
                 ks = "· no Kronos"
             kdir = ("up" if (k and k.get("pct") and k["pct"] >= 0) else "down") if k else ""
             kpct = f" {kdir} {k['pct']:+.1f}%" if k and k.get("pct") is not None else ""
+            kconv = f" | Conv {k['conv']}x" if k and k.get("conv") is not None else ""
             print(f"    {r['date']}  {e} {r['direction']:<6} conv={r['conviction']:.2f} "
-                  f"PF={r['pf']:.2f} WR={r['wr']:.0%} 🌙→{r['moon']} ({r['match']})  {ks}{kpct}")
+                  f"PF={r['pf']:.2f} WR={r['wr']:.0%} 🌙→{r['moon']} ({r['match']})  {ks}{kpct}{kconv}")
 
     return {"ticker": ticker, "net_conviction": net, "projected_move": proj,
             "verdict": verdict, "n_long": len(longs), "n_short": len(shorts),
