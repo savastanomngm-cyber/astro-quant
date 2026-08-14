@@ -72,18 +72,28 @@ def load_mtf_data(ticker, bar_size="1h", start="2023-01-01", end=None):
 def load_csv_data(ticker, bar_size="1h"):
     """Try to load from local CSV files (your existing data)."""
     csv_map = {
-        "NQ": {"60m": "CME_MINI_NQ1!, 60.csv", "30m": "NQ_2024-2026_30m.csv"},
-        "ES": {"60m": "CME_MINI_ES1!, 60.csv", "30m": "CME_MINI_ES1!, 30.csv"},
-        "GC": {"60m": "COMEX_GC1!, 60.csv", "30m": "GC_2024-2026_30m.csv"},
+        "NQ": {"1h": "CME_MINI_NQ1!, 60.csv", "60m": "CME_MINI_NQ1!, 60.csv",
+               "30m": "NQ_2024-2026_30m.csv"},
+        "ES": {"1h": "CME_MINI_ES1!, 60.csv", "60m": "CME_MINI_ES1!, 60.csv",
+               "30m": "CME_MINI_ES1!, 30.csv"},
+        "GC": {"1h": "COMEX_GC1!, 60.csv", "60m": "COMEX_GC1!, 60.csv",
+               "30m": "GC_2024-2026_30m.csv"},
     }
     files = csv_map.get(ticker, {})
     fn = files.get(bar_size)
     if not fn or not os.path.exists(fn):
         return None
     df = pd.read_csv(fn)
-    if "Date" in df.columns:
-        df["Date"] = pd.to_datetime(df["Date"])
-        df = df.set_index("Date")
+    # Standardize index: handle 'Date', 'time', or 'datetime' timestamp column
+    for icol in ("Date", "time", "datetime", "timestamp"):
+        if icol in df.columns:
+            df[icol] = pd.to_datetime(df[icol], errors="coerce")
+            df = df.set_index(icol)
+            break
+    # Standardize column names to lowercase
+    df = df.rename(columns={c: c.lower() for c in df.columns if c in ("Open","High","Low","Close","Volume")})
+    if df.index.isnull().any():
+        df = df.dropna(subset=[df.index.name])
     return df
 
 
@@ -330,13 +340,17 @@ def generate_mtf_live_signal(
     inst = INSTRUMENTS.get(ticker)
     if not inst:
         return None
+    # Prefer local CSV (full history, no Yahoo 730-day intraday limit),
+    # then fall back to Yahoo daily if CSV unavailable for this bar size.
     try:
-        end_dt = datetime.now().strftime("%Y-%m-%d")
-        start_dt = (datetime.now() - timedelta(days=lookback_days)).strftime("%Y-%m-%d")
-        df = load_mtf_data(ticker, bar_size=bar_size, start=start_dt, end=end_dt)
-        if df.empty:
+        df = load_csv_data(ticker, bar_size)
+        if df is None or df.empty:
+            end_dt = datetime.now().strftime("%Y-%m-%d")
+            start_dt = (datetime.now() - timedelta(days=lookback_days)).strftime("%Y-%m-%d")
+            df = load_mtf_data(ticker, bar_size=bar_size, start=start_dt, end=end_dt)
+        if df is None or df.empty:
             return None
-    except:
+    except Exception:
         return None
     try:
         personas, learned = generate_mtf_personas(
