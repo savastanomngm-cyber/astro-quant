@@ -1563,6 +1563,60 @@ def action_predict():
     _pause()
 
 
+def action_kronos_daily():
+    """Kronos-only day-by-day forecast (no astro)."""
+    box("KRONOS DAY-BY-DAY", color=C)
+    ticker = _ask("Ticker (NQ/ES/GC): ", "NQ").upper()
+    if ticker not in INSTRUMENTS:
+        print("Invalid."); _pause(); return
+    end = _ask_date("End date (YYYY-MM-DD)", datetime.now().strftime("%Y-%m-%d"))
+    days = _ask_int("Number of days back", 5)
+
+    from astro_matraix_kronos import KronosConfirmer
+    import pandas as pd, yfinance as yf
+    from datetime import timedelta
+
+    # Real OHLCV window (same source trade.py uses)
+    try:
+        kc = KronosConfirmer(); kc._ensure_loaded()
+        df = kc._load_yahoo_ohlcv(ticker)
+        if df is None or df.empty:
+            print(f"  {Y}No data for {ticker}{X}"); _pause(); return
+    except Exception as e:
+        print(f"  {R}Kronos load failed: {e}{X}"); _pause(); return
+
+    start = datetime.strptime(end, "%Y-%m-%d") - timedelta(days=days * 7)
+    print(f"\n  {C}KRONOS day-by-day — {ticker} (last {days} trading days → {end}){X}")
+    print(f"  {'─'*58}")
+
+    idx = df.index
+    trading = [d for d in idx if d <= pd.Timestamp(end)]
+    trading = trading[-days:] if len(trading) >= days else trading
+
+    for d in trading:
+        # window = data up to and including that day
+        win = df[df.index <= d].tail(200)
+        if len(win) < 60:
+            continue
+        mock = {"direction": "LONG", "conviction": 0.68, "hold_days": 5,
+                "sl_pct": "1%", "tp_pct": "5%"}
+        try:
+            c = kc.confirm_signal(ticker, mock, df=win)
+        except Exception:
+            c = None
+        if not c or c.get("status") in (None, "NO_DATA", "KRONOS_UNAVAILABLE"):
+            print(f"    {d.date()}  · no Kronos")
+            continue
+        st = c.get("status")
+        mark = {"CONFIRMED": "✓", "DIVERGES": "✗", "NEUTRAL": "○"}.get(st, "·")
+        ddir = "up" if (c.get("kronos_pct") or 0) >= 0 else "down"
+        pct = c.get("kronos_pct")
+        cv = c.get("boosted_conviction")
+        print(f"    {d.date()}  {mark} {st:<9} {ddir} {pct:+.1f}% | Conv {cv}x")
+
+    _pause()
+
+
 def interactive_menu():
     while True:
         stats = memory.stats()
@@ -1588,6 +1642,7 @@ def interactive_menu():
                 ("2", "Historical Backtest", action_backtest),
                 ("3", "Custom Date Backtest", action_backtest_custom),
                 ("P", "Predict Date Range (forward forecast)", action_predict),
+                ("K", "Kronos Day-by-Day (pure Kronos, no astro)", action_kronos_daily),
                 ("4", "Walk-Forward Retrain (weekly)", action_walkforward),
                 ("J", "Trade Journal", action_journal),
             ]),
