@@ -227,7 +227,7 @@ def _run_group(label, tickers, date_str, show_tf=True):
         except Exception as e:
             print(f"  Mean-rev unavailable: {e}")
 
-    # 0DTE filter
+    # 0DTE filter (unchanged)
     if tickers == FUTURES:
         print(f"\n  {'─'*55}")
         print(f"  0DTE ELIGIBILITY")
@@ -285,19 +285,15 @@ def main():
     label = sys.argv[1] if len(sys.argv)==2 else f"{sys.argv[1]}→{sys.argv[2]}" if len(sys.argv)>=3 else datetime.now().strftime("%Y-%m-%d")
 
     for i, ds in enumerate(dates):
+        ds = ds or datetime.now().strftime("%Y-%m-%d")
         if len(dates) > 1:
             print(f"\n{'─'*55}")
             print(f"  >>> {ds} <<<")
 
         print(f"\n{'█'*55}")
-        print(f"  FUTURES")
+        print(f"  FUTURES — {ds}")
         print(f"{'█'*55}")
         _run_group("FUTURES", FUTURES, ds, show_tf=True)
-
-        print(f"\n{'▓'*55}")
-        print(f"  ETF TRACKERS")
-        print(f"{'▓'*55}")
-        _run_group("ETFS", ETF_TRACKERS, ds, show_tf=False)
 
     print(f"\n  v0.64 — {label}")
 
