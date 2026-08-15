@@ -139,7 +139,7 @@ def _signal_for_day(ctx, day_dt):
     elif moon in ("Saturn", "Mars"): moon_mult = 0.85
 
     # Kronos read for this date (best-effort, optional — independent confirmation)
-    kron = _kronos_for_date(ctx, day_dt, _cur_ticker)   # best-effort; None if n/a
+    kron = None   # Kronos moved to the dedicated 'K' option; P is astro-only
 
     return {
         "date": day_dt.strftime("%Y-%m-%d"),
@@ -261,23 +261,8 @@ def predict(ticker, start_str, end_str, verbose=True):
     print(f"\n  Day-by-day:")
     for r in results:
             e = "🟢" if r["direction"] == "LONG" else "🔴"
-            k = r.get("kronos")
-            if k and k.get("status") == "CONFIRMED":
-                ks = "✓ CONFIRMED"
-            elif k and k.get("status") == "DIVERGES":
-                ks = "✗ DIVERGES"
-            elif k and k.get("status") == "NEUTRAL":
-                ks = "○ NEUTRAL"
-            else:
-                ks = "· no Kronos"
-            if k and k.get("status"):
-                kdir = "up" if (k.get("pct") or 0) >= 0 else "down"
-                kpct = f" {kdir} {k['pct']:+.1f}%" if k.get("pct") is not None else ""
-                kconv = f" | Conv {k['conv']}x" if k.get("conv") is not None else ""
-            else:
-                kpct = ""; kconv = ""
             print(f"    {r['date']}  {e} {r['direction']:<6} conv={r['conviction']:.2f} "
-                  f"PF={r['pf']:.2f} WR={r['wr']:.0%} 🌙→{r['moon']} ({r['match']})  {ks}{kpct}{kconv}")
+                  f"PF={r['pf']:.2f} WR={r['wr']:.0%} 🌙→{r['moon']} ({r['match']})")
 
     return {"ticker": ticker, "net_conviction": net, "projected_move": proj,
             "verdict": verdict, "n_long": len(longs), "n_short": len(shorts),
