@@ -1488,9 +1488,10 @@ def action_settings():
 # MENU WRAPPERS (thin delegates to the standalone scripts)
 # ---------------------------------------------------------------
 def action_master_trade():
-    """Run trade.py — the single daily command."""
+    """Run trade.py — allow custom date (empty = today)."""
     import subprocess
-    subprocess.run([sys.executable, "trade.py"])
+    d = _ask("Date (YYYY-MM-DD, blank=today): ", "").strip()
+    subprocess.run([sys.executable, "trade.py"] + ([d] if d else []))
     _pause()
 
 
