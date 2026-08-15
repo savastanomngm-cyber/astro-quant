@@ -258,13 +258,21 @@ class TraderPersona:
         house: int,
         pattern: Optional[PatternCard] = None,
         llm_api_key: Optional[str] = None,
-        llm_base_url: str = "https://api.openai.com/v1",
-        llm_model: str = "gpt-4o-mini",
+        llm_base_url: Optional[str] = None,
+        llm_model: Optional[str] = None,
     ) -> "TraderPersona":
         """
         LLM-powered persona generation (MatrAIx-style agent conditioning).
         Falls back to rule-based if no API key or on failure.
+        Uses env vars: OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_MODEL (or Deepseek equivalents).
         """
+        import os as _os
+        
+        # Use env vars if not explicitly provided
+        llm_api_key = llm_api_key or _os.environ.get('OPENAI_API_KEY')
+        llm_base_url = llm_base_url or _os.environ.get('OPENAI_BASE_URL', 'https://api.openai.com/v1')
+        llm_model = llm_model or _os.environ.get('OPENAI_MODEL', 'gpt-4o-mini')
+        
         if not llm_api_key:
             return cls.generate_from_astro_state(
                 state_key, ticker, fidaria_main, fidaria_sub,

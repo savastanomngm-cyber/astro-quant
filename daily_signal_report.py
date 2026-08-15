@@ -67,7 +67,8 @@ def generate_daily_signal(ticker, date_str=None, min_wr=0.50, min_pf=1.0):
         pats = bp(chart_dict, dd, all_dates, horizons=[3,5,7])
         learned_raw = lp(pats, min_n=12, max_p=0.02, min_edge=0.52)
     except Exception: return None
-    personas = generate_trader_personas_from_learned(learned_raw, ticker, chart_snap)
+    # Disable LLM by default (use_llm=False) to keep daily signal fast + token-light
+    personas = generate_trader_personas_from_learned(learned_raw, ticker, chart_snap, use_llm=False)
     personas_dict = {p.persona_id: p for p in personas}
     today = datetime.strptime(date_str, "%Y-%m-%d") if date_str else datetime.now()
     signal_utc = today.replace(hour=17)
