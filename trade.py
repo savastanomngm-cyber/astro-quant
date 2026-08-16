@@ -78,6 +78,25 @@ def _run_group(label, tickers, date_str, show_tf=True):
             else:
                 print(f"  {t:<6} {tf:<7} ⚪  NO SIGNAL")
 
+    # GC/NQ coupling detector
+    print(f"\n  {'─'*55}")
+    print(f"  GC/NQ COUPLING ANALYSIS")
+    print(f"  {'─'*55}")
+    if tickers == FUTURES and 'GC' in tickers and 'NQ' in tickers:
+        try:
+            from coupling_detector import detect_coupling, format_coupling_display
+            gc_daily = all_sigs.get(('GC', 'daily'))
+            nq_daily = all_sigs.get(('NQ', 'daily'))
+            if gc_daily and nq_daily:
+                coupling_info = detect_coupling(gc_daily, nq_daily)
+                print(f"  {format_coupling_display(coupling_info)}")
+            else:
+                print(f"  ❓ Missing GC or NQ signal")
+        except Exception as e:
+            print(f"  ❌ Coupling detection error: {str(e)[:40]}")
+    else:
+        print(f"  (N/A — not futures or missing GC/NQ)")
+
     print(f"\n  {'─'*55}")
     print(f"  POSITION SIZING")
     print(f"  {'─'*55}")
@@ -251,7 +270,7 @@ def _run_group(label, tickers, date_str, show_tf=True):
                     try:
                         from signals_0dte_execute import build_0dte
                         acct = float(os.environ.get("ACCOUNT_SIZE", 25000))
-                        e = build_0dte(t, r['suggested'] or sd['direction'], acct)
+                        e = build_0dte(t, sd['direction'], acct)
                         if 'error' in e:
                             print(f"       (no option: {e['error']})")
                         else:
