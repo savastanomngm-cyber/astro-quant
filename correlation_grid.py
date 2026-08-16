@@ -65,7 +65,7 @@ def enrich(ticker, start):
     if not br or not br.out_of_sample or not br.oos_trades:
         print(f"    no OOS"); return []
     trades = br.oos_trades
-    print(f"    {len(trades)} OOS trades, loading signals...", flush=True)
+    print(f"    {len(trades)} OOS trades, range {trades[0].date} → {trades[-1].date}, loading signals...", flush=True)
     df_price = load_price(ticker)
 
     # Generate signal for EACH OOS trade date (slow, ~3-5s per date)
@@ -133,7 +133,7 @@ def main():
         print(f"{i+1:>4} {pf:>6.2f} {wr:>5.0%} {n:>4} {avg:>+7.0f} {f:>10} {m:>8} {k:>11} {tk:>6}")
     # Save CSV
     import csv
-    with open('/home/user/workspace/astro-quant/correlation_grid_results.csv','w',newline='') as fh:
+    with open(os.path.join(os.path.dirname(__file__), 'correlation_grid_results.csv'),'w',newline='') as fh:
         w=csv.writer(fh)
         w.writerow(['rank','PF','WR','n','avg_pnl','fold','moon','kronos','ticker'])
         for i,(pf,f,m,k,tk,n,wr,avg,wins) in enumerate(results):
