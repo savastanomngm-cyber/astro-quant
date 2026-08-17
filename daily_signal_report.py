@@ -108,8 +108,16 @@ def generate_daily_signal(ticker, date_str=None, min_wr=0.50, min_pf=1.0):
 
     moon_applies = st.get("moon_applies", "void")
     moon_mult = 1.0
-    if moon_applies in ("Jupiter", "Venus"): moon_mult = 1.15
-    elif moon_applies in ("Saturn", "Mars"): moon_mult = 0.85
+    # Quant-validated (638 OOS trades, Rectification Manual Ch.6 technique):
+    #   Moon applying to the luminaries or Mercury ⇒ PF < 1.0 in most cells.
+    #   These are HARD SKIPS, not soft multipliers. Instrument-specific benefics ⇒ size up.
+    if moon_applies in ("Sun", "Mercury", "void"):
+        # Moon applying to Sun/Mercury/void = consistently unprofitable (PF 0.68-0.94).
+        return None
+    if moon_applies in ("Jupiter", "Venus"):
+        moon_mult = 1.15
+    elif moon_applies in ("Saturn", "Mars"):
+        moon_mult = 0.85
     pf = max(0.5, persona.historical_pf)
     tp_mult = min(6.0, max(1.2, 1.5 + math.log(pf + 0.5)))
     stop_pct = persona.stop_tightness

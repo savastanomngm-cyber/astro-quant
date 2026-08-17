@@ -1,0 +1,28 @@
+
+============================================================
+FORCED-SHORT BACKTEST: GC
+============================================================
+  18 personas: 14L / 4S
+  Val signals: 835 | OOS signals: 835
+    OOS: 773L / 62S
+  OOS: 60t | WR=50.0% | PF=0.59 | Sharpe=-2.16 | DD=100.0%
+  OOS SHORT: 4t  WR=0%  PF=0.00  avg=-600
+  OOS LONG:  56t  WR=54%
+
+============================================================
+FORCED-SHORT BACKTEST: NQ
+============================================================
+  24 personas: 23L / 1S
+  Val signals: 835 | OOS signals: 836
+    OOS: 836L / 0S
+  OOS: 118t | WR=57.6% | PF=1.59 | Sharpe=2.9 | DD=40.6%
+
+============================================================
+FORCED-SHORT BACKTEST: ES
+============================================================
+  37 personas: 33L / 4S
+  Val signals: 835 | OOS signals: 836
+    OOS: 836L / 0S
+  OOS: 145t | WR=59.3% | PF=1.46 | Sharpe=2.39 | DD=32.1%
+  VAL SHORT: 7t  WR=43%  PF=0.99  avg=-1
+  VAL LONG:  136t  WR=62%

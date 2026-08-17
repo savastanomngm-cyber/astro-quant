@@ -97,6 +97,9 @@ def get_state(chart, utc_dt):
 
     # Distributor
     dist = distributor(chart, utc_dt)
+    # MC directed through the bounds (manual Ch.8 — Asc AND MC are separate significators)
+    from astro_core_v2 import mc_distributor
+    mc_bound = mc_distributor(chart, utc_dt)
 
     # Profected ASC + bound ruler
     prof_lon = profected_asc(chart, utc_dt)
@@ -127,6 +130,7 @@ def get_state(chart, utc_dt):
         "main": main,
         "sub": sub,
         "dist": dist,
+        "mc_bound": mc_bound,
         "house": house,
         "moon_phase": f"MP{moon_phase_idx}",
         "moon_sign": moon_sign,

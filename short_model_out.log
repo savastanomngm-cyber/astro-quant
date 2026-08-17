@@ -1,0 +1,21 @@
+GC: 4179 bars loaded
+NQ: 4181 bars loaded
+ES: 4181 bars loaded
+
+=== SHORT MODEL BACKTEST (real short P&L) ===
+               condition tkr    n     WR     PF  avg_pts                   exit
+            neutral_moon  NQ   78    26%   1.12    +18.4        stop58 target20
+            neutral_moon  GC   54    30%   1.21     +4.9  stop38 target14 time2
+            neutral_moon  ES   37    22%   0.84     -7.1   stop28 target8 time1
+            gc_confirmed  GC   32    41%   2.05    +22.8  stop19 target11 time2
+             es_mainmoon  ES   25    32%   1.41    +15.6   stop16 target7 time2
+             nq_mainmoon  NQ   18    28%   1.19    +39.1         stop13 target5
+         gc_neutral_conf  GC    7    57%   5.48    +46.3          stop3 target4
+    gc_pref_malefic_conf  GC   11    36%   1.52    +13.3    stop7 target3 time1
+             neutral_all  NQ   78    26%   1.12    +18.4        stop58 target20
+             neutral_all  GC   54    30%   1.21     +4.9  stop38 target14 time2
+             neutral_all  ES   37    22%   0.84     -7.1   stop28 target8 time1
+     malefic_diverges_gc  GC   38    21%   0.76     -5.6   stop30 target7 time1
+
+=== summary: conditions with short WR > 50% and PF > 1.1 ===
+  gc_neutral_conf GC: WR=57% PF=5.48 avg=+46.3 (n=7)

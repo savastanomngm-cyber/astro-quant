@@ -18,18 +18,18 @@ FIDARIA_ORDER_N = ['Moon','Saturn','Jupiter','Mars','NN','SN','Sun','Venus','Mer
 
 # Egyptian bounds (verified against manual)
 EGYPTIAN_BOUNDS = {
-    'Aries': [(5.9999, 'Jupiter'), (11.9999, 'Venus'), (16.9999, 'Mercury'), (23.9999, 'Mars'), (29.9999, 'Saturn')],
-    'Taurus': [(7.9999, 'Venus'), (13.9999, 'Mercury'), (18.9999, 'Jupiter'), (23.9999, 'Saturn'), (29.9999, 'Mars')],
-    'Gemini': [(5.9999, 'Mercury'), (11.9999, 'Jupiter'), (16.9999, 'Venus'), (21.9999, 'Mars'), (29.9999, 'Saturn')],
-    'Cancer': [(5.9999, 'Mars'), (11.9999, 'Jupiter'), (16.9999, 'Mercury'), (23.9999, 'Venus'), (29.9999, 'Saturn')],
-    'Leo': [(5.9999, 'Jupiter'), (10.9999, 'Venus'), (17.9999, 'Saturn'), (23.9999, 'Mercury'), (29.9999, 'Mars')],
-    'Virgo': [(6.9999, 'Mercury'), (12.9999, 'Venus'), (17.9999, 'Jupiter'), (23.9999, 'Mars'), (29.9999, 'Saturn')],
-    'Libra': [(5.9999, 'Saturn'), (10.9999, 'Venus'), (16.9999, 'Jupiter'), (21.9999, 'Mercury'), (29.9999, 'Mars')],
-    'Scorpio': [(6.9999, 'Mars'), (11.9999, 'Venus'), (15.9999, 'Jupiter'), (22.9999, 'Mercury'), (29.9999, 'Saturn')],
-    'Sagittarius': [(6.9999, 'Jupiter'), (11.9999, 'Venus'), (16.9999, 'Mercury'), (21.9999, 'Saturn'), (29.9999, 'Mars')],
-    'Capricorn': [(5.9999, 'Mercury'), (11.9999, 'Jupiter'), (16.9999, 'Venus'), (21.9999, 'Saturn'), (29.9999, 'Mars')],
-    'Aquarius': [(6.9999, 'Mercury'), (11.9999, 'Venus'), (16.9999, 'Jupiter'), (21.9999, 'Mars'), (29.9999, 'Saturn')],
-    'Pisces': [(5.9999, 'Venus'), (9.9999, 'Jupiter'), (14.9999, 'Mercury'), (21.9999, 'Mars'), (29.9999, 'Saturn')],
+    'Aries':       [(5.9999, 'Jupiter'), (11.9999, 'Venus'), (19.9999, 'Mercury'), (24.9999, 'Mars'), (29.9999, 'Saturn')],
+    'Taurus':      [(7.9999, 'Venus'),   (13.9999, 'Mercury'), (21.9999, 'Jupiter'), (26.9999, 'Saturn'), (29.9999, 'Mars')],
+    'Gemini':      [(5.9999, 'Mercury'), (11.9999, 'Jupiter'), (16.9999, 'Venus'),   (23.9999, 'Mars'),   (29.9999, 'Saturn')],
+    'Cancer':      [(6.9999, 'Mars'),    (12.9999, 'Venus'),   (18.9999, 'Mercury'), (25.9999, 'Jupiter'), (29.9999, 'Saturn')],
+    'Leo':         [(5.9999, 'Jupiter'), (10.9999, 'Venus'),   (17.9999, 'Saturn'),  (23.9999, 'Mercury'), (29.9999, 'Mars')],
+    'Virgo':       [(6.9999, 'Mercury'), (16.9999, 'Venus'),   (20.9999, 'Jupiter'), (27.9999, 'Mars'),   (29.9999, 'Saturn')],
+    'Libra':       [(5.9999, 'Saturn'),  (13.9999, 'Mercury'), (20.9999, 'Jupiter'), (27.9999, 'Venus'),   (29.9999, 'Mars')],
+    'Scorpio':     [(6.9999, 'Mars'),    (10.9999, 'Venus'),   (18.9999, 'Mercury'), (23.9999, 'Jupiter'), (29.9999, 'Saturn')],
+    'Sagittarius': [(11.9999, 'Jupiter'),(16.9999, 'Venus'),   (20.9999, 'Mercury'), (25.9999, 'Saturn'),  (29.9999, 'Mars')],
+    'Capricorn':   [(6.9999, 'Mercury'), (13.9999, 'Jupiter'), (21.9999, 'Venus'),   (25.9999, 'Saturn'),  (29.9999, 'Mars')],
+    'Aquarius':    [(6.9999, 'Mercury'), (12.9999, 'Venus'),   (19.9999, 'Jupiter'), (24.9999, 'Mars'),   (29.9999, 'Saturn')],
+    'Pisces':      [(11.9999, 'Venus'),  (15.9999, 'Jupiter'), (18.9999, 'Mercury'), (27.9999, 'Mars'),   (29.9999, 'Saturn')],
 }
 
 SIGN_NAMES = [
@@ -203,6 +203,15 @@ def distributor(chart, target_utc):
     asc_lon = chart['ascendant']['longitude']
     age_years = (target_utc - chart['utc_time']).total_seconds() / 86400.0 / 365.25
     directed = (asc_lon + age_years) % 360
+    return bound_ruler(directed)
+
+def mc_distributor(chart, target_utc):
+    """Directing the Midheaven through the Bounds (right ascension, ~1°/yr).
+    Complements distributor() which directs the Ascendant. The manual (Ch.8)
+    directs Asc AND MC as separate significators — each bound ruler matters."""
+    mc_lon = chart['midheaven']['longitude']
+    age_years = (target_utc - chart['utc_time']).total_seconds() / 86400.0 / 365.25
+    directed = (mc_lon + age_years) % 360
     return bound_ruler(directed)
 
 # ---------- Part of Fortune (Manual Formula) ----------
