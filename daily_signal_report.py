@@ -110,16 +110,24 @@ def generate_daily_signal(ticker, date_str=None, min_wr=0.50, min_pf=1.0):
 
     moon_applies = st.get("moon_applies", "void")
     moon_mult = 1.0
-    # Quant-validated (638 OOS trades, Rectification Manual Ch.6 technique):
+    # Quant-validated (466 OOS trades, corrected bounds):
     #   Moon applying to the luminaries or Mercury ⇒ PF < 1.0 in most cells.
-    #   These are HARD SKIPS, not soft multipliers. Instrument-specific benefics ⇒ size up.
+    #   These are HARD SKIPS, not soft multipliers.
     if moon_applies in ("Sun", "Mercury", "void"):
-        # Moon applying to Sun/Mercury/void = consistently unprofitable (PF 0.68-0.94).
         return None
     if moon_applies in ("Jupiter", "Venus"):
         moon_mult = 1.15
     elif moon_applies in ("Saturn", "Mars"):
         moon_mult = 0.85
+
+    # Fidaria sub-period ruler (Rectification Manual Ch.7, validated: p<0.04):
+    #   Saturn sub = 69% WR (size up). Jupiter/Moon sub = 41-43% WR (caution/skip).
+    fid_sub = st.get("sub", "?")
+    fid_mult = 1.0
+    if fid_sub == "Saturn":
+        fid_mult = 1.20
+    elif fid_sub in ("Jupiter", "Moon"):
+        fid_mult = 0.80
     pf = max(0.5, persona.historical_pf)
     tp_mult = min(6.0, max(1.2, 1.5 + math.log(pf + 0.5)))
     stop_pct = persona.stop_tightness
@@ -144,7 +152,7 @@ def generate_daily_signal(ticker, date_str=None, min_wr=0.50, min_pf=1.0):
     return {
         "ticker": ticker, "date": today.strftime("%Y-%m-%d"),
         "direction": persona.pattern_direction,
-        "conviction": round(persona.conviction_mult * moon_mult, 2),
+        "conviction": round(persona.conviction_mult * moon_mult * fid_mult, 2),
         "moon_applies": moon_applies,
         "sl_pct": f"{stop_pct:.1%}",
         "tp_pct": f"{stop_pct * tp_mult:.1%}",

@@ -1525,14 +1525,19 @@ def action_trading_rules():
      • {G}Exact fold → full size (GC 77% / ES 78% / NQ 62% WR){X}
      • {G}Moon applies to Jupiter (GC) or Venus (NQ/ES) → full size{X}
      • Benefic moon (Venus/Jupiter) → normal+ (66-68% WR)
+     • {G}Fidaria sub-ruler = Saturn → size up (69% WR, p=0.02){X}
+
+  {B}3b. REDUCE / caution days{X}
+     • {Y}Fidaria sub-ruler = Moon or Jupiter → reduce (41-43% WR, p<0.04){X}
 
   {B}4. Kronos handling (per-ticker — NOT uniform){X}
      • GC DIVERGES → do NOT skip (still 63% WR / PF 2.70)
      • NQ/ES DIVERGES → MONITOR/half (ES diverges = 48% WR = weak)
 
   {B}5. IGNORE these (proven noise for futures){X}
-     • Fidaria main/sub rulers, directed bounds — {Y}no measurable effect{X}
+     • Fidaria MAIN ruler, directed bounds → {Y}no measurable effect{X}
      • Conviction band — no signal
+     • (NOTE: Fidaria SUB-ruler is NOT noise — see 3/3b. Real birth dates matter.)
 
   {'─'*55}
   {Y}Note: exact fold only fires ~20-31% of days (it's the rare premium).{X}
