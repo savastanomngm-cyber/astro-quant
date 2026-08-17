@@ -298,24 +298,24 @@ def mtf_backtest(ticker, bar_size="1h", start="2018-01-01", end=None, train_rati
             st = get_state(chart_dict, signal_utc)
         except:
             continue
-        cur = (st["main"], st["sub"], st["dist"], st["house"], st["moon_phase"])
+        cur = (st["house"], st["moon_phase"], st.get("moon_applies","void"))
         if cur == prev_state:
             continue
         prev_state = cur
         sk = state_key(st, 7)
         persona = personas_dict.get(sk)
         if not persona:
+            prefix = f"H{st['house']}_{st['moon_phase']}_"
             for pid, p in personas_dict.items():
-                if pid.startswith(f"{st['main']}_{st['sub']}_{st['dist']}_"):
-                    persona = p; break
-        if not persona:
-            hs = f"_H{st['house']}_"; mp = f"_{st['moon_phase']}_"
-            for pid, p in personas_dict.items():
-                if hs in pid and mp in pid:
+                if pid.startswith(prefix):
                     persona = p; break
         if not persona:
             for pid, p in personas_dict.items():
-                if pid.startswith(f"{st['main']}_"):
+                if f"_{st['moon_phase']}_" in pid:
+                    persona = p; break
+        if not persona:
+            for pid, p in personas_dict.items():
+                if pid.startswith(f"H{st['house']}_"):
                     persona = p; break
         if not persona:
             continue
@@ -424,7 +424,7 @@ def generate_mtf_live_signal(
     if sk_exact in personas_dict:
         persona = personas_dict[sk_exact]; match_type = "exact"
     if not persona:
-        prefix = f"{st['main']}_{st['sub']}_{st['dist']}_"
+        prefix = f"H{st['house']}_{st['moon_phase']}_"
         candidates = [(pid, p) for pid, p in personas_dict.items() if pid.startswith(prefix)]
         if candidates:
             import math
@@ -432,11 +432,11 @@ def generate_mtf_live_signal(
             match_type = "prefix"
     if not persona:
         candidates = [(pid, p) for pid, p in personas_dict.items()
-                      if pid.startswith(st['main']) and f"_{st['moon_phase']}_" in pid]
+                      if f"_{st['moon_phase']}_" in pid]
         if candidates:
             import math
             persona = max(candidates, key=lambda x: min(x[1].historical_pf, 20) * math.log(max(x[1].n_samples, 2)))[1]
-            match_type = "main+moon"
+            match_type = "moon"
     if not persona:
         return None
     if persona.historical_win_rate < min_wr:

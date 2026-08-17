@@ -217,21 +217,21 @@ def persona_backtest_flow(
             if sd not in dd or ed not in dd: continue
             signal_utc = datetime.strptime(sd,"%Y-%m-%d").replace(hour=17)
             st = get_state(chart_dict, signal_utc)
-            curr = (st["main"], st["sub"], st["dist"], st["house"], st["moon_phase"])
+            curr = (st["house"], st["moon_phase"], st.get("moon_applies","void"))
             if curr == prev_state: continue
             prev_state = curr
             sk = state_key(st,7)
             persona = personas_dict.get(sk)
             if not persona:
+                prefix = f"H{st['house']}_{st['moon_phase']}_"
                 for pid,p in personas_dict.items():
-                    if pid.startswith(f"{st['main']}_{st['sub']}_{st['dist']}_"): persona=p; break
-            if not persona:
-                hs = f"_H{st['house']}_"; mp = f"_{st['moon_phase']}_"
-                for pid,p in personas_dict.items():
-                    if hs in pid and mp in pid: persona=p; break
+                    if pid.startswith(prefix): persona=p; break
             if not persona:
                 for pid,p in personas_dict.items():
-                    if pid.startswith(f"{st['main']}_"): persona=p; break
+                    if f"_{st['moon_phase']}_" in pid: persona=p; break
+            if not persona:
+                for pid,p in personas_dict.items():
+                    if pid.startswith(f"H{st['house']}_"): persona=p; break
             if not persona:
                 best = max(personas_dict.values(), key=lambda p:p.historical_pf, default=None)
                 if best and best.historical_pf >= min_pf: persona = best

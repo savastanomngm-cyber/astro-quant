@@ -79,19 +79,21 @@ def generate_daily_signal(ticker, date_str=None, min_wr=0.50, min_pf=1.0):
     for hz in [3,5,7]:
         sk = state_key(st, hz)
         if sk in personas_dict: persona = personas_dict[sk]; match_type = "exact"; break
+    # Fast-only key (H{house}_{moon_phase}_MA{planet}_{horizon}d):
+    # fallbacks relax moon_applies first, then house, then moon_phase.
     if not persona:
-        prefix = f"{st['main']}_{st['sub']}_{st['dist']}_"
+        # same house + moon_phase, any moon_applies (prefix by fast tuple)
+        prefix = f"H{st['house']}_{st['moon_phase']}_"
         candidates = [(pid, p) for pid, p in personas_dict.items() if pid.startswith(prefix)]
         if candidates: persona = _best(candidates); match_type = "prefix"
     if not persona:
-        candidates = [(pid, p) for pid, p in personas_dict.items() if pid.startswith(st['main']) and f"_{st['moon_phase']}_" in pid]
-        if candidates: persona = _best(candidates); match_type = "main+moon"
-    if not persona:
-        candidates = [(pid, p) for pid, p in personas_dict.items() if pid.startswith(st['main'])]
-        if candidates: persona = _best(candidates); match_type = "main"
-    if not persona:
+        # same moon_phase, any house/applies
         candidates = [(pid, p) for pid, p in personas_dict.items() if f"_{st['moon_phase']}_" in pid]
         if candidates: persona = _best(candidates); match_type = "moon"
+    if not persona:
+        # same house, any moon_phase/applies
+        candidates = [(pid, p) for pid, p in personas_dict.items() if pid.startswith(f"H{st['house']}_")]
+        if candidates: persona = _best(candidates); match_type = "house"
     if not persona: return None
     if persona.historical_win_rate < min_wr: return None
     if persona.historical_pf < min_pf: return None

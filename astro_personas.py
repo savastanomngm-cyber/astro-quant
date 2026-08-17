@@ -508,13 +508,19 @@ def generate_trader_personas_from_learned(
         try:
             h_part = next((p for p in parts if p.startswith("H")), "H1")
             mp_part = next((p for p in parts if p.startswith("MP")), "MP0")
+            ma_part = next((p for p in parts if p.startswith("MA")), "MAvoid")
             house = int(h_part[1:])
             moon_phase = mp_part
-            fid_main = parts[0] if len(parts) > 0 else "?"
-            fid_sub = parts[1] if len(parts) > 1 else "?"
-            dist = parts[2] if len(parts) > 2 else "?"
+            moon_applies = ma_part[2:]
+            # Slow rulers no longer in state_key (fast-only key). They are passed
+            # separately from get_state() via the caller where available; here we
+            # degrade gracefully to "?" (does not affect persona trait mapping,
+            # since fid/dist only modulate SL/TP/conviction slightly).
+            fid_main = "?"
+            fid_sub = "?"
+            dist = "?"
         except (ValueError, IndexError):
-            house = 1; moon_phase = "MP0"
+            house = 1; moon_phase = "MP0"; moon_applies = "void"
             fid_main = fid_sub = dist = "?"
 
         from astro_knowledge import SourceRef, DataSourceKind

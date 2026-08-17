@@ -145,9 +145,17 @@ def get_state(chart, utc_dt):
 def state_key(st, horizon: int = 7) -> str:
     """
     Build a state key for pattern matching.
-    Format: {main}_{sub}_{dist}_H{house}_{moon_phase}_{horizon}d
+    FAST-ONLY key (see critical finding: Fidaria/bound don't recur across
+    train/test in a single backtest window). Components:
+      H{house}       — profected house (12 values, recurs yearly)
+      {moon_phase}   — MP0-7 (8 values, ~3.5 day cycle, recurs)
+      MA{planet}     — moon_applies (fastest, daily)
+      {horizon}d
+    The slow rulers (main/sub/dist,~10yr+) are READ from st for persona traits
+    but NOT part of the matching key, so personas can recur and be tested OOS.
     """
-    return f"{st['main']}_{st['sub']}_{st['dist']}_H{st['house']}_{st['moon_phase']}_{horizon}d"
+    ma = st.get("moon_applies", "void")
+    return f"H{st['house']}_{st['moon_phase']}_MA{ma}_{horizon}d"
 
 
 # ====================================================================
