@@ -327,3 +327,31 @@ if __name__ == "__main__":
                 lat_name, d["arc_deg"], d["date"].strftime("%d-%b-%Y")))
         else:
             print("    %-24s -> no finite arc" % lat_name)
+
+    # ---- Multi-example validation (manual 3rd-edition preface, authoritative) ----
+    print("\n" + "=" * 64)
+    print(" MULTI-EXAMPLE VALIDATION (manual, 3rd ed. preface)")
+    print("=" * 64)
+
+    from datetime import datetime as _dt
+
+    taft = calculate_chart(1857, 9, 15, 20, 2, 26, 39.161, -84.457, -(5 + 37.5 / 60))
+    truman = calculate_chart(1884, 5, 8, 15, 53, 12, 37.495, -94.276, -6)
+
+    suite = [
+        # (name, chart, prom, asp, sig, motion, adir, lp, ls, expected)
+        ("Washington dex.sex Sat d.=>Moon", ch, "Saturn", 60, "Moon", "direct", "dexter", False, False, "1752-07-29"),
+        ("Truman Sun c.=>MC", truman, "Sun", 0, "MC", "converse", "sinister", False, False, "1939-04-23"),
+        ("Taft dex.trine Sat d.=>MC", taft, "Saturn", 120, "MC", "direct", "dexter", False, False, "1918-03-31"),
+        ("Taft dex.square Jup d.=>MC", taft, "Jupiter", 90, "MC", "direct", "dexter", False, False, "1880-05-18"),
+    ]
+    print("  %-30s | %7s | %-11s | %-11s | %s" % ("direction", "arc", "computed", "manual", "err"))
+    for name, c, prom, asp, sig, motion, adir, lp, ls, expected in suite:
+        d = direction(c, prom, asp, sig, motion, adir, use_lat_prom=lp, use_lat_sig=ls)
+        if d is None:
+            print("  %-30s |     -- | (no arc)" % name)
+            continue
+        exp = _dt.strptime(expected, "%Y-%m-%d")
+        err = abs((d["date"] - exp).days)
+        print("  %-30s | %6.2f° | %-11s | %-11s | %dd" % (
+            name, d["arc_deg"], d["date"].strftime("%Y-%m-%d"), expected, err))
