@@ -1,9 +1,41 @@
 {
-  "NQ": {"hour": 21, "min": 35, "sec": 0, "score": 9.0, "method": "event-driven-placidus-pd"},
-  "ES": {"hour": 13, "min": 33, "sec": 0, "score": 10.8, "method": "event-driven-placidus-pd"},
-  "GC": {"hour": 7, "min": 55, "sec": 0, "score": 8.4, "method": "event-driven-placidus-pd"},
-  "ITA": {"hour": 9, "min": 30, "sec": 0, "score": 5000.0},
-  "PPA": {"hour": 9, "min": 30, "sec": 0, "score": 5000.0},
-  "AIQ": {"hour": 9, "min": 30, "sec": 0, "score": 5000.0},
-  "SHLD": {"hour": 9, "min": 30, "sec": 0, "score": 5000.0}
+  "GC": {
+    "hour": 16,
+    "min": 0,
+    "sec": 0,
+    "stage_fidaria": 5.0,
+    "stage_solar_arcs": 7.32,
+    "stage_placidus_pd": 2.25,
+    "combined": 0.608,
+    "power": "LOW",
+    "status": "provisional",
+    "method": "full-3-stage-zoller",
+    "note": "Stages I-II-III per Zoller A Rectification Manual. 30yr-old instruments are low-power for Stage III; times are provisional, not verdicts."
+  },
+  "ES": {
+    "hour": 22,
+    "min": 0,
+    "sec": 0,
+    "stage_fidaria": 5.5,
+    "stage_solar_arcs": 9.34,
+    "stage_placidus_pd": 4.5,
+    "combined": 0.915,
+    "power": "MODERATE",
+    "status": "provisional-moderate",
+    "method": "full-3-stage-zoller",
+    "note": "Stages I-II-III per Zoller A Rectification Manual. 30yr-old instruments are low-power for Stage III; times are provisional, not verdicts."
+  },
+  "NQ": {
+    "hour": 17,
+    "min": 0,
+    "sec": 0,
+    "stage_fidaria": 4.0,
+    "stage_solar_arcs": 10.04,
+    "stage_placidus_pd": 4.5,
+    "combined": 0.744,
+    "power": "LOW",
+    "status": "provisional",
+    "method": "full-3-stage-zoller",
+    "note": "Stages I-II-III per Zoller A Rectification Manual. 30yr-old instruments are low-power for Stage III; times are provisional, not verdicts."
+  }
 }

@@ -209,21 +209,23 @@ def _ask_float(prompt, default):
 # ACTION: Rectification (unchanged — uses rectify_v3)
 # ---------------------------------------------------------------
 def action_rectify():
-    """Event-driven rectification: Placidus (PT) primary directions to the angles.
+    """Full 3-stage rectification (Zoller, A Rectification Manual).
 
-    Replaces the old pattern-quality grid search (which overfit to backtest) with
-    the manual's Stage III method: Mars/Saturn/Sun primary directions to the
-    ASC/MC are matched against the contract's known Martian/Saturnian/Solar
-    events (crashes, panics, peaks, structural breaks). Score = event hits.
+    STAGE I  Fidaria (coarse) + STAGE II solar arcs/progressions/transits
+    (±1-2h) + STAGE III Placidus PT primary directions (±min) vote on the full
+    24h grid.  The final time is reported WITH a power/status flag — never as
+    an unqualified literal, because the manual's Stage III is only "fine
+    sandpaper" after Stages I-II, and 30yr-old instruments are at the low end
+    of the method's power range.
     """
-    box("RECTIFICATION — Event-driven Placidus (PT) primary directions", color=C)
+    box("RECTIFICATION — Full 3-stage method (Fidaria → Solar arcs → Placidus PD)",
+        color=C)
     import time as _time
+    import json as _json
 
     from event_db import get_events
-    from placidian_pd import direction, CONJ, SEXTILE, SQUARE, TRINE, OPPOSITION
-    from rectify_event import score_time, build_chart
+    from rectify_full import rectify_full as _rectify_full
 
-    import json as _json
     json_path = os.path.join(os.path.dirname(__file__), "rectified_times_v3.json")
     try:
         with open(json_path) as jf:
@@ -240,43 +242,37 @@ def action_rectify():
             box(title=f"{t} — no event DB", lines=[], color=Y)
             continue
 
-        # seed from current rectified time, then grid-search around it
-        seed_hour = existing.get(t, {}).get("hour", 12)
         t0 = _time.time()
-        best = (-1, None, None, [])
-        for h in range(24):
-            for m in (0, 15, 30, 45):
-                sc, hits = score_time(t, h, m, events)
-                if sc > best[0]:
-                    best = (sc, h, m, hits)
-
-        sc, bh, bm, hits = best
+        combined = _rectify_full(t, grid_minutes=15)
         elapsed = _time.time() - t0
 
-        lines = [
-            f"Events:    {len(events)}   (Mars/Saturn/Sun -> ASC/MC)",
-            f"Best time: {bh:02d}:{bm:02d} UTC   (score {sc:.2f})",
-            f"Prev time: {seed_hour:02d}:00 UTC",
-            f"Elapsed:   {elapsed:.1f}s",
-            "", f"{B}Direction hits (orb +-7d):{X}",
-        ]
-        for err, ev_date, ev_label, prom, sig, asp, motion, adir, d_date, sco in hits:
-            lines.append(
-                f"  {err}d  {prom}->{sig} {asp} {motion}  [{ev_date} {ev_label[:34]}...]"
-            )
-        if not hits:
-            lines.append("  (none — no direction aligned with known events)")
-        box(f"{t} — Placidus PT Rectification", lines, color=G if hits else Y)
+        top = combined[0]
+        c, s1, s2, s3, nn1, nn2, nn3, bh, bm = top
+        c_gap = (combined[0][0] - combined[1][0]) if len(combined) > 1 else 0.0
+        power = ("HIGH" if c_gap > 0.25 else
+                 "MODERATE" if c_gap > 0.10 else "LOW")
 
-        # Persist best time
-        existing[t] = {"hour": bh, "min": bm, "sec": 0, "score": round(sc, 2),
-                       "method": "event-driven-placidus-pd"}
+        # persist with explicit status
+        existing[t] = {
+            "hour": bh, "min": bm, "sec": 0,
+            "stage_fidaria": round(s1, 2),
+            "stage_solar_arcs": round(s2, 2),
+            "stage_placidus_pd": round(s3, 2),
+            "combined": round(c, 3),
+            "power": power,
+            "status": ("provisional" if power == "LOW" else
+                       "provisional-moderate" if power == "MODERATE" else
+                       "rectified"),
+            "method": "full-3-stage-zoller",
+        }
         try:
             with open(json_path, "w") as jf:
                 _json.dump(existing, jf, indent=2)
-            print(f"  {G}✓ Saved {t} rectified time {bh:02d}:{bm:02d} UTC{X}")
+            print(f"  {G}✓ Saved {t} → {bh:02d}:{bm:02d} UTC  (power={power}){X}")
         except Exception as e:
             print(f"  {Y}Could not save: {e}{X}")
+        print(f"      stage scores — Fidaria {s1:.1f} | Solar+prog+tr {s2:.1f} | "
+              f"Placidus PD {s3:.1f} | combined {c:.3f} | elapsed {elapsed:.1f}s")
 
     _pause()
 
