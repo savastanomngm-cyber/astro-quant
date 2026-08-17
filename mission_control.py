@@ -1509,11 +1509,12 @@ def action_trading_rules():
   {G}HOW TO TRADE (current validated rules){X}
   {'─'*55}
 
-  {B}1. DIRECTION — long-only, EXCEPT GC-Kronos-CONFIRMED{X}
+  {B}1. DIRECTION — long-only, no hard short rule yet{X}
      • NQ / ES / GC: default LONG (futures drift up = baseline edge)
-     • {R}GC + Kronos CONFIRMED → SHORT (half size){X} — the ONE short.
-       (GC-confirmed long = 44% WR / PF 0.70; short-mirror = 56% / PF 2.05)
-     • NQ/ES Kronos CONFIRMED = BULLISH (do NOT short these)
+     • GC + Kronos CONFIRMED → {Y}MONITOR/reduce long{X} (bad long cell:
+       historically 44% WR / PF 0.70, but CONFIRMED fires ~20% of days
+       so it's not a rare-enough setup to hard-short)
+     • NQ/ES Kronos CONFIRMED = BULLISH (65-68% WR)
 
   {B}2. SKIP days (hard skip — expected PF < 1.0){X}
      • {Y}Moon applies to Sun / Mercury / void → SIT OUT (all tickers){X}

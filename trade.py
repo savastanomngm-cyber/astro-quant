@@ -152,12 +152,13 @@ def _run_group(label, tickers, date_str, show_tf=True):
             elif kron["status"] == "UNRELIABLE":
                 note += " ⚠KRONOS-UNRELIABLE"
 
-            # GC + Kronos CONFIRMED = SHORT signal (backtested: 41% WR / PF 2.05,
-            # and GC-confirmed LONG = 44% WR / PF 0.70 — the single worst long cell).
-            # Kronos CONFIRMED is INVERTED for GC specifically (NQ/ES confirmations are bullish).
+            # GC + Kronos CONFIRMED: LONG WR is weak (44% / PF 0.70 historically),
+            # but the "short GC" signal is not yet robust (CONFIRMED is ~20% of live
+            # days, not a rare setup). Safer: reduce/downgrade the long, don't hard-flip.
             if t == "GC" and kron["status"] == "CONFIRMED":
-                note += " 🔻GC-CONFIRMED→SHORT (half size, asymmetric hedge)"
-                a = "SHORT (GC)"
+                note += " ⚠GC-CONFIRMED (weak long — reduce size, not a clean short)"
+                if a in ("FULL", "HALF"):
+                    a = "MONITOR"
 
         # Moon application overlay (Rectification Manual, dynamic_filters_v1 §6):
         # applying to a malefic (Mars/Saturn) → caution (half size);
