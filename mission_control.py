@@ -246,33 +246,41 @@ def action_rectify():
         combined = _rectify_full(t, grid_minutes=15)
         elapsed = _time.time() - t0
 
+        # combined rows: (c, s1, s2, s3pd, s3sa, sig, h, m, n1, n2, n3)
         top = combined[0]
-        c, s1, s2, s3, nn1, nn2, nn3, bh, bm = top
+        c, s1, s2, s3pd, s3sa, sig, bh, bm, n1, n2, n3 = top
         c_gap = (combined[0][0] - combined[1][0]) if len(combined) > 1 else 0.0
         power = ("HIGH" if c_gap > 0.25 else
                  "MODERATE" if c_gap > 0.10 else "LOW")
 
-        # persist with explicit status
+        # persist with explicit status + manual stage labels
         existing[t] = {
             "hour": bh, "min": bm, "sec": 0,
-            "stage_fidaria": round(s1, 2),
-            "stage_solar_arcs": round(s2, 2),
-            "stage_placidus_pd": round(s3, 2),
+            "asc_sign": sig["asc_sign"],
+            "sect": sig["sect"],
+            "moon_sign": sig["moon_sign"],
+            "stage1_fidaria_match": f"{sig['fidaria_match']}/{sig['fidaria_total']}",
+            "stage2_arabic_parts_profections": round(s2, 2),
+            "stage3_placidus_pd": round(s3pd, 2),
+            "stage3_solar_arcs": round(s3sa, 2),
             "combined": round(c, 3),
             "power": power,
             "status": ("provisional" if power == "LOW" else
                        "provisional-moderate" if power == "MODERATE" else
                        "rectified"),
             "method": "full-3-stage-zoller",
+            "note": "Stage I sign cull + Stage II Arabic-Parts/profections are the robust output; Stage III (PD+solar arcs) is CORROBORATION only — assets don't converge on PD alone (prior finding o1pbi80d).",
         }
         try:
             with open(json_path, "w") as jf:
                 _json.dump(existing, jf, indent=2)
-            print(f"  {G}✓ Saved {t} → {bh:02d}:{bm:02d} UTC  (power={power}){X}")
+            print(f"  {G}✓ Saved {t} → {bh:02d}:{bm:02d} UTC  (ASC {sig['asc_sign']}, "
+                  f"{sig['sect']}, power={power}){X}")
         except Exception as e:
             print(f"  {Y}Could not save: {e}{X}")
-        print(f"      stage scores — Fidaria {s1:.1f} | Solar+prog+tr {s2:.1f} | "
-              f"Placidus PD {s3:.1f} | combined {c:.3f} | elapsed {elapsed:.1f}s")
+        print(f"      Stage I Fidaria {sig['fidaria_match']}/{sig['fidaria_total']} | "
+              f"II Arabic-Parts {s2:.1f} | III PD {s3pd:.1f} + SolarArcs {s3sa:.1f} | "
+              f"combined {c:.3f} | {elapsed:.1f}s")
 
     _pause()
 

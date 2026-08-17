@@ -1,56 +1,56 @@
-# Full 3-Stage Rectification — Zoller's Method (Implemented)
+# Full 3-Stage Rectification — corrected to the manual's TRUE structure
 
-Status of the event-driven rectification rebuild, per *A Rectification Manual*
-(3rd ed.).  Update the standing "Stage III only" state to the FULL method.
+Prior status (commit df458a9) misplaced solar-arcs/progressions/transits as
+"Stage II".  The project canon (notes "The Source Manual", "Rectification
+Audit", "Rectification Rebuild") establishes the manual's REAL stages.  This is
+now corrected.
 
-## The three stages (as the manual orders them)
+## The manual's three stages (authoritative)
 
-| Stage | Technique | Precision | Module |
-|-------|-----------|-----------|--------|
-| I | Fidaria (Persian chronocrators, Table B-2) | coarse ±hours | `rectify_stages.stage1_score` |
-| II | Solar arcs (direct + converse `c.s.a.`) + secondary progressions (`prog. Moon/Sun`) + outer-planet transits (Saturn/Uranus) | ±1–2h at 0.5° partile | `rectify_stages.stage2_score` |
-| III | Placidus PT primary directions | ±minutes ("fine sandpaper") | `placidian_pd.direction` (validated, see below) |
+| Stage | Goal | Tools |
+|-------|------|-------|
+| **I** | Ascendant **SIGN** | Fidaria (diurnal vs nocturnal culls ~50% of hours in one step) + Moon sign/application + config + physiognomy |
+| **II** | Ascendant **1–4° range** | Rising decan physiognomy + **Arabic Parts + profections** |
+| **III** | Ascendant **degree/minute** | Primary Directions + Primary Direction Sequence + **Solar Arc Directions** + arcus vitae |
 
-`rectify_full.py` runs all three as a **vote over the full 24h grid** (not a
-hard cut-off funnel), so Stage III can override a weak Stage II — the manual's
-"corroboration" intent.  `mission_control.action_rectify()` (menu option 8) now
-wires to this.
+Predictive hierarchy (highest → lowest): Primary Directions → PD Sequence →
+Solar Arcs → Fidaria → Transits/Progressions/Profections.
 
-## Why Stage II matters (the answer to "how do you rectify a 25-year-old?")
+**Note:** Solar Arcs are a Stage-III tool ("equally accurate"), not Stage II.
+Stage II is Arabic Parts + profections.  This module now reflects that.
 
-The manual rectifies young charts routinely.  It never relies on primary
-directions alone.  A 30-year-old instrument has only ~16 Placidus PD dates but
-~30° of solar arc and ~360° of progressed-Moon motion — Stage II provides the
-*dense* timing signal that Stage III then refines.  That was the missing
-mechanism; it is now built.
+## Modules
 
-## Stage II is disciplined, not a broad sweep
+- `rectify_stages.py` — `stage1_score` (sign-level Fidaria sect-cull + Moon
+  config), `stage2_score` (Arabic Parts + profections), `solar_arc_hits`
+  (Stage III solar-arc directions), `arcus_vitae` (hyleg/kadukhadah).
+- `rectify_full.py` — chains I→II→III over the full grid as a vote.
+- `placidian_pd.py` — Stage III primary directions (unchanged, validated to
+  within a day on the manual's worked examples).
+- `mission_control.action_rectify` — menu option 8, now wired to `rectify_full`.
 
-Ch.14's warning (against manufacturing spurious near-matches) is respected:
-- Partile orbs (0.5°), not multi-degree.
-- Only the manual's cited signatures: `c.s.a.` (converse solar arc) of Sun/Moon
-  and the event's own planet to ASC/MC; `prog.` Moon/Sun to ASC/MC; Saturn &
-  Uranus transits to the event planet/angles.
-- An event is timed by its OWN semantic planet (Mars crash → Mars contact,
-  etc.), same discipline as Stage III.
+## Current results (15-min grid, 2026-08-17)
 
-## Current results (15-min grid, full method, 2026-08-17)
+| Ticker | Time (UTC) | ASC sign | Sect | Fidaria match | Power |
+|--------|-----------|----------|------|---------------|-------|
+| GC | 05:15 | Sagittarius | Nocturnal | 6/16 | MODERATE |
+| ES | 00:15 | Cancer | Nocturnal | 7/23 | LOW |
+| NQ | 05:45 | Libra | Nocturnal | 6/21 | LOW |
 
-| Ticker | Time (UTC) | Fid | SA/prog/tr | PD | Combined | Power |
-|--------|-----------|-----|------------|-----|----------|-------|
-| GC | 16:00 | 5.0 | 7.3 | 2.2 | 0.608 | **LOW** |
-| ES | 22:00 | 5.5 | 9.3 | 4.5 | 0.915 | **MODERATE** |
-| NQ | 17:00 | 4.0 | 10.0 | 4.5 | 0.744 | **LOW** |
+All three resolve Nocturnal — the manual's sect-cull working as intended.
 
-Persisted in `rectified_times_v3.json` with explicit `power` + `status` flags.
+## Honest positioning (carried forward, not to be lost)
 
-## Honest conclusion (not to be lost)
+1. **Stage I + II are the defensible output** — they are the manual's "robust
+   level" (sign + 1–4° range).  The codebase already had Fidaria / bounds /
+   POF-POS / hyleg / profections (astro_core_v2), so this is a faithful
+   assembly, not new math.
 
-The engine and all three stages are **correct** (Placidus PT validated to
-within a day on the manual's worked examples).  But the **statistical power
-remains modest** for 30-year-old instruments: the winner-vs-runner-up gap is
-narrow (0.02–0.16), so these are **provisional priors, not verdicts**.  The
-manual assumes 70–90yr lifespans with 8–15 tightly-dated *personal* events;
-futures contracts born in 1974–1997 with 20+ noisy *market* events sit at the
-low end of the method's range.  Times are fit for use as a weak prior in
-downstream work, not as a lit rectification.
+2. **Stage III is CORROBORATION ONLY for instruments.**  Prior finding
+   (note o1pbi80d): the primary-direction event-match does NOT converge for
+   assets (best ±700–1019 days vs the manual's "within 48h"), because market
+   events are sparse and continuous, not discrete personal events.
+
+3. Therefore rectified_times_v3.json carries the times as **provisional
+   priors**, with Stage I/II support spelled out and Stage III explicitly
+   labelled low-power.  Not a lit rectification.
