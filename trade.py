@@ -292,6 +292,30 @@ def _run_group(label, tickers, date_str, show_tf=True):
     nq = all_sigs.get(("NQ", "daily"), {})
     if "NQ" in tickers and nq.get("match_type") != "exact":
         print(f"\n  ⚠ NQ fallback — half size on NQ")
+
+    # ── CLEAN DECISION SUMMARY ────────────────────────────────────────
+    if tickers == FUTURES:
+        print(f"\n  {'─'*55}")
+        print(f"  ⚡ TODAY'S DECISION (what to do)")
+        print(f"  {'─'*55}")
+        for t in tickers:
+            sd = all_sigs.get((t, "daily"))
+            if not sd:
+                print(f"  {t:<4} ➜  SIT OUT  (no signal / moon_applies skip)")
+                continue
+            d = sd.get("direction", "LONG")
+            pf = sd.get("pf", "?"); wr = sd.get("wr", "?")
+            fold = sd.get("match_type", "?")
+            moon = sd.get("moon_applies", "?")
+            kron = (kronos_map.get(t) or {}).get("status", "—")
+            sl = sd.get("sl_pct", "?"); tp = sd.get("tp_pct", "?")
+            # determine a one-word action from the notes already computed
+            emoji = "🟢" if d == "LONG" else ("🔴" if d == "SHORT" else "⚪")
+            kron_mark = {"CONFIRMED":"✓","DIVERGES":"✗","NEUTRAL":"○","UNRELIABLE":"?"}.get(kron, "·")
+            print(f"  {t:<4} {emoji} {d:<5}  PF {pf:<5} WR {wr:<5}  fold={fold:<9} "
+                  f"🌙→{moon:<8} Kronos {kron_mark} {kron}")
+            print(f"       → SL {sl} | TP {tp}")
+        print(f"\n  ☝ Full detail below (persona guidance, 0DTE, sizing).")
     return all_sigs
 
 def main():
