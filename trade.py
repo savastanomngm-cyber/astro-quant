@@ -80,24 +80,6 @@ def _run_group(label, tickers, date_str, show_tf=True):
 
     # GC/NQ coupling detector
     print(f"\n  {'─'*55}")
-    print(f"  GC/NQ COUPLING ANALYSIS")
-    print(f"  {'─'*55}")
-    if tickers == FUTURES and 'GC' in tickers and 'NQ' in tickers:
-        try:
-            from coupling_detector import detect_coupling, format_coupling_display
-            gc_daily = all_sigs.get(('GC', 'daily'))
-            nq_daily = all_sigs.get(('NQ', 'daily'))
-            if gc_daily and nq_daily:
-                coupling_info = detect_coupling(gc_daily, nq_daily)
-                print(f"  {format_coupling_display(coupling_info)}")
-            else:
-                print(f"  ❓ Missing GC or NQ signal")
-        except Exception as e:
-            print(f"  ❌ Coupling detection error: {str(e)[:40]}")
-    else:
-        print(f"  (N/A — not futures or missing GC/NQ)")
-
-    print(f"\n  {'─'*55}")
     print(f"  POSITION SIZING")
     print(f"  {'─'*55}")
 
@@ -174,39 +156,24 @@ def _run_group(label, tickers, date_str, show_tf=True):
         ts = f"SL={sd['sl_pct']} TP={sd['tp_pct']} {sd.get('hold_days','?')}d" if sd else ""
         print(f"  {t:<6s}: {a:<22s} {ts}{note}")
 
-    # Execution guidance (persona-derived: entry timing, timeframe, hold, note)
+    # Execution guidance — COMPACT (persona-derived: entry timing, SL/TP/hold)
     print(f"\n  {'─'*55}")
-    print(f"  PERSONA EXECUTION GUIDANCE")
+    print(f"  EXECUTION (compact)")
     print(f"  {'─'*55}")
     for t in tickers:
         sd = all_sigs.get((t, "daily"))
         if not sd:
-            print(f"  {t:<6}: no daily signal")
+            print(f"  {t:<4}: no signal")
             continue
-        print(f"  {t:<6}  {sd.get('timeframe','daily')}")
-        print(f"    ▶ Enter: {sd.get('entry_timing','?')}")
-        print(f"    ⏱ Hold:  {sd.get('hold_days','?')}d | SL {sd.get('sl_pct','?')} | TP {sd.get('tp_pct','?')} | Pos {sd.get('position_pct','?')}")
-        # Real contract sizing (micro vs mini) for a given account size
-        try:
-            from sizing import display_for
-            acct = float(os.environ.get("ACCOUNT_SIZE", 25000))
-            inst = __import__('astro_configs').INSTRUMENTS.get(t)
-            px = None
-            try:
-                import yfinance as yf
-                sym = inst.data_symbol or f'{t}=F'
-                px = float(yf.Ticker(sym).history(period='2d')['Close'].iloc[-1])
-            except Exception:
-                pass
-            if px:
-                sl = float(sd['sl_pct'].rstrip('%')) / 100.0
-                acct_line = display_for(t, px, sl, 0.0, acct)
-                print(f"    💰 ${acct:,.0f} acct → {acct_line}")
-        except Exception:
-            pass
-        note = sd.get('note')
-        if note:
-            print(f"    ℹ {note}")
+        note = sd.get('note', '')
+        # strip the long note to a short hint
+        short_note = ''
+        if 'Elite pattern' in note: short_note += ' ⭐elite'
+        if 'High hit rate' in note: short_note += ' 🎯high-WR'
+        if 'panic-exit' in note: short_note += ' ⚠panic'
+        if 'rule adherence' in note: short_note += ' ⚠bracket'
+        print(f"  {t:<4} {sd.get('timeframe','daily'):<8} SL {sd.get('sl_pct','?'):<6} TP {sd.get('tp_pct','?'):<6} "
+              f"Hold {sd.get('hold_days','?')}d  Enter: {sd.get('entry_timing','?')[:28]}{short_note}")
 
     # Kronos confirmation for futures
     if tickers == FUTURES:
