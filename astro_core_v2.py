@@ -81,11 +81,11 @@ def calculate_chart(year, month, day, hour, minute, second, lat, lon, tz):
     for name, pid in planet_ids:
         res = swe.calc_ut(jd, pid, swe.FLG_SWIEPH)
         lng = res[0][0] % 360
-        lat = res[0][1]
+        plat = res[0][1]
         speed = res[0][3]
         planets[name] = {
             'longitude': lng,
-            'latitude': lat,
+            'latitude': plat,
             'speed': speed,
             'sign': int(lng / 30),
             'degree_in_sign': lng % 30,

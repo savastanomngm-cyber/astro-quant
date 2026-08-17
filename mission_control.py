@@ -209,90 +209,72 @@ def _ask_float(prompt, default):
 # ACTION: Rectification (unchanged — uses rectify_v3)
 # ---------------------------------------------------------------
 def action_rectify():
-    """Grid-search birth time by pattern quality score (fast — patterns computed once)."""
-    box("RECTIFICATION — Grid Search (pattern quality)", color=C)
-    import time as _time, math
+    """Event-driven rectification: Placidus (PT) primary directions to the angles.
 
-    for t in ["NQ", "ES", "GC"]:
+    Replaces the old pattern-quality grid search (which overfit to backtest) with
+    the manual's Stage III method: Mars/Saturn/Sun primary directions to the
+    ASC/MC are matched against the contract's known Martian/Saturnian/Solar
+    events (crashes, panics, peaks, structural breaks). Score = event hits.
+    """
+    box("RECTIFICATION — Event-driven Placidus (PT) primary directions", color=C)
+    import time as _time
+
+    from event_db import get_events
+    from placidian_pd import direction, CONJ, SEXTILE, SQUARE, TRINE, OPPOSITION
+    from rectify_event import score_time, build_chart
+
+    import json as _json
+    json_path = os.path.join(os.path.dirname(__file__), "rectified_times_v3.json")
+    try:
+        with open(json_path) as jf:
+            existing = _json.load(jf)
+    except Exception:
+        existing = {}
+
+    for t in ["GC", "ES", "NQ"]:
         inst = INSTRUMENTS.get(t)
         if not inst:
             continue
-
-        # Load price data once
-        symbol = inst.data_symbol if inst.data_symbol else f"{t}=F"
-        try:
-            import yfinance as yf; tkr = yf.Ticker(symbol)
-            data = tkr.history(start="2010-01-01")
-            if data.empty: raise ValueError("empty")
-        except Exception:
-            box(title=f"{t} — no data", lines=[], color=Y)
+        events = get_events(t)
+        if not events:
+            box(title=f"{t} — no event DB", lines=[], color=Y)
             continue
 
-        dd = {}; all_dates = []
-        for idx, row in data.iterrows():
-            ds = idx.strftime("%Y-%m-%d")
-            try:
-                o, h, l, c = float(row["Open"]), float(row["High"]), float(row["Low"]), float(row["Close"])
-            except Exception: continue
-            if o <= 0 or c <= 0: continue
-            dd[ds] = {"open": o, "high": h, "low": l, "close": c}
-            all_dates.append(ds)
-        if len(all_dates) < 200: continue
-
-        birth_dt = datetime(inst.birth_year, inst.birth_month, inst.birth_day, 12, 0)
-        best_score = -1; best_hour = None; results = []
-
+        # seed from current rectified time, then grid-search around it
+        seed_hour = existing.get(t, {}).get("hour", 12)
         t0 = _time.time()
-        for hour in range(0, 24, 4):  # 4-hour bands (fast — 6 points per ticker)
-            local_dt = birth_dt.replace(hour=hour)
-            chart_dict = calculate_chart(
-                local_dt.year, local_dt.month, local_dt.day,
-                local_dt.hour, local_dt.minute, local_dt.second,
-                inst.birth_lat, inst.birth_lon, inst.birth_tz,
-            )
-            pats = build_patterns(chart_dict, dd, all_dates, horizons=[3, 5, 7])
-            learned = learn_patterns(pats, min_n=12, max_p=0.02, min_edge=0.52)
-            if not learned: continue
-            n_sig = sum(1 for p in learned.values() if p["p_value"] < 0.01)
-            avg_pf = sum(p.get("profit_factor", 0) for p in learned.values()) / max(1, len(learned))
-            avg_wr = sum(p["win_rate"] for p in learned.values()) / max(1, len(learned))
-            avg_n = sum(p["n_samples"] for p in learned.values()) / max(1, len(learned))
-            score = avg_pf * avg_wr * math.sqrt(max(n_sig, 1)) * math.log(max(avg_n, 2))
-            results.append((hour, score, len(learned), n_sig, avg_pf, avg_wr))
-            if score > best_score:
-                best_score = score; best_hour = hour
+        best = (-1, None, None, [])
+        for h in range(24):
+            for m in (0, 15, 30, 45):
+                sc, hits = score_time(t, h, m, events)
+                if sc > best[0]:
+                    best = (sc, h, m, hits)
 
+        sc, bh, bm, hits = best
         elapsed = _time.time() - t0
-        # Show top 3 times
-        results.sort(key=lambda x: x[1], reverse=True)
-        top = results[:3]
-        saved = rectify_ticker(t, birth_dt, inst.birth_lat, inst.birth_lon, inst.birth_tz) if rectify_ticker else None
-        saved_hr = f"{saved[0].hour:02d}:{saved[0].minute:02d}" if saved else "N/A"
 
         lines = [
-            f"Best time: {best_hour:02d}:00 UTC  (score: {best_score:.1f})",
-            f"Saved:     {saved_hr} UTC",
-            f"Elapsed:   {elapsed:.1f}s for 24 hour-bands",
-            "", f"{B}Top 3 times:{X}",
+            f"Events:    {len(events)}   (Mars/Saturn/Sun -> ASC/MC)",
+            f"Best time: {bh:02d}:{bm:02d} UTC   (score {sc:.2f})",
+            f"Prev time: {seed_hour:02d}:00 UTC",
+            f"Elapsed:   {elapsed:.1f}s",
+            "", f"{B}Direction hits (orb +-7d):{X}",
         ]
-        for h, sc, npat, nsig, pf, wr in top:
-            lines.append(f"  [{h:02d}:00] pats={npat} sig={nsig} pf={pf:.2f} wr={wr:.1%} score={sc:.1f}")
-        box(f"{t} — Grid Search Results", lines, color=G if best_score > 0 else Y)
+        for err, ev_date, ev_label, prom, sig, asp, motion, adir, d_date, sco in hits:
+            lines.append(
+                f"  {err}d  {prom}->{sig} {asp} {motion}  [{ev_date} {ev_label[:34]}...]"
+            )
+        if not hits:
+            lines.append("  (none — no direction aligned with known events)")
+        box(f"{t} — Placidus PT Rectification", lines, color=G if hits else Y)
 
-        # Save best time back to rectified_times_v3.json (persists across sessions)
-        import json
-        json_path = os.path.join(os.path.dirname(__file__), "rectified_times_v3.json")
-        existing = {}
-        if os.path.exists(json_path):
-            try:
-                with open(json_path) as jf:
-                    existing = json.load(jf)
-            except: pass
-        existing[t] = {"hour": best_hour, "min": 0, "sec": 0, "score": round(best_score, 1)}
+        # Persist best time
+        existing[t] = {"hour": bh, "min": bm, "sec": 0, "score": round(sc, 2),
+                       "method": "event-driven-placidus-pd"}
         try:
             with open(json_path, "w") as jf:
-                json.dump(existing, jf, indent=2)
-            print(f"  {G}✓ Saved {t} best time ({best_hour:02d}:00) to rectified_times_v3.json{X}")
+                _json.dump(existing, jf, indent=2)
+            print(f"  {G}✓ Saved {t} rectified time {bh:02d}:{bm:02d} UTC{X}")
         except Exception as e:
             print(f"  {Y}Could not save: {e}{X}")
 

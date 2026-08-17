@@ -1,7 +1,7 @@
 {
-  "NQ": {"hour": 21, "min": 0, "sec": 0, "score": 6615.0},
-  "ES": {"hour": 14, "min": 30, "sec": 0, "score": 10564.0},
-  "GC": {"hour": 4, "min": 0, "sec": 0, "score": 7437.0},
+  "NQ": {"hour": 21, "min": 35, "sec": 0, "score": 9.0, "method": "event-driven-placidus-pd"},
+  "ES": {"hour": 13, "min": 33, "sec": 0, "score": 10.8, "method": "event-driven-placidus-pd"},
+  "GC": {"hour": 7, "min": 55, "sec": 0, "score": 8.4, "method": "event-driven-placidus-pd"},
   "ITA": {"hour": 9, "min": 30, "sec": 0, "score": 5000.0},
   "PPA": {"hour": 9, "min": 30, "sec": 0, "score": 5000.0},
   "AIQ": {"hour": 9, "min": 30, "sec": 0, "score": 5000.0},
