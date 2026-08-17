@@ -1502,6 +1502,44 @@ def action_walkforward():
     _pause()
 
 
+def action_trading_rules():
+    """Print the current validated trading edge (single source of truth)."""
+    box("TRADING RULES — validated edge (fast-key, 638-trade backtest)", color=C)
+    print(f"""
+  {G}HOW TO TRADE (current validated rules){X}
+  {'─'*55}
+
+  {B}1. DIRECTION — long-only, EXCEPT GC-Kronos-CONFIRMED{X}
+     • NQ / ES / GC: default LONG (futures drift up = baseline edge)
+     • {R}GC + Kronos CONFIRMED → SHORT (half size){X} — the ONE short.
+       (GC-confirmed long = 44% WR / PF 0.70; short-mirror = 56% / PF 2.05)
+     • NQ/ES Kronos CONFIRMED = BULLISH (do NOT short these)
+
+  {B}2. SKIP days (hard skip — expected PF < 1.0){X}
+     • {Y}Moon applies to Sun / Mercury / void → SIT OUT (all tickers){X}
+     • {Y}Moon = neutral → SIT OUT (all tickers){X}
+       (neutral moon: GC 50% / NQ 55% / ES 57% — coin flip)
+
+  {B}3. SIZE UP (premium days){X}
+     • {G}Exact fold → full size (GC 77% / ES 78% / NQ 62% WR){X}
+     • {G}Moon applies to Jupiter (GC) or Venus (NQ/ES) → full size{X}
+     • Benefic moon (Venus/Jupiter) → normal+ (66-68% WR)
+
+  {B}4. Kronos handling (per-ticker — NOT uniform){X}
+     • GC DIVERGES → do NOT skip (still 63% WR / PF 2.70)
+     • NQ/ES DIVERGES → MONITOR/half (ES diverges = 48% WR = weak)
+
+  {B}5. IGNORE these (proven noise for futures){X}
+     • Fidaria main/sub rulers, directed bounds — {Y}no measurable effect{X}
+     • Conviction band — no signal
+
+  {'─'*55}
+  {Y}Note: exact fold only fires ~20-31% of days (it's the rare premium).{X}
+  Most days are prefix/moon fallback (53-62% WR base edge + long bias).
+""")
+    _pause()
+
+
 def action_journal():
     """Trade journal — log entries, close trades, view dashboard, stats."""
     import subprocess
@@ -1640,6 +1678,7 @@ def interactive_menu():
         menu = [
             ("TRADE — daily", [
                 ("1", "Today's Signals (all tickers + sizing)", action_master_trade),
+                ("R", "Trading Rules (validated edge — how to trade)", action_trading_rules),
                 ("2", "Historical Backtest", action_backtest),
                 ("3", "Custom Date Backtest", action_backtest_custom),
                 ("P", "Predict Date Range (forward forecast)", action_predict),
