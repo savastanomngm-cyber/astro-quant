@@ -32,38 +32,8 @@ from placidian_pd import (
 )
 
 # ── Merged event database ────────────────────────────────────────────
-# event_db.EVENTS (curated Mars/Saturn/Sun labels) + rectify_v3.ASSET_EVENTS
-# (richer date coverage).  Preferences: event_db label where dates overlap;
-# rectify_v3 adds unique dates.
-
-_EV_db: dict  = None  # lazy import
-
-def _load_event_db():
-    global _EV_db
-    from event_db import EVENTS as edb_ev
-    from rectify_v3 import ASSET_EVENTS as rv3_ev
-    _EV_db = {}
-    for tk in ("GC","ES","NQ"):
-        merged = {}  # date -> (planet, label)
-        # event_db first (higher quality)
-        for (_tk, ds, pl, lb) in edb_ev:
-            if _tk == tk:
-                merged[ds] = (pl, lb)
-        # rectify_v3 adds unique dates
-        for (ds, lb, pl, _, wt, comment) in rv3_ev.get(tk, []):
-            if ds not in merged:
-                # map planet hints to canonical keys
-                canon = {"mars":"Mars","saturn":"Saturn","sun":"Sun",
-                         "jupiter":"Jupiter","venus":"Venus","moon":"Moon","":""}
-                pl2 = canon.get(pl, "").title() if pl else ""
-                merged[ds] = (pl2, lb)
-        # filter to only dated, labeled events with a planet
-        _EV_db[tk] = [(d, p, l) for d,(p,l) in sorted(merged.items()) if p and l]
-    return _EV_db
-
-def get_events(ticker: str) -> list:
-    db = _load_event_db()
-    return db.get(ticker, [])
+# Single source: event_db.py (semantically labelled Mars/Saturn/Sun)
+from event_db import get_events
 
 
 # ── Scoring ───────────────────────────────────────────────────────────
