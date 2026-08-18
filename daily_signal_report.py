@@ -130,22 +130,19 @@ def generate_daily_signal(ticker, date_str=None, min_wr=0.50, min_pf=1.0):
         fid_mult = 0.80
 
     # ── Directed-Bound Regime Gate (Rectification Manual Ch.8 + Dr. H video) ──
-    # The directed Ascendant/MC moving through the Egyptian bounds is the
-    # "stage" / background Time-Lord.  A SATURN-ruled bound = command-and-control,
-    # deregulation, contraction (video's 2026-28 Saturn-Virgo era: hollowing,
-    # disruption of big-data/ML monopolies).  Restrict speculative LONGS there.
-    # Mars-ruled bound = forceful/extractive (allowed, but reduce size).
+    # The directed Ascendant/MC moving through the Egyptian bounds = the asset's
+    # "stage" / background Time-Lord.  The bound ruler is NOT a hard block —
+    # Saturn-bound for a safe-haven like gold can be a structural repricing /
+    # inflation fear bid, not a contraction.  Use it as a conviction scale.
     dist = st.get("dist", "?")
     mc_b = st.get("mc_bound", "?")
-    bound_rulers = {r for r in (dist, mc_b) if r}
     bound_note = f"bound:{dist}/{mc_b}"
     bound_mult = 1.0
     if persona.pattern_direction == "LONG":
-        if "Saturn" in bound_rulers:
-            # contraction regime — block plain speculative longs
-            return None
-        if "Mars" in bound_rulers:
-            bound_mult = 0.85  # volatile/extractive — reduce size
+        if "Saturn" in (dist, mc_b):
+            bound_mult = 0.85  # contraction regime — reduce conviction, don't block
+        if "Mars" in (dist, mc_b):
+            bound_mult *= 0.90  # volatile/extractive — further reduce
 
     pf = max(0.5, persona.historical_pf)
     tp_mult = min(6.0, max(1.2, 1.5 + math.log(pf + 0.5)))
