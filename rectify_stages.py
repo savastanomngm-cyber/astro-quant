@@ -47,6 +47,50 @@ from event_db import get_events
 
 DEG = math.pi / 180.0
 
+# Ptolemaic bodies whose application to the natal Moon is meaningful for
+# event-nature discrimination (the full planet set, since the manual's
+# "Moon separates/applies" uses all seven classic planets, not only the
+# Mars/Saturn/Sun event natures).
+APPLICABLE_PLANETS = [
+    ("Sun", swe.SUN), ("Mercury", swe.MERCURY), ("Venus", swe.VENUS),
+    ("Mars", swe.MARS), ("Jupiter", swe.JUPITER), ("Saturn", swe.SATURN),
+]
+PLANET_SWE_IDS = {name: pid for name, pid in APPLICABLE_PLANETS}
+
+
+def moon_application(chart: dict) -> str:
+    """Which planet does the natal Moon next apply to, by Ptolemaic aspect.
+
+    The manual's Ch.6 "flow of energy": a separating/applying Moon tells which
+    planet colours the native's disposition.  It is the fastest-moving
+    birth-time-sensitive discriminator in Stage I (~13°/day), so it is what
+    turns a coarse sect-cull into a single-sign verdict.
+
+    We reuse the same aspect logic as `pattern_engine_v3._moon_applying_to`
+    (the transiting-Moon analogue), but here against the NATAL planet
+    longitudes so the result is a property of the candidate birth chart.
+    """
+    moon = chart["planets"]["Moon"]
+    moon_lon = moon["longitude"]
+    planets = chart["planets"]
+
+    next_sign_boundary = (int(moon_lon / 30) + 1) * 30.0
+    best = None  # (planet_name, travel_deg)
+
+    for name in PLANET_SWE_IDS:
+        plon = planets[name]["longitude"]
+        for aspect_deg in sorted(ASPECTS):
+            target = (plon + aspect_deg) % 360.0
+            travel = (target - moon_lon) % 360.0
+            if travel < 0.01:       # separated (past the exact aspect)
+                continue
+            if travel > next_sign_boundary:  # won't reach before sign change
+                continue
+            if best is None or travel < best[1]:
+                best = (name, travel)
+
+    return best[0] if best else "void"
+
 # Ptolemaic aspects
 ASPECTS = {0, 60, 90, 120, 180}
 ASPECT_NAMES = {0: "cjn", 60: "sex", 90: "sq", 120: "tri", 180: "opp"}
@@ -98,6 +142,7 @@ def stage1_sign(chart: dict, events: list) -> dict:
     # Moon config: sign + application
     moon = chart["planets"]["Moon"]
     moon_sign_name = SIGN_NAMES[moon["sign"]]
+    moon_app = moon_application(chart)
 
     # -- Fidaria period-nature match --
     fid_match = 0
@@ -113,33 +158,71 @@ def stage1_sign(chart: dict, events: list) -> dict:
         if ev_planet in (main_r, sub_r):
             fid_match += 1
 
+    # -- Moon application: does the native's disposition match the event-nature
+    #    distribution?  The Moon "applying to Mars" means Martian events are the
+    #    native's expected energy-flow; count how many events bear that nature.
+    moon_match = 0
+    for ev_date, ev_planet, ev_label in events:
+        if ev_planet == moon_app:
+            moon_match += 1
+
     return {
         "sect": sect,
         "asc_sign": asc_sign_name,
         "moon_sign": moon_sign_name,
+        "moon_applies": moon_app,
         "fidaria_match": fid_match,
         "fidaria_total": fid_total,
+        "moon_match": moon_match,
+        "event_total": len(events),
     }
 
 
 def stage1_score(ticker: str, hour: int, minute: int, events: list):
-    """Score a candidate time at SIGN level.
+    """Score a candidate time at SIGN level — now returns ONE sign as winner.
 
-    The manual's Stage I cull is: does this candidate birth time place the
-    Ascendant in the sign that the Fidaria + Moon-config evidence supports?
+    The manual's Stage I ends when you pick ONE sign, and the tool that does
+    the final discrimination is the Moon's application.
 
-    We operationalize it as: for each event, is a Fidaria period-ruler of the
-    SAME nature as the event active?  (Higher = the candidate time's sect +
-    period structure explains the event-nature distribution.)
+    Scoring formula (both sub-scores are fractions in [0,1]):
+      score = fidaria_nature_match_fraction + moon_application_event_alignment_fraction
+
+    The second term answers: does this candidate's natal Moon-application
+    planet better explain the event-nature distribution?
+      e.g., Moon applies to Mars → Martian events count as aligned.
     """
     inst = INSTRUMENTS[ticker]
     chart = calculate_chart(inst.birth_year, inst.birth_month, inst.birth_day,
                             hour, minute, 0, inst.birth_lat, inst.birth_lon,
                             inst.birth_tz)
     sig = stage1_sign(chart, events)
-    # Fidaria-nature match fraction is the primary Stage-I signal (0..1)
-    score = sig["fidaria_match"] if sig["fidaria_total"] else 0.0
+
+    # Fidaria-nature match with better statistical treatment (avoid zero-div)
+    n_total = max(sig["fidaria_total"], 1)
+    n_total_ev = max(sig["event_total"], 1)
+    fid_frac = sig["fidaria_match"] / n_total
+    moon_frac = sig["moon_match"] / n_total_ev
+
+    score = fid_frac + moon_frac
     return float(score), sig
+
+
+def stage1_winner_sign(ticker: str, grid_minutes: int = 15,
+                       events: list | None = None) -> tuple[str, float, dict]:
+    """Grid-search over 24h and return the winning Ascendant SIGN + its stats.
+
+    Returns (sign_name, score, best_sig_dict).
+    """
+    if events is None:
+        events = get_events(ticker)
+    best_sign, best_score, best_sig = None, -1.0, {}
+    for h in range(24):
+        for m in range(0, 60, grid_minutes):
+            sc, sig = stage1_score(ticker, h, m, events)
+            if sc > best_score:
+                best_score, best_sig = sc, sig
+                best_sign = sig["asc_sign"]
+    return best_sign, best_score, best_sig
 
 
 # ----------------------------------------------------------------------
@@ -268,10 +351,17 @@ def arcus_vitae(chart: dict) -> dict:
 if __name__ == "__main__":
     for tk in ("GC", "ES", "NQ"):
         ev = get_events(tk)
+        win = stage1_winner_sign(tk, 15, ev)
         print(f"\n=== {tk} ({len(ev)} events) ===")
+        print(f"  STAGE I winner sign: {win[0]}  (score={win[1]:.3f})")
+        s = win[2]
+        print(f"    sect={s['sect']}  asc={s['asc_sign']}  moon={s['moon_sign']} "
+              f"moon_applies_to={s['moon_applies']}  "
+              f"fidaria-match={s['fidaria_match']}/{s['fidaria_total']}  "
+              f"moon-match={s['moon_match']}/{s['event_total']}")
         for h, m in ((12, 0), (0, 0)):
             s1, sig = stage1_score(tk, h, m, ev)
             s2, d2 = stage2_score(tk, h, m, ev)
-            print(f"  {h:02d}:{m:02d}  STAGE I(sign) fidaria-match={sig['fidaria_match']}/{sig['fidaria_total']} "
-                  f"sect={sig['sect']} asc={sig['asc_sign']} moon={sig['moon_sign']}  "
+            print(f"  {h:02d}:{m:02d}  STAGE I={s1:.3f} fid={sig['fidaria_match']}/{sig['fidaria_total']} "
+                  f"moon_applies={sig['moon_applies']} sect={sig['sect']} asc={sig['asc_sign']} "
                   f"| STAGE II(parts+prof) score={s2:.1f} ({len(d2)} contacts)")

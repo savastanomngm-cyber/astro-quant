@@ -2,43 +2,38 @@
 """
 RECTIFICATION — FULL 3-STAGE METHOD (Zoller, A Rectification Manual, 3rd ed.).
 
-Faithful to the manual's TRUE stage structure (corrected from an earlier
-misplacement of solar-arcs as "Stage II"):
+Faithful to the manual's TRUE stage structure, now as a STRICT funnel:
+  STAGE I    Ascendant SIGN       Fidaria + Moon config (incl. application) → ONE sign
+  STAGE II   Ascendant 1-4 deg    Arabic Parts + profections (only in the winning sign)
+  STAGE III  Ascendant deg/min    Placidus PT + Solar Arcs (only on Stage II survivors)
 
-  STAGE I    Ascendant SIGN       Fidaria (diurnal/nocturnal culls ~50% of
-                                   hours), Moon sign + application.   ±hours
-  STAGE II   Ascendant 1–4°       Arabic Parts + Ascendant profections. ±1–4°
-  STAGE III  Ascendant deg/min    Primary Directions (Placidus PT) +
-                                   Solar Arc Directions + arcus vitae.  ±min
-
-Stage III is "fine sandpaper" — it only works after Stages I–II have constrained
-the Ascendant.  The manual is explicit that primary directions alone, run on a
-raw 24h grid, are "throwing the ball in the wrong crater."
+The manual is explicit: primary directions are "fine sandpaper" and only work
+after Stages I-II have constrained the Ascendant.  Prior versions ran all
+stages on the full 24h grid — this version enforces the funnel.
 
 HONEST POSITIONING (carried from prior findings, notes o1pbi80d & jl8p0j9):
-  * The PD direction-event method does NOT converge for instruments (±700–1000d
-    at best vs the manual's "within 48h") because market events are sparse and
-    continuous, not discrete personal events.
-  * Therefore this pipeline reports the STAGE-I sign cull and STAGE-II range as
-    the PRIMARY, defensible output ("the manual's robust level"), and reports
-    Stage III as CORROBORATION ONLY, explicitly flagged low-power for assets.
+  * The PD direction-event method does NOT converge for instruments because
+    market events are sparse and continuous, not discrete personal events.
+  * Therefore Stage III is CORROBORATION ONLY, explicitly low-power for assets.
+  * The defensible output is Stage I sign + Stage II 1-4 degree band.
 
 Usage:
     python3 rectify_full.py [ticker] [--grid 15]
 """
 from __future__ import annotations
 
-import json
-import os
 import sys
+import os
 from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(__file__))
 
 from astro_configs import INSTRUMENTS
 from event_db import get_events
-from rectify_stages import stage1_score, stage2_score, solar_arc_hits, arcus_vitae
-from rectify_event import score_time as stage3_pd  # Placidus PT (existing)
+from rectify_stages import (stage1_score, stage1_winner_sign, stage2_score,
+                            solar_arc_hits, arcus_vitae)
+from rectify_event import score_time as stage3_pd  # Placidus PT
+from astro_core_v2 import calculate_chart
 
 TICKERS = ["GC", "ES", "NQ"]
 
@@ -51,86 +46,103 @@ def _norm(xs):
     return [(x - lo) / (hi - lo) for x in xs]
 
 
+def _angle_dist(a, b):
+    return abs(((a - b + 180.0) % 360.0) - 180.0)
+
+
 def rectify_full(ticker: str, grid_minutes: int = 15,
-                 stage_weights=(0.35, 0.35, 0.30)):
-    """Run the manual's 3 stages over the full grid, staged report."""
+                 stage2_band_deg: float = 4.0):
+    """Run the manual's 3 stages as a STRICT funnel (sign -> 1-4 deg band -> deg/min)."""
     events = get_events(ticker)
     n_ev = len(events)
+    inst = INSTRUMENTS[ticker]
 
     grid = [(h, m) for h in range(24) for m in range(0, 60, grid_minutes)]
 
-    # ── Stage I: Ascendant SIGN (Fidaria + Moon config) ──
-    s1_map, s1_sig = {}, {}
-    for h, m in grid:
-        s1_map[(h, m)], s1_sig[(h, m)] = stage1_score(ticker, h, m, events)
+    # ---- STAGE I -- winner SIGN ----
+    win_sign, win_s1, win_sig = stage1_winner_sign(ticker, grid_minutes, events)
 
-    # ── Stage II: Arabic Parts + profections (1–4° range) ──
-    s2_map = {}
+    # ---- STAGE II -- only candidates whose ASC is in the winning sign ----
+    s2_candidates = []
     for h, m in grid:
-        s2_map[(h, m)], _ = stage2_score(ticker, h, m, events)
+        sc1, sig1 = stage1_score(ticker, h, m, events)
+        if sig1["asc_sign"] != win_sign:
+            continue
+        sc2, d2 = stage2_score(ticker, h, m, events)
+        s2_candidates.append((h, m, sc2))
 
-    # ── Stage III: Primary Directions (Placidus PT) + Solar Arcs ──
-    s3_pd = {}
-    s3_sa = {}
-    for h, m in grid:
-        s3_pd[(h, m)], _ = stage3_pd(ticker, h, m, events)
-        # solar arcs need a chart; build via stage1's chart indirectly
-        from astro_core_v2 import calculate_chart
-        inst = INSTRUMENTS[ticker]
+    if not s2_candidates:
+        print(f"\n {ticker}: STAGE II found no candidates in sign {win_sign}")
+        return []
+
+    s2_candidates.sort(key=lambda x: -x[2])
+
+    # Ascendant longitude for top scoring candidates
+    asc_of = {}
+    for h, m, _ in s2_candidates:
         chart = calculate_chart(inst.birth_year, inst.birth_month, inst.birth_day,
                                 h, m, 0, inst.birth_lat, inst.birth_lon, inst.birth_tz)
-        s3_sa[(h, m)], _ = solar_arc_hits(chart, events)
+        asc_of[(h, m)] = chart["ascendant"]["longitude"]
 
-    # stage III combined = normalize pd + sa, then average (both are "equal" per manual)
-    n_pd = _norm([s3_pd[hm] for hm in grid])
-    n_sa = _norm([s3_sa[hm] for hm in grid])
-    s3_map = {hm: 0.5 * n_pd[i] + 0.5 * n_sa[i] for i, hm in enumerate(grid)}
+    top_asc = asc_of[(s2_candidates[0][0], s2_candidates[0][1])]
+    band = [(h, m, sc2) for (h, m, sc2) in s2_candidates
+            if _angle_dist(asc_of[(h, m)], top_asc) <= stage2_band_deg]
 
-    # ── combine (normalize each stage's raw score) ──
-    w1, w2, w3 = stage_weights
-    n1 = _norm([s1_map[hm] for hm in grid])
-    n2 = _norm([s2_map[hm] for hm in grid])
-    n3 = _norm([s3_map[hm] for hm in grid])
+    # ---- STAGE III -- Primary Directions + Solar Arcs on the Stage-II band ----
+    pd_map, sa_map = {}, {}
+    for h, m, _ in band:
+        pd_map[(h, m)], _ = stage3_pd(ticker, h, m, events)
+        chart = calculate_chart(inst.birth_year, inst.birth_month, inst.birth_day,
+                                h, m, 0, inst.birth_lat, inst.birth_lon, inst.birth_tz)
+        sa_map[(h, m)], _ = solar_arc_hits(chart, events)
+
+    n_pd = _norm([pd_map[(h, m)] for h, m, _ in band])
+    n_sa = _norm([sa_map[(h, m)] for h, m, _ in band])
+    s3_map = {band[i][:2]: 0.5 * n_pd[i] + 0.5 * n_sa[i]
+              for i in range(len(band))}
+
+    # ---- report ----
     combined = []
-    for i, hm in enumerate(grid):
-        h, m = hm
-        c = w1 * n1[i] + w2 * n2[i] + w3 * n3[i]
-        combined.append((c, s1_map[hm], s2_map[hm], s3_pd[hm], s3_sa[hm],
-                         s1_sig[hm], h, m, n1[i], n2[i], n3[i]))
+    for i, (h, m, sc2) in enumerate(band):
+        sc1, sig1 = stage1_score(ticker, h, m, events)
+        s3n = s3_map[(h, m)]
+        # simple combined = Stage I + Stage II (Stage III is corroboration only)
+        c = sc1 + sc2
+        combined.append((c, sc1, sc2, pd_map[(h, m)], sa_map[(h, m)],
+                         sig1, h, m, s3n))
     combined.sort(key=lambda x: -x[0])
 
-    # power assessment: winner-vs-runner-up gap
-    c_gap = (combined[0][0] - combined[1][0]) if len(combined) > 1 else 0.0
-    power = ("HIGH" if c_gap > 0.25 else "MODERATE" if c_gap > 0.10 else "LOW")
-
     print(f"\n{'=' * 82}")
-    print(f" {ticker} — RECTIFICATION (manual 3-stage, faithful)  |  {n_ev} events, {grid_minutes}min grid")
+    print(f" {ticker} -- RECTIFICATION (manual 3-stage funnel)  |  {n_ev} events, {grid_minutes}min grid")
     print(f"{'=' * 82}")
-    print(f"  Stage I   SIGN        Fidaria sect-cull + Moon config     (±h)")
-    print(f"  Stage II  RANGE 1–4°  Arabic Parts + profections          (±1-4°)")
-    print(f"  Stage III DEG/MIN     Placidus PT + Solar Arcs + arc.vitae (±min, CORROBORATION)")
-    print(f"  weights  {stage_weights}   POWER {power} (gap {c_gap:.3f})")
+    print(f"  STAGE I   SIGN          -> {win_sign}  ({win_sig['sect']}, Moon {win_sig['moon_sign']} "
+          f"applies to {win_sig['moon_applies']}; Fidaria {win_sig['fidaria_match']}/{win_sig['fidaria_total']}; "
+          f"Moon-nature {win_sig['moon_match']}/{win_sig['event_total']})")
+    print(f"  STAGE II  RANGE 1-4deg   {len(s2_candidates)} candidates in {win_sign} -> "
+          f"{len(band)} within +-{stage2_band_deg}deg of best ASC")
+    print(f"  STAGE III DEG/MIN       Placidus PT + Solar Arcs (CORROBORATION ONLY for assets)")
     print(f"{'-' * 82}")
-    print(f"  {'rank':>4} {'time':>8} {'comb':>7} {'I(sign)':>8} {'II(parts)':>10} {'III(PD)':>8} {'III(SA)':>8}  sect/ASC-sign")
-    for i, (c, s1, s2, s3pd, s3sa, sig, h, m, nn1, nn2, nn3) in enumerate(combined[:14], 1):
-        print(f"  {i:>4} {h:02d}:{m:02d} {c:>7.3f} {s1:>8.1f} {s2:>10.1f} {s3pd:>8.1f} {s3sa:>8.1f}  {sig['sect'][:3]}/{sig['asc_sign']}")
+    print(f"  {'rank':>4} {'time':>8} {'comb':>7} {'I(sign)':>8} {'II(parts)':>10} {'III(PD)':>8} {'III(SA)':>8} {'III(norm)':>9}  sect/ASC-sign")
+    for i, (c, s1, s2, s3pd, s3sa, sig, h, m, s3n) in enumerate(combined[:14], 1):
+        print(f"  {i:>4} {h:02d}:{m:02d} {c:>7.3f} {s1:>8.3f} {s2:>10.1f} {s3pd:>8.1f} {s3sa:>8.1f} {s3n:>9.3f}  {sig['sect'][:3]}/{sig['asc_sign']}")
+
+    if not combined:
+        return []
 
     # winner detail
     top = combined[0]
-    c, s1, s2, s3pd, s3sa, sig, h, m, nn1, nn2, nn3 = top
+    c, s1, s2, s3pd, s3sa, sig, h, m, s3n = top
     print(f"\n  WINNER {h:02d}:{m:02d} UTC  (ASC={sig['asc_sign']}, {sig['sect']}, "
-          f"Moon={sig['moon_sign']}, Fidaria-match={sig['fidaria_match']}/{sig['fidaria_total']})")
+          f"Moon={sig['moon_sign']}->{sig['moon_applies']}, "
+          f"Fidaria-match={sig['fidaria_match']}/{sig['fidaria_total']})")
     _, hits3 = stage3_pd(ticker, h, m, events)
     if hits3:
-        print(f"  Stage III PD hits (within ±7d):")
+        print(f"  Stage III PD hits (within +-7d):")
         for err, ev_date, ev_label, ev_pl, sigp, asp, motion, adir, ddate, sc in hits3:
             print(f"    {ev_date} [{ev_pl:6s}] {ev_label[:46]:46s} {sigp} {asp} {motion}/{adir} -> {ddate} ({err}d)")
     else:
-        print(f"  Stage III PD hits: (none within ±7d — expected; assets don't converge on PD alone)")
+        print(f"  Stage III PD hits: (none within +-7d -- expected; assets don't converge on PD alone)")
 
-    # arcus vitae / hyleg for the winner chart
-    from astro_core_v2 import calculate_chart
-    inst = INSTRUMENTS[ticker]
     chart = calculate_chart(inst.birth_year, inst.birth_month, inst.birth_day,
                             h, m, 0, inst.birth_lat, inst.birth_lon, inst.birth_tz)
     av = arcus_vitae(chart)
