@@ -128,6 +128,25 @@ def generate_daily_signal(ticker, date_str=None, min_wr=0.50, min_pf=1.0):
         fid_mult = 1.20
     elif fid_sub in ("Jupiter", "Moon"):
         fid_mult = 0.80
+
+    # ── Directed-Bound Regime Gate (Rectification Manual Ch.8 + Dr. H video) ──
+    # The directed Ascendant/MC moving through the Egyptian bounds is the
+    # "stage" / background Time-Lord.  A SATURN-ruled bound = command-and-control,
+    # deregulation, contraction (video's 2026-28 Saturn-Virgo era: hollowing,
+    # disruption of big-data/ML monopolies).  Restrict speculative LONGS there.
+    # Mars-ruled bound = forceful/extractive (allowed, but reduce size).
+    dist = st.get("dist", "?")
+    mc_b = st.get("mc_bound", "?")
+    bound_rulers = {r for r in (dist, mc_b) if r}
+    bound_note = f"bound:{dist}/{mc_b}"
+    bound_mult = 1.0
+    if persona.pattern_direction == "LONG":
+        if "Saturn" in bound_rulers:
+            # contraction regime — block plain speculative longs
+            return None
+        if "Mars" in bound_rulers:
+            bound_mult = 0.85  # volatile/extractive — reduce size
+
     pf = max(0.5, persona.historical_pf)
     tp_mult = min(6.0, max(1.2, 1.5 + math.log(pf + 0.5)))
     stop_pct = persona.stop_tightness
@@ -152,8 +171,10 @@ def generate_daily_signal(ticker, date_str=None, min_wr=0.50, min_pf=1.0):
     return {
         "ticker": ticker, "date": today.strftime("%Y-%m-%d"),
         "direction": persona.pattern_direction,
-        "conviction": round(persona.conviction_mult * moon_mult * fid_mult, 2),
+        "conviction": round(persona.conviction_mult * moon_mult * fid_mult * bound_mult, 2),
         "moon_applies": moon_applies,
+        "bound_rulers": bound_note,
+        "fidaria_sub": fid_sub,
         "sl_pct": f"{stop_pct:.1%}",
         "tp_pct": f"{stop_pct * tp_mult:.1%}",
         "hold_days": persona.max_hold_days,
