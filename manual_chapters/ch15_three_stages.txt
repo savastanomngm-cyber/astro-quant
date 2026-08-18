@@ -1,0 +1,547 @@
+
+
+===== PDF PAGE 297 (printed ~288) =====
+CHAPTER FIFTEEN 
+The Three Stages of Rectification 
+Rectification is best thought of as a mathematical optimization problem. A 
+common feature to all optimizations is sensitivity to initial conditions. What this 
+means is the correct solution is more likely to be achieved if initial parameters are 
+reasonably close to the final solution before the optimization actually begins. The 
+same principle applies to rectification. A three-stage rectification method is 
+proposed which matches each technique to a commensurate level of robustness 
+appropriate for each rectification stage. 
+Chapter Summary 
+Stage I: Determine the Ascendant Sign. Planetary period techniques, including 
+Fidaria and Directing by Triplicity, are relatively robust methods which allow 
+large blocks of time to be culled from the day of birth. Determination of the 
+Moon's sign and her separation and application to other planets is another robust 
+method which can significantly narrow the birth time range. Once the Ascendant 
+is narrowed to a few possible signs, both physiognamy and general delineation 
+techniques are used to narrow the Ascendant choice to a single sign. 
+Stage 11: Determine the Ascendant's ranee within 1-4 degrees. Both 
+physiognamy and dynamic measurements to the angles further specify the 
+Ascendant to a range of ten degrees or less. It is at this point when Arabic Parts 
+are deployed to narrow the Ascendant's range to 4 degrees or less. Iterating 
+Ascendant Profections is also useful at this stage. 
+Stage 111: Determine the exact Degree and Minute of the Ascendant. Primary 
+directions, primary direction sequences, and solar arc directions are the scalpels of 
+the rectification toolbox designed to finalize the Ascendant's exact degree and 
+minute. Confirmation of a suitable arcus vitae is the final rectification step. 
+A Miscellany of Tricks and Traps concludes the chapter. It includes a 
+discussion for choosing magical times for conducting rectification projects. 
+
+
+===== PDF PAGE 298 (printed ~289) =====
+290 
+A RECTIFICATION MANUAL 
+Treating Rectification as a Mathematical Optimization 
+Sensitivity to initial conditions. Above all one must consider rectification a 
+mathematical optimization process. Like all optimizations, rectification is 
+sensitive to initial conditions. Consider a vast moonscape filled with craters, pits, 
+and hidden tunnels as an analogy to the rectification problem. Each surface 
+depression or opening represents a possible rectification solution. Many holes 
+may appear promising yet only one will lead to the correct answer which lies 
+below the surface, connected to the surface by some optimal path. The process 
+itself is like throwing a ball across the moonscape and hoping it lands in the 
+correct hole. With the permutations of transits, progressions, directions, and their 
+different mathematical aspects, it is easy to find at least some fit for any hole. The 
+trick then is to start near the optimal hole by identifying the correct crater from the 
+outset. One is less likely to go astray if the starting point is reasonably close. One 
+simply can't see the right hole if it is located in some other out-of-sight crater 
+1000 or 3000 feet away. Finding some event matches for a particular time may 
+cause too much time spent in the wrong place - literally throwing the ball round 
+and around the surface of the wrong crater! 
+Proper attribution of planetary behavior to life events requires accurate 
+delineation. For example, suppose one observes a client's punctuality, tidiness of 
+dress, and attention to detail. These are the characteristics of Virgo. Suppose the 
+trial chart has no planets in Virgo so Virgo is assumed a trial Ascendant. Some 
+event matches are found consistent with a Virgo Ascendant and a trial time is 
+computed. But has the rectification really started in the correct crater? Suppose 
+that the detail of Virgo manifests through the dwad position of the Moon or Sun in 
+Virgo? Then the rectification has fallen victim to the trap of anchoring, sticking 
+with some initial notion which unfairly biases the entire rectification. How to 
+avoid anchoring? Delineation, Delineation, Delineation! 
+The Rectification Process in Brief 
+The proposed three stage rectification progressively resolves the choice of birth 
+time to the exact degree and minute of the zodiac rising on the Eastern horizon at 
+birth. Both the Ascendant and Midheaven are the two most important angles for 
+use in rectification. 
+Stage 1: Determine the Ascendant Sign. The goal of Stage I is to correctly 
+choose the Ascendant sign through testing robust planetary period techniques, 
+identifying the Moon's configuration, creating a figure whose planet placement is 
+consistent with life patterns, and physiognamy. 
+Stage II: Determine the Ascendant's range within 1-4 degrees. Narrowing the 
+Ascendant to a tight range is the most time consuming part of the rectification 
+process. Physiognamy of the rising decan, Arabic Parts, and Ascendant 
+Profections are recommended tools for this stage. 
+
+
+===== PDF PAGE 299 (printed ~290) =====
+CHAPTER 15 - THREE STAGES OF RECTIFICATION 291 
+Stage 111: Determine the exact Degree and Minute of the Ascendant. Primary 
+directions, primary direction sequences, and solar arc directions are tools used to 
+fine tune the Ascendant. Identification of a suitable arcus vitae provides final 
+confirmation of the rectified Ascendant. 
+Where does one begin? 
+Depending on the quality of birth data, the practicing astrologer may choose to 
+begin the rectification process with any one of the three stages. What types of 
+birth data does the astrologer face? In general, four types of data are encountered: 
+1. Date but no time. This is relatively common for historical figures, older 
+generations still living, or individuals who by reason of immigration, warfare, or 
+other displacement no longer have access to official birth times. 
+2. Date and approximate time of day, such as late at night, sunrise, or before 
+lunch. Biographers often provide these indications for historical subjects, saving 
+astrologers from working completely blind. 
+3. Date and exact - but suspicious - birth certificate time. Just because the time 
+of 1:15 PM or 3:00 AM appears on a birth certificate does not mean it is accurate. 
+Whenever birth times are rounded to the nearest 10, 15, 30 or 60 minute interval, 
+one has good reason to be suspicious that for whatever reason the exact birth time 
+was not recorded. What kind of reasons? Incorrect clock settings, insufficient 
+nursing staff on duty, lack of attentiveness by nursing staff and complications at 
+birth which demand immediate medical attention are the most common causes for 
+incorrect birth time notations. In virtually all cases rounded times are off, in some 
+cases as much as 20 or 30 minutes based on my experience! 
+4. Date and exact birth certificate time. When one finds 2:23 PM or 5:51 PM 
+recorded on a birth certificate, one can be reasonably certain that a nurse was 
+watching the clock. There is still room for error, but it is generally very small. 
+From my experience, these observations are often slightly late by 0-90 seconds. 
+Caution: When Mercury is Retrograde or Combust. Irrespective of whether a 
+birth time is rounded or not; whenever Mercury is retrograde or combust one must 
+be suspicious of the birth time. The ability of Mercury retrograde periods to 
+disrupt communications is common knowledge among even armchair astrologers. 
+Yet few have made the connection between Mercury-retrograde and errors in 
+recording birth times. The same can be said for times when Mercury is near the 
+Sun, making his actions hidden. In one case, I rectified an official birth time of 
+5:32 AM to 5:22:30 AM. It appears the official birth time should have been 5:23 
+AM but someone transposed the digits from 5:23 to 5:32. The additional 
+difference between 5:23:00 and 5:22:30 is within the normal range of error for an 
+accurate birth time. Mercury was under the beams in this example. 
+
+
+===== PDF PAGE 300 (printed ~291) =====
+292 
+A RECTIFICAT/ON MANUAL 
+What is the True Birth Time? So what actually constitutes the birth time? I 
+have personally never witnessed a live birth. From what other astrologers have 
+reported, while the birth process is generally quite fast, there remains an interval 
+of time between the appearance of the head, the first breath, and the severing of 
+the umbilical cord; any one of which can be argued as the true birth time. I can 
+only state that empirical events timed by directions to the angles are the only 
+decisive proof of the empirical birth time. What this means is not until an 
+individual has lived for 5, 10, or even 15 years might there be sufficient evidence 
+using primary directions to determine the true birth time. 
+Choosing the Initial Rectification Stage. For the first three types of data - day 
+but no time, day but approximate time, and day with exact but suspicious time - I 
+recommend beginning with Stage I rectification procedures. For the fourth type 
+of data - date and exact birth certificate time - one may immediately jump in with 
+primary directions, primary direction sequences, and solar arc directions as 
+outlined in Stage III. Even for these cases, some Stage II Arabic Part testing is 
+still recommended. 
+One Shortcut worth Trying First 
+Illness/Death of native or female family members. Before introducing Stage I, 
+let me mention one shortcut which for about 5% of cases studied was able to 
+achieve an Ascendant accurate within 1 degree in just a few minutes of work. If 
+the event database contains 4-6 events including one or more major illnesses 
+and/or death for the native, mother, grandmother, wife, sister, and/or daughter; 
+often the Moon's position can be accurately determined because most of these 
+events are timed by afflictions to the Moon. For illnesses and/or death of the 
+native, this occurs whether or not the Moon is the actual hllaj because the Moon 
+remains the universal significator of the physical body. For illnesses of other 
+female family members, this guideline works because female family members are 
+often read through the Moon in the native's figure. Even when females are 
+signified by Venus, not the Moon, the stress of family illnesses often marks the 
+native's own Moon indirectly. 
+Determine the Moon's trial degree. Measurements like these, even if just a 
+transit, can offer provide a clue to the Moon's true degree. With these types of 
+events in hand, I use the quad-wheel software function to examine dynamic planet 
+positions for each event. I recommend flipping back and forth between direct and 
+converse motion for as many events as possible, noting degree positions of planets 
+which are most likely cause of the affliction. See if a common degree can be used 
+for the Moon's trial position. South Node transits are very useful in this step. 
+
+
+===== PDF PAGE 301 (printed ~292) =====
+CHAPTER 15 - THREE STAGES OF RECTIFICATION 
+293 
+Stage I: Determine the Ascendant Sign 
+Correct Day and Year. As obvious as it sounds, there are some instances when 
+even the birthday of a historical figure is in question. Woodrow Wilson gave his 
+birthday as 28 December even though the family Bible recorded 29 December 
+12:45 AM as the birth time. The latter proved accurate in testing. A variation of 
+this problem occurs for births occurring near midnight. Compared to James 
+Madison's official birthday of 16 March 1751 occurring near midnight, my 
+proposed rectification is 15 March 1751, 11:23:48 PM, just shy of midnight. In 
+these cases, I believe some flexibility must be allowed for a day either side of the 
+official birth date. Finally there are examples of outright lies. Out of sheer vanity, 
+Chester Arthur, bom 5 October 1829, changed his birth year to 1830 sometime 
+between 1870 and 1880. The birth year of 1829 is correct (Reeves 1975, 5). 
+Fidaria: Establishing the Sun's position above or below the horizon. Because 
+Fidaria sequences differ for diumal and nocturnal births, they effectively divide 
+the day into two halves. Matching major life periods to either the diumal or 
+nocturnal sequence is usually so evident that it makes sense to begin with a 
+Fidaria sequence comparison when the birth time is unknown. There is no better 
+way to cull invalid blocks of time. Choosing a diumal sequence leaves only times 
+between sunrise and sunset for consideration, a reduction on average of 50% of 
+the hours of the day; for the nocturnal sequence, vice versa. 
+Getting the Planets in the correct signs. For most cases this step involves 
+choosing the Moon's correct sign; yet other planets, usually Mercury, Venus, or 
+the Sun, may be positioned at the 30th or 1st degree of a sign and need to be double 
+checked. For the Presidential database, this condition was met in 7 of 42 cases. 
+Table 24 considers planets in the 30th or 1st degrees of signs with actual zodiacal 
+degree positions taken from proposed rectifications. Delineation of the planet in 
+the actual sign is contrasted with the planet in the adjacent sign. In some cases, 
+such as Hoover where the Ingress of Mercury to Leo confirms a birth time no 
+earlier than 10:27 p.m., much of the day's hours can be dismissed as rectification 
+possibilities. 
+
+
+===== PDF PAGE 302 (printed ~293) =====
+294 A RECTIF/CA TION MANUAL 
+Table 24. Planets in the 30th or 1st Degrees of Signs 
+President 
+Planet 
+Delineation Notes 
+G. Washington 
+Venus 29P111 
+Interest in luxury goods is Venus/Pisces 
+not the lust of Venus/Aries. 
+F. Pierce 
+Mercury 29SC44 
+Vindictive diplomats (e.g., Ostend) are 
+Mercury in Scorpio not Sagittarius. 
+J. Buchanan 
+Venus 00GE15 
+Reputation as entertainer and as writer of 
+frequent correspondence matches 
+Venus/Gemini as love of talk. 
+J. Garfield 
+Mercury 00SA50 
+Dreaminess and accidents from falling 
+(including falling overboard 14 times 
+during a canal boat ride at age 16) is 
+Mercury in Sagittarius not Scorpio. 
+C. Coolidge 
+Mars 00CA09 
+Coolidge's timid, yet delayed forceful 
+response during the Boston Police Strike 
+matches Mars/Cancer not Mars/Gemini 
+which would make Coolidge much more 
+of a risk taker and debater. 
+H. Hoover 
+Mercury 00LE01 
+Earliest profession in gold mine 
+management is Mercury in Leo not Cancer 
+Moon's Sign and Aspects. With an average motion of 13.2 degrees per day and 
+30 degrees in each zodiacal sign, the odds of two possible Moon signs for a single 
+day are high. There are two methods to narrow the Moon's degree range. 
+Delineation. Identity the Moon's sign, bound, and dwad. See Chapter 1: 
+Planets in Signs for the theoretical basis for this approach. For additional 
+examples which demonstrate the influence of bound and dwad, see Appendix A. 
+Prediction. Match the Moon's separation and application to long-term patterns 
+of life development. Use aphorisms by Matemus, Pearce, and others as a 
+baseline. Remember to customize their observations to the nativity at hand by 
+respecting the actual zodiacal state of each planet involved in the Moon's 
+configuration. Chapter 6: Temporal Indicators includes a case study of selecting 
+of Franklin Pierce's Moon position using this approach. 
+Basic Configuration of the Chart. The effects of beneflcs and malefics placed 
+in houses are so strong that their effects are hard to miss. Good health yet a 
+childless marriage? Not if the trial rectification shows Jupiter in the 5,h. Try 
+moving Jupiter to the 6th house and see if a malefic moves to the 5th by position or 
+rulership. More so than any other rectification method, matching the basic 
+configuration of the chart to the native's life requires expertise in delineation. The 
+Jupiter-S^-children is but one example. There are endless others. A military 
+leader? Look for Mars in the 7th or 10th. Wealthy? Look for the Part of Fortune 
+
+
+===== PDF PAGE 303 (printed ~294) =====
+CHAPTER 15 - THREE STAGES OF RECTIFICATION 
+295 
+ruled and aspected by strong benefics. Multiple marriages? Look for a mutable 
+sign on the T"
+1 cusp. No religious affiliation? Look for Mars in or ruling the 9th 
+house. Good health? Watch for Venus, Jupiter, or the North Node in the 6th 
+house. Even the Part of Fortune in the 6th can ameliorate the effects of an empty 
+house ruled by a malefic. The possibilities are endless. 
+Physiognamv. Matching the Ascendant sign to physical appearance based on 
+physiognomy is a method I picked up towards the end of this project. In theory, 
+the physical appearance of an individual's face should allow a specific ten degree 
+sign subdivision to be selected as the Ascendant range based on the physiognamy 
+characteristics of the decans. In practice, there are a number of exceptions which 
+make this a risky first step in rectification. 
+First is the Moon's ability to alter physiognomy no matter where she is located 
+in the figure. Because the Moon is the significator of the body; as the Sun is to 
+spirit, the Moon always leaves her mark on the physical body and temperament. 
+Second is the ability of a multiple planet stellium to dominate physiognomy no 
+matter where the stellium appears in the figure. Warren Harding is an excellent 
+example of this exception. His heavy contrasting eyebrows and the eagle shape of 
+his nose are a classic Scorpio signature. Yet his Ascendant is Sagittarius. The 
+exception is caused by a four planet Scorpio stellium; for Harding, in the 12th 
+house (WS). Anyone choosing Scorpio as Harding's Ascendant based on 
+physiognomy would anchor the rectification on a false assumption. 
+To avoid making rectification errors with physiognomy, 1 suggest two tactics. 
+First is to narrow the Ascendant to not more than two or three possible signs by 
+first determining the correct Fidaria sequence, the Moon's sign, and the Moon's 
+separation and application to other planets by aspect. At this point, the odds of 
+making a mistake because of physiognomy's exceptions are greatly reduced. 
+Second is to determine the Ascendant through other means in Stage I and wait 
+until Stage II before attacking the figure with physiognomy. At this point, one can 
+narrow the Ascendant based on the decans. 
+Sources for physiognomy. There has not been a significant book published on 
+decans in many years. At this point, I can offer nothing better than the 
+recommendation to search an online bookseller using decans or decanates as 
+keywords. Of books I have reviewed, I recommend Anrias (1938) whose 
+composite illustrations of each of the 36 decan types were uncannily accurate in 
+practice. Barrett (1941) and Hill (1997) are also useful. 
+One of the key principles of decans in astrology is the influence of the decan's 
+element, e.g., whether cardinal, fixed, or mutable. Cardinal decans, such as the 
+second decan of Gemini assigned to Libra, manifest their outgoing nature by a 
+forward-leaning facial profile. Viewing the head in profile, it appears the head's 
+profile can literally fit in the outline of the shape of an arrow head with the nose 
+
+
+===== PDF PAGE 304 (printed ~295) =====
+296 
+A RECTIFICATION MANUAL 
+leading the way. This is but one of many examples of how physiognamy can be 
+used to confirm the Ascendant's rising decan. 
+Triplicitv Rulers of the Angles. Directing by Triplicity can be used to confirm 
+signs on the angles. See if a test can be constructed based on planetary strength 
+which can confirm or invalidate rulership of the angles. For example, in final 
+years Saturn rules the fiery triplicity; Jupiter, the airy triplicity. Suppose the trial 
+figure places Leo on the MC, one of three fire signs ruled by Saturn in final years. 
+For this hypothetical figure, Saturn is in poor state; Jupiter is in good state. 
+Confronted with the fact that the native - age 60 - is universally loved, a 
+humanitarian, and a successful corporate executive does not match Saturn ruling 
+the 10th in final years as participating triplicity ruler of fire. The angles on this 
+figure are wrong. Usually there are sufficient differences between planets in each 
+figure to construct this type of test: another might be choosing between an earth or 
+air sign for the MC in middle years based on Venus or Saturn as diurnal triplicity 
+rulers for a nocturnal figure. 
+From my experience, the validity of Directing by Triplicity is just as 
+significant, but more subtle than Fidaria. In most cases, reading a full-length 
+biography was required to sort out effects attributable to both methods. When 
+making a rectification based on limited biographical details, as I do in Chapter 16; 
+Rectification Case Studies, I pass over Directing by Triplicity as a rectification 
+tool. 
+Stage II: Determine the Ascendant's range within 1-4 degrees 
+Entering Stage II with only the Ascendant sign known, there are two steps to 
+further specify the Ascendant's range. The first step narrows the Ascendant to a 
+range of ten degrees or less using physiognamy and dynamic measurements to the 
+angles. The second step makes use of Arabic Parts and profections to narrow the 
+Ascendant's range to within 1-4 degrees. 
+Physiognamy. As stated above, in some cases it's best to wait until Stage 11 
+before applying rules of physiognamy to narrow the Ascendant to a ten degree 
+range based on the rising decan. 
+Dynamic Measurements to the Angles. If unable to confidently secure the 
+rising decan through physiognamy, one can check for transits, progressions, and 
+solar arc directions to the angles. This is the approach recommended by most 
+contemporary sources including Tyl (2001). As demonstrated with Andrew 
+Jackson's chimney fire which opened Part II, this approach falls flat if 
+measurements relate to an Arabic Part and not one of the angles. Still one cannot 
+entirely ignore insights from this method. 
+Recalling the ability of the Lunar Nodes to connect the native to the public, I 
+recommend emphasizing transits of the Lunar Nodes to the angles to time major 
+
+
+===== PDF PAGE 305 (printed ~296) =====
+Chapter 15 - three stages of rectification 
+297 
+life events. In some cases, Nodal transits allow refinement of the Ascendant to 
+within a few minutes of degree during Stage II rectification. These moments are 
+rare but they do occur. For example, see how accurately transits of the Nodes to 
+the Ascendant timed John Wesley's 24 May 1738 conversion in Chapter 16. 
+Arabic Parts. Testing events against Arabic Parts is the bread and butter of 
+Stage II rectification. It is best to have the Ascendant narrowed to ten degrees or 
+less before testing Arabic Parts; otherwise one feels as if looking for a needle in a 
+haystack. The ability of the eye and brain to iterate differences between planet 
+positions and Arabic Parts is compromised if the differences are too great. 
+Consider trying to iterate which Ascendant minimizes the error of these three 
+observations: 
+4 degrees between Jupiter and the antiscion of the Part of Marriage, 
+3 degrees from the square of Mars and the Part of Illness/Accidents, 
+5 degrees between Saturn and the contra-antiscion of the Part of Death. 
+Now reconsider the same exercise if the 4, 3, and 5 degree differences were 
+instead 15, 22, and 25. This case with wider measurements is virtually impossible 
+for the brain to iterate much less sort out. 
+For this study, the most common events tested against Arabic Parts were: 
+Accidents, Illness, and Death of Parents and Siblings 
+Marriage and death of Spouse 
+Birth and Death of Children 
+Accidents and Surgeries 
+Real Estate: purchases, sales, loss (fire or theft) 
+Native's Death 
+See Chapters 11 and 16 for examples of both solar return planet aspects and 
+dynamic activity to Arabic Parts which can narrow the Ascendant to 1-4 degrees. 
+Profected Ascendant. Because the profected Annual Ascendant moves 30 
+degrees per year, its movement of 12.175 days per one degree is sufficiently 
+robust for Stage II rectification. Because the profected Ascendant aspects the 
+same planets on the same date every year, I recommend watching for anniversary 
+events with similar planetary significations. This exercise requires an extensive 
+database of events in order to spot these periodic repetitions. One example is 
+James Garfield whose Ascendant profection to Mars on 8 April each year timed: 
+12-Apr-1861. Profected Ascendant sextile Mars. Outbreak of Civil War. 
+6/7-Apr-1862. Profected Ascendant square Mars. Battle of Shiloh. 
+14-Apr-1865. Profected Ascendant opposed Mars. Lincoln assassination. 
+
+
+===== PDF PAGE 306 (printed ~297) =====
+298 
+/I RECTIFICATION MANUAL 
+Note the ability of the profected Ascendant to time these events with an error of 
+6 days or less implies an Ascendant accurate to 30 minutes of degree. 
+To confess, because of the nonexistence of any software which includes 
+profections in their rectification module, I did not use iterations of the Profected 
+Ascendant for this rectification project. Had software allowed, my story here 
+would differ. Until such software is developed, one can either create a customized 
+spreadsheet model or simply train the eye to calculate the profected Ascendant's 
+position without the aid of software. 
+Stage III: Determine the exact Degree and Minute of the Ascendant 
+Primary Directions. Starting with directing direct, begin to test primary 
+directions against the event database. Here are a few tips to consider: 
+Focus on directions of the Sun, Mars, and Saturn to the Ascendant and 
+Midheaven. Chapter 14: Preparing the Event Database opened with observations 
+by Pearce and Simmonite which emphasized the consistency of these directions 
+for rectification. It's a point which cannot be overemphasized. 
+Planets close to the Midheaven are most likely to signify parental events in 
+youth. Exceptions include figures when the native lives out some mundane event 
+through the natal figure, such as the Battle of Bunker Hill timed by the Mars - 
+MC direction for John Quincy Adams. 
+When planets are angular (any angle - 1st, 4th, 7th, or 10,h), events of interest are 
+most likely to occur when the directed planet aspects the angle by sextile or trine, 
+depending on whether the angle is in a sign of long or short ascension. Because 
+the modem psychological assumption that development requires a hard aspect to 
+occur, many practicing astrologers discount the ability of soft aspects to time 
+events through directions. As explained in Chapter 8: Directions and 
+Progressions, this notion is a completely false. Sextiles and trines can cause 
+havoc - even death - just as well as any hard aspect. Ignore them at your perill 
+Primary Direction Sequences. In my opinion, the discovery of primary 
+direction sequences is the most significant technical advancement reported by this 
+study. The odds that a pair of events, often a year apart of more, can be timed by 
+the same direction computed with and without latitude are so low that primary 
+direction sequences can effectively lock down a rectified birth time to within a 
+fraction of a single second of time. This level of accuracy is unheard of in 
+astrological circles yet possible with primary direction sequences. 
+The trick in confirming primary direction sequences is to first discard any 
+notion the orb surrounding a primary direction to the angles may last several 
+months or a year. This is not correct. Replace this notion with the recognition 
+that directions to the angles for a reliably timed birth chart occur within a few 
+
+
+===== PDF PAGE 307 (printed ~298) =====
+Chapter i 5 - three stages of rectification 
+299 
+days, often within 48 hours. Any continued effects after a primary direction, 
+mistakenly ascribed to some kind of orb, are properly attributed to the elapsed 
+time between the first and last direction defined by the primary direction 
+sequence. Once the sequence is kicked off from an initial event, often similar 
+events continue to occur until the last direction closes the sequence. 
+Remember that one is looking for pairs of events when testing for sequences. 
+At the beginning of Stage III, establish the length of a sequence by computing a 
+pair of planet-angle directions with and without latitude. Do this for several 
+planet pairs. Complete this step and try to identify pairs of events which conform 
+to the computed sequence lengths. 
+For an example of the level of minutiae involved in testing primary direction 
+sequences, see comments for Benjamin Franklin's Stage III rectification in 
+Chapter 16, pp. 342-343. 
+Solar Arc Directions. Solar arc directions are just as accurate as primary 
+directions, yet they are incapable of measuring certain types of events. For 
+instance, there is no evidence that solar arc directions independently time death. 
+This is a consistent finding for the Presidential database and confirms that primary 
+directions occupy a higher rung on the predictive hierarchy. The other finding, 
+listed as a proposition in Chapter 8: Directions and Progressions, is the possible 
+connection between solar arc directions and public events which may only 
+indirectly involve the native. Recall the solar arc direction of Mars to the 7th cusp 
+timed Pearl Harbor for Eisenhower, yet the primary direction of Mars to the 7th 
+timed his own personal involvement in military engagements as a direct result of 
+Pearl Harbor. Accordingly, events timed by solar arc directions may have a more 
+nature to their manifestation than primary directions. 
+Arcus vitae. The last word in any rectification project is confirmation of the 
+arcus vitae. Be aware that there are many exceptions to theory in choice of hllaj 
+and killing planets. 
+
+
+===== PDF PAGE 308 (printed ~299) =====
+300 
+A RECTIFICATION MANUAL 
+A Miscellany of Tricks and Traps 
+All events are not recorded. Even the most carefully constructed databases 
+omit events which would otherwise be helpful for rectification. Why? Two 
+reasons. First, the event may not have been recorded for reasons including 
+embarrassment, secrecy, or sloppy record keeping. Second, the event may have 
+occurred but was not mentioned by a biographer. It may have manifested through 
+other people read through the individual's figure. This is very common for the 
+Moon who can signify the grandmother, aunt, mother, wife, sister, or daughter. If 
+not reported by the biographer, there is no way to confirm the direction. 
+Attack multiple events with a variety of rectification techniques. Avoid the 
+error of anchoring a rectification on two or three events based on familiar or 
+favorite techniques. Employ the full battery of predictive methods to confirm a 
+rectification. Directions and transits to the angles are helpful but not the end of 
+the story. As stated time and time again, Arabic Parts are more accurate. Do solar 
+return planets highlight Arabic Parts? Do transits, progressions, and solar arc 
+directions highlight a relevant Arabic Part and not an angle? 
+Do Triplicity rulers of the angles confirm major changes in life purpose, 
+finance, or career? And although I have highlighted triplicity rulers of the 
+Ascendant and Midheaven, remember this technique applies to all signs, planets, 
+cusps, and parts. Do not ignore the influence of triplicity rulers on the Part of 
+Fortune. 
+When planets are hidden. Effects of planets are often hidden when either 
+combust or in the 12th house. In my experience, significations of 12th house 
+planets are especially difficult to observe when testing directions against even the 
+best constructed event databases. 
+.t 
+Jefferson is a good example. I delineate Venus/Taurus/12 as his slave 
+mistress Sally Hemings whose rumored identity was settled only by DNA 
+evidence released in 1998, a full 172 years following Jefferson's death. Only 
+because Jefferson was a public figure did scrutiny cause the truth to be known. 
+For lesser figures, the significations of 12th house planets may be forever hidden. 
+Even some individuals cannot identify nor understand planets in the 12th, even 
+when confronted with their delineation by an astrologer in a private counseling 
+session. This is especially true when 12th house planets do not rule the 
+Ascendant's sign, triplicity, bound, or dwad nor aspect the Ascendant's ruler. 
+Universal significations of Sun and Moon, Remember because the Moon 
+signifies the physical body and Sun the spirit, dynamic measurements to the Moon 
+can time illness whether or not the Moon is the hilaj. In cases where the Sun is 
+the true hTlaj, afflictions to a combination of the Sun, Moon, or Ascendant can 
+time physical illness and death. 
+
+
+===== PDF PAGE 309 (printed ~300) =====
+CHAPTER 15 - THREE STAGES OF RECTIFICATION 
+301 
+Focus on directions to the Ascendant and Midheaven. Avoid paralysis of 
+working with too many significators. Focus on the Ascendant and Midheaven. 
+After refining a birth time to a range of a few minutes, only at this point introduce 
+alternative angles such as the Equatorial Ascendant or Vertex when testing 
+directions. 
+Let it rest. After making a trial rectification, let it rest overnight. See if it holds 
+up after a good night's sleep and a cup of morning coffee. If working with a 
+living client, identify directions due in the next year which can be monitored to 
+test the rectification on an out-of-sample basis. 
+Magical times. Recently an entire book was written on connections between 
+the time established for an astrological consultation and dynamic measurements 
+between natal figures of both the astrologer and client (Sellars & Newman 2000). 
+Can the same be said for rectification? Are astrologers driven to study and 
+research certain figures, be they clients or historical personages, based on the 
+position of currently transiting planets? I answer in the affirmative. This from the 
+experience of comparing times when I locked down a rectification to the natal 
+figure studied at that time. 
+The most common connections I witnessed were between transiting planets and 
+the figure's Moon or Mercury. Even the writing of the book was partly timed by 
+Mercury transits. I completed Chapter 13's case study of Franklin Roosevelt at 
+War during the Mercury Aquarius Ingress of January 2007, a Mercury return for 
+FDR. During the following Mercury Pisces Ingress of February 2007, I 
+completed most of Chapter 10's study of Lincoln's 1862 solar return - also a 
+Mercury return for Lincoln. When Mercury went retrograde, I paused on that 
+chapter, and completed it during March when Mercury made its last pass through 
+Pisces after its direct station. 
+Another valuable method for choosing magical times for the study of historical 
+figures is to make use of the New Moon's sign position. A number of rectification 
+cases were started following New Moon's whose sign matched the sign of the 
+final Ascendant, Moon, or Sun position for the nativity studied. 
+The future. Research in traditional astrology continues. It takes time for 
+software to catch up with research findings and methods. Some valuable 
+predictive methods, like profections, are difficult to use in rectification unless one 
+has the facility to design an iterative rectification spreadsheet. Other methods, 
+such as Directing through the Bounds, also await software upgrades which can 
+handle their iterative calculations in rectification modules. Stay abreast with new 
+research and advances in astrological software. 

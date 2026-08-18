@@ -1,0 +1,1567 @@
+
+
+===== PDF PAGE 92 (printed ~83) =====
+80 
+A RECTIFICATION MANUAL 
+45" 
+'24° 
+00' 
+00' 
+. 27° 
+.28' 
+18° V3 13' 
+03' 
+20° 
+'o 
+10 
+Q 
+r/ ? 
+12 
+2 w o 
+o 
+.ou 
+Q 
+.23° 
+05' 
+23'= 
+05- 
+y 
+y 
+03' 
+20° 
+27' 
+Ub 
+Ta- 
+rn, or 
+eig-Q 
+00° 
+mi 
+Off 
+45' 
+24° 
+18° 5 13' 
+Tying the Suspect list to the scene of the crime: 
+Planet 
+Measurement 
+Position 
+Mars 
+Transit 
+12CA01 
+Mars 
+Progressed 
+5CA47 
+Mars 
+Solar Arc 
+28CA20 
+Venus 
+Progressed 
+2CA44 
+South Node 
+Solar Arc 
+15LI06 
+Moon 
+Secondary Progressed 
+29SC58 
+
+
+===== PDF PAGE 93 (printed ~84) =====
+CHAPTER 5 - THE PROBLEM OF UNDER SPECIFICATION 
+81 
+At this point, under all methods Mars falls in the sign of Cancer, suggesting 
+Cancer on the 4th cusp of home and real estate. Notice d.s.a. South Node at 
+15L106 squares the tr. Mars 12CA01 by 3 degrees. Also see tr. Saturn 14LI30 
+forms a square with tr. Mars 12CA01. Saturn did not make the suspect list, but 
+probably still pays a role because of the square aspect to Mars. Mars-Saturn in 
+hard aspect is always a difficult configuration. So a cluster of dynamic 
+measurements is identified falling between 12-15 degrees of cardinal signs. This 
+suggests the IC might be 12-15 Cancer. The only other possibility is 28-29 
+degrees Cancer because of s.a. Mars at 28CA20 and prog. Moon at 29SC58. As 
+for measurements activating the Moon, except for tr. Nodes square the Moon 
+within 5 degrees, there is no dynamic activity to the Moon of interest. 
+Using modem methods of rectification which assume this fire should be timed 
+by dynamic activity to the angles (here the 4th) or the Moon, the exercise is now 
+complete. It is repeated for a wider array of events to determine if either 12-15 or 
+28-29 degrees of Cancer is confirmed as a possible IC. The IC's degree is then 
+chosen on a best fit basis from all events tested. 
+Testing the House Fire: Medieval Predictive Astrology. 
+Considering the complete array of predictive methods, the solution to timing 
+Jackson's house fire requires the use of Arabic Parts and Directing through the 
+Bounds. Without these methods, the house fire cannot be predicted. 
+Converse Measurements. It's been my practice to complement direct 
+measurements with converse measurements because events are occasionally 
+shown through converse and not by direct motion. True enough, medieval 
+astrologers did not use nor recommend converse directions nor had the means to 
+compute converse transits had they so desired. They did not use secondary 
+progressions. Few people to my knowledge, even today, use converse transits. 
+Modem solar arc practitioners also use exclusively compute solar arc directions in 
+direct motion. Yet my research shows converse directions and dynamic 
+measurements of all kinds do work and are useful during Stage II rectification. 
+Adding some converse measurements to the Suspect list: 
+Planet 
+Motion 
+Measurement 
+Position 
+Mars 
+Direct 
+Transit 
+12CA01 
+Mars 
+Direct 
+Progressed 
+5CA47 
+Mars 
+Direct 
+Solar Arc 
+28CA20 
+Venus 
+Direct 
+Progressed 
+2CA44 
+South Node 
+Direct 
+Solar Arc 
+151106*** 
+Moon 
+Direct 
+Secondary Progressed 
+29SC58 
+Moon 
+Converse 
+Solar Arc 
+I5CA48*** 
+Mars 
+Converse 
+Solar Arc 
+14PII0*** 
+
+
+===== PDF PAGE 94 (printed ~85) =====
+82 
+A RECTIFICATION MANUAL 
+Arabic Parts. Rechecking Jackson's figure for converse measurements, I 
+discover two additional observations: c.s.a. Moon 15CA48 and c.s.a. Mars 
+14P110. Compared to d.s.a. South Node 15LI06, c.s.a. Moon squares and c.s.a. 
+Mars forms an antiscia relationship. Do these three measurements work as a unit 
+to time the house fire? It's at this point I will let the cat out of the bag. Based on 
+the final rectification, these measurements formed tight aspects to the Part of Real 
+Estate 15LI32 and itsantiscion 14P128: 
+d.s.a. South Node conj. Part of Real Estate, error = 26 minutes 
+c.s.a. Moon square Part of Real Estate, error = 16 minutes 
+c.s.a. Mars conj. antiscion of Part of Real Estate, error = 18 minutes 
+The earlier assumption that 12-15 cardinal was correct, except it applied to an 
+Arabic Part and not the 4'h house cusp! Because Arabic Parts represent 
+customized Ascendants for a specific life area, they are especially helpful in 
+rectification. 
+Directing through the Bounds. This method supplies the missing link of 
+dynamic activity to the 4th cusp itself. Of the many predictive methods recently 
+uncovered, few appear more significant than Directing through the Bounds which 
+dynamically moves the significators through the Egyptian bounds by primary 
+motion. Recalling comments on bounds in Chapter I, I stated that bounds impart 
+their own intrinsic quality to whatever planet falls within their confines. The same 
+can be said for any significator (e.g., the IC) which moves through the bounds. 
+On 13 October 1834, Andrew Jackson's directed 4th cusp fell at 28V135, falling 
+in the bound of Saturn/Virgo, defined as the two degree range between 
+28deg00min and 28deg59min of Virgo. The position of the directed 4th cusp at 
+28V135 meant the bound had changed from Mars/Virgo about seven months 
+previously. Understanding the nature of both these bounds and the evolution of 
+chimney fires helps explain why a chimney fire started in the fall of 1834. 
+The nature of Mars is hot and dry; in the cold and dry earth sign of Virgo, 
+dryness is emphasized. The nature of Saturn is cold and dry, both qualities 
+emphasized by Virgo. Saturn's nature is to destroy by compression and breakage 
+unlike Mars who bums. Chimneys are constructed with bricks and mortar. 
+Chimney fires happen after mortar is fatigued by repeated applications of heat; 
+finally cracking and revealing exposed flammable materials, usually wood or 
+plaster. It is the agency of Mars/Virgo, acting as the directed 4th cusp moved 
+through its bound; that caused mortar fatigue by heat. Yet the actual crumbling of 
+the mortar did not occur until the directed 4th cusp moved into the bound of 
+Satum/Virgo because it is Saturn's nature to destroy through cracking. Why did 
+the fire not occur as soon as the directed 4th cusp entered the bound of 
+Satum/Virgo on 28 March 1834? Because seasonally, no fires were lit after the 
+warmth of spring arrived. The fire lit on 13 October 1834 was probably one of the 
+first fires lit in the fall season. 
+
+
+===== PDF PAGE 95 (printed ~86) =====
+CHAPTER SIX 
+Temporal Indicators 
+Sometimes a particular event or activity changes over time or as one gets older. 
+Implied in these statements is a temporal change in life affairs which has no 
+precise date or time. This chapter discusses three predictive methods which are 
+designed to identify these long-term temporal shifts. 
+Chapter Summary 
+Conjunctional and Preventional Births. The degree of the New or Full Moon 
+immediately prior to birth is known as the Syzygy Ante Nativitatem ("SAN"). It 
+joins the Ascendant, Midheaven, Sun, Moon, and Part of Fortune as one of the six 
+principal significators which are directed and profected. If after a New Moon, the 
+lunation's degree is also known as the conjunction-, the natal chart is called 
+conjunctional. If after a Full Moon, the lunation's degree is known as the 
+prevention', the natal chart is called preventional. Applied as a temporal indicator, 
+conjunctional nativities manifest higher levels of activity during the first half of 
+life; preventional figures, during the second half. 
+Moon's Separation and Application. In horary astrology, the planet from which 
+the Moon separates shows events in the past; the planet to which the Moon applies 
+shows events in the future. When applied to natal astrology, the interpretation is 
+slightly different. The separating planet bears influence during early life; the 
+applying planet, during later years. The Moon's configuration is one of the most 
+important aspect combinations which indicate the flow of energy through the 
+overall natal chart. 
+Multiple Planets in a single Sign. When two or more planets fall in a single 
+sign, there is an implied sequence in each planet's temporal influence on house 
+affairs. The first planet in a sign marks its influence and is followed by each 
+successive planet, ordered from lowest to highest by zodiacal degree. Should the 
+sign ruler participate in the stellium, its influence is relatively constant. 
+
+
+===== PDF PAGE 96 (printed ~87) =====
+84 
+A RECTIFICATION MANUAL 
+CONJUNCTIONAL AND PREVENTIONAL BIRTHS 
+Use of SAN in natal astrology. Besides its use as a possible hllaj, one of the 
+principal significators, and one input for computing the Al-mubtazz Figurae, little 
+survives as to the use of the SAN in natal astrology. Here Bonatti (2007, 1403) 
+provides a hint: 
+But the degree of the conjunction is directed for generally knowing 
+ahead of time and for considering, all the aforesaid up to the middle of 
+the native's life (if he nativity were conjunctional). Whence if it were 
+well disposed, it will increase the signification of those things 
+signifying good, and will decrease what is signified by those signifying 
+evil. If however it were badly disposed, it will increase the 
+signification of those things signifying evil, and will take away from 
+what is signified by those signifying good. You could say the same 
+about the degree of the prevention after the middle of life (if the nativity 
+were preventional). 
+Though Bonatti is talking about employing the SAN in primary directions, it is 
+possible to glean from his reasoning that the conjunctional degree has an analogy 
+to the first half of life, as does the Moon in her waxing phase. The preventional 
+degree has an analogy to the second half of life, as does the waning Moon. It is a 
+small jump from this analogy to the notion that individuals bom after a New 
+Moon demonstrate higher levels of activity earlier than those bom after a Full 
+Moon. Stated differently, conjunctional figures demonstrate accelerated 
+development before middle age. In contrast, those with preventional figures do 
+not come into their own until after middle age. This is the opinion of Robert 
+Zoller who suggests individuals with conjunctional figures are early bloomers\ 
+those with preventional figures, late bloomers (Zoller 2002, Chapter 16). 
+No implication for 'Good' or 4Bad' Affairs. Be aware there is nothing good 
+or bad implied about how individuals may develop. A conjunctional figure which 
+is unusually stressed will manifest difficulties early on. The most that can be said 
+for these individuals is that life should not materially deteriorate after middle age 
+because all the skeletons should be out of the closet. The opposite scenario 
+applies for preventional figures. Hints of crisis before midlife may become full- 
+blown disasters after midlife if so promised. 
+Evaluating the Presidential Database. Table 7 summarizes birth date, 
+lifespan, midpoint of lifespan, SAN's degree, lunar phase, and whether the figure 
+is conjunctional or preventional. 
+In what follows, the early/late bloomer proposition is evaluated for all 
+Presidential nativities. 
+
+
+===== PDF PAGE 97 (printed ~88) =====
+CHAPTER 6 - TEMPORAL INDICATORS 85 
+Table 7. Lifespan, Midpoint, Syzygy ante Navitatem, and Lunar Phase. 
+President 
+Birth 
+Span 
+Midpoint 
+SAN 
+Otr 
+Type 
+1 
+G. WashinRton 
+22-Feb-32 
+67.8 
+15-Jan-66 
+21LE33 
+4th 
+Prev. 
+2 
+J. Adams 
+30-Oct-35 
+90.7 
+28-Feb-81 
+22L1I4 
+2nd 
+Conj. 
+3 
+T. Jefferson 
+13-Apr-43 
+83.2 
+21-Nov-84 
+18LI42 
+3rd 
+Prev. 
+4 
+J. Madison 
+15-Mar-51 
+85.3 
+3-Nov-93 
+21VI09 
+3rd 
+Prev. 
+5 
+J. Monroe 
+28-Apr-58 
+73.2 
+29-Nov-94 
+3SC09 
+3rd 
+Prev. 
+6 
+J. Q. Adams 
+I l-Jul-67 
+80.6 
+31 -Oct-07 
+18CP58 
+3rd 
+Prev. 
+7 
+A. Jackson 
+15-Mar-67 
+78.2 
+25-Apr-06 
+9PI49 
+2nd 
+Conj. 
+8 
+M. van Buren 
+5-Dec-82 
+79.6 
+26-Sep-22 
+12SA56 
+1st 
+Conj. 
+9 
+W. Harrison 
+9-Feb-73 
+68.1 
+8-Mar-07 
+19LE05 
+3rd 
+Prev. 
+10 
+J. Tyler 
+29-Mar-90 
+71.8 
+18-Feb-26 
+25P124 
+2nd 
+Conj. 
+11 
+J. Polk 
+2-Nov-95 
+53.6 
+22-Aug-22 
+4TA37 
+3rd 
+Prev. 
+12 
+Z. Taylor 
+24-Nov-84 
+65.6 
+14-Sep-17 
+21SC17 
+2nd 
+Conj. 
+13 
+M. Fillmore 
+7-Jan-00 
+74.2 
+5-Feb-37 
+4CP56 
+2nd 
+Conj. 
+14 
+F. Pierce 
+23-Nov-04 
+64.9 
+29-Apr-37 
+24TA56 
+3rd 
+Prev. 
+15 
+J. Buchanan 
+23-Apr-91 
+77.1 
+10-Nov-29 
+28L133 
+3rd 
+Prev. 
+16 
+A. Lincoln 
+12-Feb-09 
+56.2 
+15-Mar-37 
+I1LE22 
+4th 
+Prev. 
+17 
+A.Johnson 
+29-Dec-08 
+66.6 
+13-Apr-42 
+25SA31 
+2nd 
+Conj. 
+18 
+U. Grant 
+27-Apr-22 
+63.2 
+8-Dec-53 
+00TA57 
+1st 
+Conj. 
+19 
+R. Hayes 
+4-Oct-22 
+70.3 
+25-Nov-57 
+7AR12 
+3rd 
+Prev. 
+20 
+J. Garfield 
+19-Nov-3l 
+49.8 
+17-Oct-56 
+26TA44 
+3rd 
+Prev. 
+21 
+C. Arthur 
+5-Oct-29 
+57.1 
+27-Apr-58 
+4LI39 
+1st 
+Conj. 
+22 
+G. Cleveland 
+18-Mar-37 
+71.3 
+3-Nov-72 
+16P106 
+2nd 
+Conj. 
+23 
+B. Harrison 
+20-Aug-33 
+67.6 
+30-May-6 7 
+22LE27 
+1st 
+Conj. 
+25 
+W. McKinlcy 
+29-Jan-43 
+58.6 
+20-May-72 
+9LE32 
+4th 
+Prev. 
+26 
+T. Roosevelt 
+27-Oct-58 
+60.2 
+30-Nov-88 
+28AR56 
+3rd 
+Prev. 
+27 
+W.Taft 
+15-Sep-57 
+72.5 
+9-Dec-93 
+11PI34 
+4th 
+Prev. 
+28 
+W. Wilson 
+29-Dec-56 
+67.1 
+17-Jul-90 
+5CP51 
+1st 
+Conj. 
+29 
+W. Harding 
+2-Nov-65 
+58.7 
+15-Mar-95 
+26LII8 
+2nd 
+Conj. 
+30 
+C. Coolidge 
+4-Jul-72 
+60.5 
+3-Oct-02 
+00CP08 
+4th 
+Prev. 
+31 
+H. Hoover 
+IO-Aug-74 
+90.2 
+14-Sep-19 
+5AQ50 
+4th 
+Prev. 
+32 
+F. Roosevelt 
+30-Jan-82 
+63.2 
+4-Sep-13 
+29CP34 
+2nd 
+Conj. 
+33 
+H. Truman 
+8-May-84 
+88.6 
+30-Aug-28 
+5TA46 
+2nd 
+Conj. 
+34 
+D. Eisenhower 
+14-Oct-90 
+78.5 
+3-Jan-30 
+20LI33 
+1st 
+Conj. 
+35 
+J. Kennedv 
+29-May-17 
+46.5 
+23-Aug-40 
+29TA23 
+2nd 
+Conj. 
+36 
+L. Johnson 
+27-Aug-08 
+64.4 
+8-Nov-40 
+3VI15 
+1st 
+Conj. 
+37 
+R. Nixon 
+9-Jan-13 
+81.3 
+30-Aug-53 
+16CP33 
+1st 
+Conj. 
+38 
+G. Ford 
+14-Jul-13 
+93.5 
+3-Apr-60 
+11CA36 
+2nd 
+Conj. 
+40 
+R. Reagan 
+6-Feb-l 1 
+93.3 
+5-Oct-57 
+9AQ24 
+1st 
+Conj. 
+
+
+===== PDF PAGE 98 (printed ~89) =====
+86 
+A RECTIFICATION MANUAL 
+George Washington: Preventional. Midpoint = 15 January 1766. Before 
+midlife, Washington was a surveyor and fought during the French and Indian 
+Wars. His life was relatively undistinguished before 1765 when he was elected to 
+the House of Burgesses. He witnessed conflict with Britain over taxation in 1765 
+with the Stamp Act's passage and its repeal in 1766. Following the imposition 
+of the Townshend Act in 1767, Washington presented resolutions opposing 
+taxation on 7 May 1769. Conflict over taxation directly led to the American 
+Revolution with Washington taking a leading role after midlife. 
+John Adams: Conjunctional. Midpoint - 25 February 1781. Adams' role as 
+signer of the Declaration of Independence in 1776, writer of the Massachusetts 
+State Constitution in 1779, and his strained foreign diplomatic efforts culminating 
+with his Dutch Mission of 1780-1782 established patterns for the rest of his life. 
+He considered the Massachusetts State Constitution one of his life's greatest 
+achievements. All of these events occurred prior to midlife. His later Presidential 
+term was considered weak. In addition, his post-Presidential correspondence with 
+Jefferson did not break new ground; it was a purposeful revisiting of themes from 
+Adams' early days. 
+Thomas Jefferson: Preventional. Midpoint = 21 November 1784. Jefferson's 
+departure for France on 5 July 1784 opened a new world for him as a diplomat 
+and later as witness to the French Revolution. In France, Jefferson was exposed to 
+new ideas which he would eventually translate into the formation of the new 
+Republican Party. The timing of his Presidency coincided with the shift of the 
+Jupiter-Saturn conjunction into the earthy triplicity. This conjunction, triggering 
+Jefferson's Jupiter/VirgoMth house, marked numerous changes including the 
+expansion of the United States with the Louisiana Purchase. With regard to the 
+exact life midpoint, note that Jefferson's French Mission in the fall of 1782 was 
+cancelled because of a peace treaty. Not until Jefferson passed his life's midpoint 
+did he travel to France for the first time. 
+James Madison: Preventional: Midpoint = 3 November 1793. On first glance, 
+the fact that Madison's role as the Father of the Constitution - signed 1787 before 
+midlife - appears to invalidate the theory that Madison should make his mark 
+later. And yet Madison's 3 January 1794 introduction of Congressional measures 
+relating to trade; asserting the commercial power of the United States because of 
+raw materials exports to Europe, tells another story. From this point on, Madison 
+would be deeply involved with issues of trade, neutrality, and impressments which 
+would culminate under his wartime Presidency against Britain with the War of 
+1812. These were new themes for Madison which would ultimately have as much 
+impact on the early Republic as did his work on the Constitution. 
+James Monroe: Preventional: Midpoint = 29 November 1794. The 19 
+November 1794 conclusion of the Jay Treaty favoring the British triggered a 
+period of political upheaval for Monroe whose preference for the French was 
+unwelcome by Washington and other Federalists. Not until Jefferson's election in 
+
+
+===== PDF PAGE 99 (printed ~90) =====
+CHAPTER 6 - TEMPORAL INDICATORS 
+87 
+1800 did political winds shift towards Monroe. He would serve as Governor of 
+Virginia, as Minister to France where he (with Livingston) negotiated the 
+Louisiana Purchase, as Secretary of War under Madison, and as President where 
+his Monroe Doctrine continues to influence American Foreign Policy to the 
+present day. 
+John Ouincy Adams: Preventional: Midpoint = 31 October 1807. Under 
+Jefferson's term, the Senate passed the Embargo Act on 18 December 1807; John 
+Quincy Adams helped write the legislation. Regulation of trade is a theme he 
+would return to as President with his signing of the infamous Tariff of 
+Abominations in 1828. More importantly, by supporting the Embargo Act, 
+Adams broke with his constituents of the Federalist Party which included his 
+parents as members. Before midlife his development was dominated by both 
+parents. His support of the Embargo Act of 1807 marks a break with the past. 
+After midlife he achieved notoriety as Secretary of State and Old Man Eloquent in 
+his post-Presidential Senatorial career though his Presidency was largely a failure. 
+Andrew Jackson: Conjunctional: Midpoint = 25 April 1806. In the early 1800s, 
+Jackson built a sizeable political organization in Tennessee. His disputes with 
+both Governor-to-be Sevier over his wife Rachel and a separate argument with 
+Charles Dickinson who Jackson killed in a duel on 30 May 1806 culminated at 
+Jackson's life midpoint. One major natal placement - ruler of the 1st in the 12th - 
+manifested early in Jackson's youth when he was captured and tortured by the 
+British. His universal hatred of Indians also marked his early development. After 
+1806, Jackson's life was a variation on these themes. 
+Martin Van Buren: Conjunctional; Midpoint = 26 September 1822, Van 
+Buren's role in creating the Democratic Party during the years 1817-1821 was his 
+life's most important accomplishment. Following his 1821 election, his active 
+political life as Senator and President was the logical extension of the party he 
+created prior to midlife. 
+William Harrison: Preventional: Midpoint = 8 March 1807. Though Harrison's 
+role in fraudulently negotiating away much Indian land predates midlife, the rise 
+of Tecumseh following the solar eclipse of 16 June 1806 predicted by Tecumseh's 
+brother (a.k.a. the 'Prophet') had a greater influence on Harrison's career. 
+Harrison would later defeat Tecumseh at the Battle of Thames River on 5 October 
+1813; an event which would play a prominent role in his 1840 Presidential 
+election some twenty-seven years later. 
+John Tyler: Conjunctional: Midpoint = 18 February 1826. Tyler's 20 February 
+1819 speech on the floor of the House stating the Bank of the United States was 
+unconstitutional was a key life event which would similarly mark his Presidency. 
+His 10 December 1825 election to the Virginia Governorship for a one year term - 
+a position mostly ceremonial - marked his life midpoint. As President, Tyler 
+would have little political power following his veto of the Bank of the United 
+
+
+===== PDF PAGE 100 (printed ~91) =====
+88 
+A rectification manual 
+States. Both of these themes - holding a ceremonial office and hatred of central 
+banking - were fully developed before midlife. 
+James Polk: Preventional; Midpoint = 22 AuRust 1822. Folk's engagement to 
+Sarah Childress in 1822 and his election to Congress in the fall of 1824 opened 
+new chapters in his life. His expansionist policies including settlement of the 
+Oregon question and the acquisition of territory through the Mexican War are for 
+what Polk is remembered. Both occurred after midlife. 
+Zacharv Taylor: Conjunctional: Midpoint = 14 September 1817. Taylor's early 
+military career was marked by victories, facilitating appropriate food and supplies 
+for his troops during periods of organizational disarray, and conflict with superiors 
+over promotion and rank. These patterns would continue throughout his almost 
+fifty years as a career military professional. His Presidency offered nothing new 
+and was considered a failure. 
+Millard Fillmore: Conjunctional: Midpoint = 5 February 1837. By midlife 
+Fillmore was known as a distinguished lawyer in western New York. The balance 
+of his political life was a variation on legalistic themes including the Missouri 
+Compromise of 1850 signed during his Presidential term. 
+Franklin Pierce: Preventional: Midpoint = 29 April 1837, Prior to midlife, 
+Pierce carved out a minor role as a New Hampshire politico in the shadow of his 
+father. Pierce's election to the Senate in 1837 together with death of both parents 
+during 1838-1839 opened the national political stage to Pierce and propelled his 
+subsequent rise to the Presidency. 
+James Buchanan: Preventional: Midpoint = 10 November 1829. Buchanan's 
+October 1828 re-election to the House as a Democrat, following four terms as a 
+Federalist, marked his successful transition to the new Democratic Party united 
+under Andrew Jackson. This election solidified Buchanan's reputation as 
+Pennsylvania's leading Democratic. This was the foundation of his remaining 
+political career which led to the Presidency. 
+Abraham Lincoln: Preventional: Midpoint = 15 March 1837. If there is any 
+accuracy of life's midpoint marking a distinct shift in activity one need look no 
+further than Lincoln who on 15 March 1837 moved to Springfield to begin his law 
+practice. This immediately followed his l51 attack against slavery on 3 March 
+1837 when he protested an anti-abolitionist resolution. After this time Lincoln's 
+level of activity increased dramatically. 
+Andrew Johnson: Conjunctional: Midpoint = 13 April 1842. By 1840, Johnson 
+was a wealthy businessman with interests in his own tailor shop and in real estate. 
+Politically he adhered to the strict Jackson party line on the limited role of central 
+government; a philosophy which would later influence his decisions on 
+Reconstruction. He was also openly criticized as a brigand. Similar comments 
+
+
+===== PDF PAGE 101 (printed ~92) =====
+Chapter 6 - Temporal indicators 
+89 
+would mar his publicity as President. All of these patterns were fully in place by 
+midlife. 
+Ulysses Grant: Conjunctional: Midpoint = 8 December 1853. Grant began his 
+career at West Point in 1839. After military exploits during the Mexican War 
+which brought Grant to the attention of his superiors, Grant's military career faded 
+by midlife as peacetime demobilization left Grant among the few remaining 
+members of a skeleton Army. He started drinking heavily and resigned his army 
+commission on 11 April 1854. Grant's rise to the Presidency after midlife is 
+directly tied to the recapitulation of his natal Jupiter-Saturn conjunction in Taurus 
+at age 60. This is an example of a mundane configuration which overrides theory 
+regarding conjunctional births. Without the Jupiter-Saturn conjunction in his 
+figure, Grant would have probably died a broken man. 
+Rutherford Hayes: Preventional: Midpoint = 25 November 1857. Though 
+Hayes' nomination speech for Fremont as Republican Presidential Candidate 
+during June 1856 did not lead to Fremont's election, it did open doors for Hayes 
+in the Republican Party. Hayes' subsequent Civil War service, his efforts at civil 
+service reform as President, his involvement with prison reform, and the education 
+of Freedman were accomplishments which marked the second half of his life. 
+James Garfield: Preventional: Midpoint = 17 October 1856. Garfield's 
+graduation from Williams College on 7 August 1856 opened the world of 
+academia to him where he was first appointed to Professor of Latin and Greek at 
+Hiram College the same year. He was quickly promoted to College President in 
+1857. He spoke as a preacher in Great Awakening revivals and won an important 
+debate on Darwinism, taking the Intelligent Design viewpoint. Active 
+participation in the Civil War military service, in Congress, and as President 
+demonstrates accelerated development after midlife. 
+Chester Arthur: Conjunctional: Midpoint = 27 April 1858. Arthur's college 
+days were marked by partying and pranks. As he approached midlife, he moved 
+to New York in 1856 and became entrenched in Thurlow Weed's political 
+machine. Arthur's remaining political life was marked by aggressive tactics of 
+local politics, a pattern established during his first two years in New York. 
+Grover Cleveland: Conjunctional: Midpoint ^ 3 November 1872. By 1872, 
+Cleveland had carved out a well-defined political niche in Buffalo, New York. 
+While still at the city-level, Cleveland had already earned a reputation as an 
+honest law enforcer first as Assistant District Attorney and later as Sheriff. He 
+rode these themes to a position of national prominence following midlife when the 
+popularity of reform movements made Cleveland's no-nonsense style valuable at 
+the ballot box. 
+Benjamin Harrison: Conjunctional: Midpoint = 30 May 1867. Harrison's 
+successful law career was interrupted by riding Lincoln's coattails to an elected 
+
+
+===== PDF PAGE 102 (printed ~93) =====
+90 
+A RECTIFICATION MANUAL 
+political office in 1860 following his adoption of an anti-slavery platform. 
+Harrison served in the Civil War with distinction and was present at the fall of 
+Atlanta. After demobilization, Harrison returned to his legal practice where he 
+achieved his greatest legal victory in the successful prosecution of a widely 
+publicized double homicide in 1869. The remainder of his life was marked by his 
+legal expertise, an area developed before midlife. His 1898 post-Presidential 
+assignment as Venezuela's representative in a border dispute with British Guyana 
+is another variation of legal expertise acquired before midlife. 
+William McKinley: Preventional: Midpoint = 20 Mav 1872. Following his 
+marriage to Ida Saxton in 1871, the death of his two daughters during 1873 and 
+1875 caused his wife to suffer tremendous psychological distress. His marriage - 
+now to an invalid - would strongly mark McKinley's post mid-life period all the 
+way to the Presidency. He achieved sympathy from the public because of his 
+tender care for his wife's condition. Politically, McKinley won his first seat in the 
+House in 1876 and begun to specialize in the tariff the following year. Interest in 
+the tariff and corporate trusts were new themes for McKinley which would mark 
+the balance of his political life. 
+Theodore Roosevelt: Preventional: Midpoint = 30 November 1888. 
+Roosevelt's 1889 appointment to the Civil Service Commission by Grover 
+Cleveland gave Roosevelt the platform to gain a reputation as a reformer through 
+propaganda. Before this time, Roosevelt had suffered extreme loss with the death 
+of his wife and mother in 1884. Roosevelt's life between 1884 and 1889 was 
+largely spent as a pilgrimage in the Dakota Badlands. Up to 1888 his life was 
+relatively undistinguished. Roosevelt's rise to national political fame can be dated 
+to his Civil Service appointment, just after midlife. 
+William Howard Taft: Preventional: Midpoint = 9 December 1893. Taft's 
+1892 resignation from the position as U.S. solicitor general to become a US circuit 
+judge marked an increase in life activity and purpose. His eventual goal of Chief 
+Justice of the Supreme Court was achieved following stints as Governor of the 
+Philippines under McKinley, Secretary of War under Theodore Roosevelt, and as 
+President. All of these activities followed midlife. 
+Woodrow Wilson: Conjunctional: Midpoint = 17 July 1890. Wilson's 1890 
+appointment to Princeton University as professor of jurisprudence and history 
+marked the culmination of his academic career at midlife. 
+Wilson's later prominence during World War I and its aftermath was tied to his 
+Jupiter-Saturn square without which he would have likely remained functioning at 
+the local or regional political level. Wilson's Peace without Victory speech of 22 
+January 1917 epitomized his role in the mundane wave; the speech was timed by 
+the recapitulation of Wilson's natal Jupiter/Aries - Saturn/Cancer square. 
+
+
+===== PDF PAGE 103 (printed ~94) =====
+Chapter 6 - Temporal Indicators 
+91 
+Warren Harding: Conjunctional: Midpoint = 15 March 1895. With the printing 
+of the Industrial Edition of the Marion Star newspaper on 15 June 1895, a 32 page 
+supplement with pictures of local buildings and landmarks, Harding firmly 
+established himself as the editor and publisher of one of Ohio's leading 
+newspapers. His bloviatiom on the editorial page, frequent trips to Battle Creek 
+Sanitarium for depression, and marriage to Florence King were all key life 
+patterns established by midlife. His election to the State Senate in 1899 and 
+subsequent political life were variations on these existing themes. 
+Calvin Coolidge: Preventional: Midpoint = 3 October 1902. Coolidge's 
+appointment as Clerk of Courts on the death of the incumbent in 1903 and his 
+1904 chairmanship of the Northhampton Republican City Committee laid the 
+political groundwork which would later propel him to a role in national politics. 
+As with his 1903 appointment, he would assume the Presidency after the death in 
+office of a sitting elected political leader. 
+Herbert Hoover: Preventional: Midpoint = 14 September 1919. Hoover's 
+accomplishments are so many that one questions with a fortune made from mining 
+engineering and volunteer service as head of the Belgium Food Relief effort 
+(ending September 1919 at midlife) whether Hoover should quality as a 
+conjunctional nativity. But his figure is preventional. It appears that Hoover's 
+rise and fall as President, together with the start of the Hoover Dam's construction 
+in 1930, represents a sufficient departure from affairs prior to midlife to quality 
+Hoover as a Preventional figure. 
+Franklin Roosevelt: Conjunctional: Midpoint = 4 September 1913. By midlife, 
+FDR followed his Cousin Theodore Roosevelt's playbook by first winning a seat 
+to the New York Assembly followed by a stint as Assistant Secretary of the Navy. 
+Roosevelt's political machinations, together with his hawkish stance in response 
+to the 1914 Vera Cruz incident in 1914, were patterns that FDR carried with him 
+the remainder of his life. Roosevelt's stature as a wartime President and world 
+statesman is attributed to the unique placement of his Jupiter-Saturn conjunction 
+in the 9,h house of foreign affairs; without which he never would have rode the 
+mundane wave of WWII. 
+Harry Truman: Conjunctional: Midpoint = 30 August 1928. By 1928, Truman 
+served in the military during WWI, had run a haberdashery business, and as 
+elected judge achieved a no-nonsense reputation later epitomized by his placard 
+The Buck Stops Here which he carried to the White House. 
+Dwight Eisenhower: Conjunctional: Midpoint = 3 January 1930. By midlife, 
+Eisenhower's military career was marked by his work in military logistics and 
+procurement published during 1930-1931. His subsequent career, ranging from 
+his success at D-Day to his final Presidential speech warning of the power of the 
+military-industrial complex was a direct outgrowth of his military expertise in 
+logistics achieved prior to midlife. 
+
+
+===== PDF PAGE 104 (printed ~95) =====
+92 A RECTIFICA T/ON MANUAL 
+John F. Kennedy: Conjunctional: Midpoint = 23 August 1940. Kennedy's 
+active sex life and physical ailments were patterns established early in life. More 
+important to understanding his role in American history was the publication of his 
+honors thesis Why England Slept during August 1940. Acclaimed at the time, but 
+criticized by a later generation of historians as a work filled with errors, Kennedy 
+came to the conclusion that Germany's domination of air power had forced a 
+weak Britain to appease Hitler at Munich in 1938. In an argument made by 
+biographer Ferret (1995: 85-86), Kennedy's bias - fully developed by midlife - 
+later convinced himself that there truly was a missile gap between the US and 
+Russia. The missile gap scare accelerated the cold war nuclear arms race and 
+arguably led to the Cuban Missile Crisis of 1962 of which Kennedy was a 
+principal player. 
+Lyndon Johnson: Conjunctional: Midpoint = 8 November 1940. FDR's 
+appointment of Johnson to manage Democratic Congressional campaigns on 9 
+October 1940 placed LBJ on the national political stage. This event was the 
+culmination of LBJ's life up to that point. Prior to 1940, LBJ had garnered 
+exceptional political skills as a workaholic in Senator Kleburg's Congressional 
+office, an aggressive experimenter and implementer of social programs as Texas 
+administrator for FDR's National Youth Administration, and as an effective 
+dealmaker for local constituents - particularly his efforts in supplying electricity 
+through the Rural Electric Administration. After 1940, LBJ's national political 
+career was a variation on themes developed prior to midlife. 
+Richard Nixon: Conjunctional: Midpoint - 30 August 1953. Nixon's 
+aggressive political tactics against opponents funded by off-the-record political 
+contributions from powerful conservatives established his political modus 
+operandi prior to midlife. His wildly successful Checkers speech of 23 September 
+1952, when he turned accusations of campaign finance irregularities into a 
+political boon, marked for many years the most widely seen television event in 
+American history. With Checkers, Nixon truly made his mark by midlife. 
+Gerald Ford: Conjunctional: Midpoint = 3 April 1960. During Ford's World 
+War II military service, his philosophy moved from Midwestern isolationism to an 
+interventionist foreign policy doctrine. His knack for fiscal conservatism 
+combined with military experience landed Ford as chair of the Army 
+subcommittee on Defense Appropriations during Eisenhower's Presidential tenure 
+in the 1950s. By 1960, Ford's transformation to a fiscal conservative with an 
+interventionist philosophy backed by a strong military was complete. His later 
+years and extensive post-Presidency revealed no new major life themes. 
+Ronald Reagan: Conjunctional; Midpoint = 5 October 1957. Reagan's early 
+stint in radio broadcasting established his skills as the Great Communicator. His 
+acting career added comfort in appearing on the political stage. His conservative 
+political views, marked by anti-Communist testimony against fellow 
+actors/actresses, were firmly established prior to midlife. Reagan achieved 
+
+
+===== PDF PAGE 105 (printed ~96) =====
+Chapter 6 - temporal indicators 
+93 
+national name recognition with his position as host of General Electric Theatre in 
+the mid-1950s. Together with his marriage to Nancy Davis, in 1952; Reagan's 
+development was complete by midlife. 
+Conjunctional and Preventional Births: Summary of Findings 
+Vindication of Early-Late Bloomer Development Pattern. These findings 
+support the thesis that conjunctional nativities assert their influence prior to 
+midlife; preventional nativities, after midlife. Exceptions to the rule for Grant, 
+Wilson, and F. Roosevelt are attributed to the overriding importance of mundane 
+Jupiter-Saturn aspects which connect these individual to world affairs, without 
+which I suggest the second half of their lives would have been considerably less 
+active. 
+Usefulness in Rectification. For individuals bom a few hours before or after 
+either a New or Full Moon, this technique may prove helpful for rectification. Be 
+aware that only until one passes life's midpoint will sufficient data accumulate in 
+order to judge when the individual made their mark. For these cases, especially 
+for historical figures for which the entire life story is known, the technique is 
+useful. But the probability of a practicing astrologer encountering this situation is 
+rather low. Consider it a useful, but rare method in the rectification toolbox. 
+For further Study. Of all significators, very few aphorisms survive regarding 
+the usage of the Syzygy Ante Navitatem. For conjunctional figures, Bonatti 
+instructs the SAN should be directed to time events during the first one-half of 
+life; for Preventional figures; the latter one-half of life. Dynamically, the SAN is 
+difficult to research because as of this writing no major software program includes 
+the SAN as an option in direction modules. How exactly the SAN functions 
+dynamically remains an unsolved problem until software vendors upgrade their 
+products or those researchers willing to take up calculations by hand rise to the 
+challenge. 
+
+
+===== PDF PAGE 106 (printed ~97) =====
+94 
+A RECTIFICATION MANUAL 
+MOON'S SEPARATION AND APPLICATION 
+Application to Natal Astrology. On initial glance, the inclusion of topics like 
+application and separation, the transfer, collection, or deprivation of light, and 
+refranation appear out of place in natal astrology texts. But Abu Ma'shar, Bonatti, 
+Ibn Ezra, and others include them not as horary rules mistakenly placed in a natal 
+text, but as fundamental tools to analyze the interaction among planets once 
+individually delineated. Given the infinite number of planetary configurations, 
+it's easy to get lost in the details of every possible configuration. Traditional 
+authors recognized the Moon's separation and application as one of the most 
+important planetary configuration. For this reason, the Moon is the focus of this 
+section. A more complicated example of Mercury rounds out the discussion. 
+Predictive Capability. Unlike horary where the separating planet shows a past 
+event relative to the time when the horary question is posed, the separating planet 
+in natal astrology shows events early in life which over time are replaced by 
+events signified by the planet to which the Moon applies. 
+Moon's Application to Malefics. When the Moon applies to malefics, the 
+general signification is calamity (Saturn) or warfare (Mars). Most Presidents 
+whose Moon applies to Saturn are ranked as failures by historians. All Presidents 
+whose Moon applied to Mars fought wars either during or prior to their 
+Presidential Terms. 
+Presidential Greatness. Washington, Lincoln, and Franklin Roosevelt 
+consistently rank as the greatest USA Presidents. Matemus' aphorisms for the 
+Moon's configuration with Mars, Jupiter, and Saturn are successful in predicting 
+effective Presidential leadership. 
+Moon's Application to Malefics 
+Quite often when facing a new predictive method for the first time I wish to see 
+whether or not the influence of malefics is clearly demonstrated. Such is the 
+power of malefics that if one encounters active malefics in a predictive method 
+but no sign of adversity; then either the method does not work, the event remains 
+unknown to the researcher, or the chart is incorrect. Only when the zodiacal state 
+of malefics configured as accidental benefics do malefics avoid calamity. Yet 
+even when malefics are accidental benefics, gains in these special cases are not 
+freely bestowed because they are usually accompanied by struggle. Bottom line: 
+when the Moon applies to malefics, the individual should encounter problems as 
+they age. 
+Sources for aphorisms. Both Matemus (1975) and Pearce (1970) provide 
+aphorisms for the Moon's separation and application. 
+
+
+===== PDF PAGE 107 (printed ~98) =====
+CHAPTER 6 - TEMPORAL INDICATORS 95 
+Table 8. Moon's Separation and Application 
+President 
+Separates From 
+Applies To 
+SAN 
+Sect 
+I 
+G. Washington 
+Square Jupiter 
+Sextile Mars 
+Preventional 
+N 
+2 
+J. Adams 
+Opposition Mars 
+Void of course 
+Conjunctional 
+D 
+3 
+T. Jefferson 
+Square Jupiter 
+Trine Mars 
+Preventional 
+D 
+4 
+J. Madison 
+Opposition Jupiter 
+Sextile Mars 
+Preventional 
+N 
+5 
+J. Monroe 
+Sextile Saturn 
+Trine Sun 
+Preventional 
+N 
+6 
+J. Q. Adams 
+Opposition Sun 
+Void of course 
+Preventional 
+D 
+7 
+A. Jackson 
+Trine Mars 
+Opposite Sun 
+Conjunctional 
+D 
+8 
+M. van Buren 
+Conjunct Sun 
+Void of course 
+Conjunctional 
+D 
+9 
+W. Harrison 
+Conjunct Saturn 
+Trine Venus 
+Preventional 
+N 
+10 
+J. Tyler 
+Opposed Venus 
+Opposed Saturn 
+Conjunctional 
+D 
+11 
+J. Polk 
+Trine Venus 
+Sextile Mars 
+Preventional 
+D 
+12 
+Z. Taylor 
+Trine Venus 
+Opposed Mars 
+Conjunctional 
+D 
+13 
+M. Fillmore 
+n.a. 
+Sextile Saturn 
+Conjunctional 
+N 
+14 
+F. Pierce 
+Square Jupiter 
+Square Mercury 
+Preventional 
+N 
+15 
+J. Buchanan 
+Trine Sun 
+Square Saturn 
+Preventional 
+D 
+16 
+A. Lincoln 
+Sextile Jupiter 
+Square Mars 
+Preventional 
+N 
+17 
+A. Johnson 
+Sextile Jupiter 
+Opposed Saturn 
+Conjunctional 
+N 
+18 
+U. Grant 
+Trine Venus 
+Void of course 
+Conjunctional 
+D 
+19 
+R. Hayes 
+Conjunct Jupiter 
+Trine Sun 
+Preventional 
+N 
+20 
+J. Garfield 
+Opposed Mercury 
+Square Saturn 
+Preventional 
+N 
+21 
+C. Arthur 
+n.a. 
+Sextile Mercury 
+Conjunctional 
+N 
+22 
+G. Cleveland 
+Square Saturn 
+Void of course 
+Conjunctional 
+D 
+23 
+B. Harrison 
+Opposed Jupiter 
+Trine Venus 
+Conjunctional 
+N 
+25 
+W. McKinley 
+Conjunct Saturn 
+Void of course 
+Preventional 
+N 
+26 
+T. Roosevelt 
+Trine Sun 
+Opposed Mars 
+Preventional 
+N 
+27 
+W.Taft 
+Conjunct Mars 
+Void of course 
+Preventional 
+D 
+28 
+W. Wilson 
+n.a. 
+Conjunct Jupiter 
+Conjunctional 
+N 
+29 
+W. Harding 
+n.a. 
+Opposed Saturn 
+Conjunctional 
+D 
+30 
+C. Coolidge 
+Sextile Jupiter 
+Void of course 
+Preventional 
+N 
+31 
+H. Hoover 
+Conjunct Mars 
+Opposed Saturn 
+Preventional 
+N 
+32 
+F. Roosevelt 
+Sextile Saturn 
+Sextile Jupiter 
+Conjunctional 
+N 
+33 
+H. Truman 
+Trine Venus 
+Square Mars 
+Conjunctional 
+D 
+34 
+D. Eisenhower 
+Square Jupiter 
+Sextile Saturn 
+Conjunctional 
+N 
+35 
+J. Kennedy 
+Square Venus 
+Trine Mars 
+Conjunctional 
+D 
+36 
+L. Johnson 
+Conjunct Sun 
+Conjunct Mercury 
+Conjunctional 
+N 
+37 
+R. Nixon 
+n.a. 
+Square Saturn 
+Conjunctional 
+N 
+38 
+G. Ford 
+n.a. 
+Opposed Venus 
+Conjunctional 
+N 
+40 
+R. Reagan 
+Opposed Jupiter 
+Square Sun 
+Conjunctional 
+N 
+
+
+===== PDF PAGE 108 (printed ~99) =====
+96 
+A rectifica tion manual 
+Application to Saturn. Such is the negativity of the Moon's application to 
+Saturn that the majority of individuals with this configuration suffered failed 
+Presidencies. In Table 8, there are nine nativities with applications to Saturn. Of 
+this group, seven comprise the worst eleven Presidents ranked either as Below 
+Average or Failure in a recent survey by historians (Leo and Taranto 2004, 249- 
+266). Garfield is missing from Leo and Taranto's list because his brief term 
+ended with his assassination. The exception is Eisenhower's Satum/Virgo/S
+111 
+which elevated him through Saturn's discrimination applied to military logistics, 
+deployment, and tank warfare. For Eisenhower, Saturn/Virgo functioned as an 
+accidental benefic. 
+Application to Mars. Listed below are nine Presidents whose nativities feature 
+the Moon's application to Mars. In every case each of these Presidents was 
+involved in warfare either prior to or while serving office. 
+Table 9. War Events for Presidents with the Moon's application to Mars 
+President 
+Conflict 
+G. Washington 
+Revolutionary War (1776-1783) 
+Whiskey Rebellion (1791-1794) 
+T. Jefferson 
+First Barbary War (1801 -1805) 
+Undeclared Naval War versus Britain (1805-1809) 
+J. Madison 
+War of 1812(1812-1815) 
+J. Polk 
+Mexican War (1846-1848) 
+Z. Taylor 
+Mexican War (1846-1848) 
+A. Lincoln 
+Civil War (1861-1865) 
+T. Roosevelt 
+Spanish American War (1898) 
+H. Truman 
+Korean War (1950-1953) 
+J.F. Kennedy 
+Vietnam War (1959-1975) 
+Not every signification of Mars is tied to warfare. Consider these other Martian 
+effects based on delineation of Mars' effects: 
+• Trust Busting. Teddy Roosevelt's Trust Busting days are tied to 
+Mars/Capricom/S
+111 because Mars signifies fights; Capricorn, established 
+wealth; 8th house, trusts as investment vehicles. 
+• MacArthur termination. Truman's Mars/Leo (bound of Saturn/Leo) signified 
+Douglas MacArthur as a military leader and insubordination as his style. 
+Truman fired him. 
+• Bullet through the throat. For Kennedy, Mars/Taurus/S"
+1 of death signified 
+assassination through gunfire. The first of two bullets punctured his throat. 
+Taurus is assigned to the throat. 
+
+
+===== PDF PAGE 109 (printed ~100) =====
+Chapter 6 - temporal indicators 
+97 
+However strong this correspondence, the Moon need not apply to Mars for 
+Presidents to be involved in warfare. Wilson (World War I), Franklin Roosevelt 
+(World War II), George Herbert Walker Bush (Gulf War), and George W. Bush 
+(Operation Iraqi Freedom) are exceptions. Jupiter-Saturn aspects tied Wilson, 
+Roosevelt, and George W. Bush to global conflict, as did Roosevelt's elevated 
+Mars/10th. I suggest that George H.W. Bush's wartime Presidency is tied to the 
+partile conjunction between his natal Sun and the position of Mars in the 4 July 
+1776 natal chart cast for the United States. 
+Testing IVfaternus' Aphorisms for Presidential Greatness 
+No matter what group of Presidential historians is surveyed, Presidents 
+Washington, Lincoln, and Franklin Roosevelt routinely top the list as Presidential 
+Greats (Leo and Taranto, 253). Do Matemus guidelines give any indication of 
+this ranking? 
+Washington & Lincoln: Moon separates from Jupiter and applies to Mars. 
+Both figures are Preventional and nocturnal. 
+If in a nocturnal chart the -waxing Moon, moving away from Jupiter, is 
+carried toward Mars, great power is predicted: control of great states 
+and regions. But is also indicates anxieties and dangers. The natives 
+will not be free from a fflictions and illnesses but will be the type who 
+endure these things easily, especially if Mars is found in important 
+houses of the chart. But if Mars is in dejected houses, this indicates 
+skills pertaining to fire. The natives themselves are low-class and 
+humble; suffer illnesses and afflictions and often an evil death. 
+But if the waxing Moon is moving away from Jupiter toward Mars by 
+day, the natives will be exposed, be slaves, or wretched beggars. They 
+will suffer illness and afflictions, slavery which is like captivity, and 
+lose their life in a violent death. 
+If it is a nocturnal chart, the natives will be famous and important, 
+Mars found in important houses will make leaders or judges entrusted 
+with the highest power. But Mars in dejected houses will make soldiers 
+or athletes who make a living for themselves by flre or sword; or he 
+will make physicians or surgeons. 
+The waning Moon in this situation wastes paternal and maternal 
+inheritance, destroys the parents when the native is young, and imposes 
+the burden of extreme beggary. Some suffer bitter pain; some become 
+slaves, sometimes captives, often dying a violent death, especially if 
+Mars is on one of the angles or its anaphora or catafora. For then the 
+effects we have described will be much stronger. Matemus (1975, 124- 
+125). 
+
+
+===== PDF PAGE 110 (printed ~101) =====
+98 
+A RECTIF1CA TION MANUA L 
+Evaluation. While crude, these cookbook aphorisms still offer valuable 
+guidance. It's clear that Matemus favored nocturnal nativities; most likely 
+because Mars is in sect when nocturnal. Both Washington and Lincoln have 
+nocturnal nativities, a point in their favor. Matemus' reasoning behind differences 
+behind conjunctional and preventional figures is less obvious, as is the translation. 
+Matemus does not favor preventional figures (e.g., waning Moon). Lincoln died a 
+violent death, one of Matemus' indications; yet Washington's fate was not as bad. 
+Note Jefferson with the same Jupiter-Mars configuration - but a diurnal figure 
+- is not ranked as highly because Mars is out of sect. His undeclared naval war 
+with Britain was considered a disaster. 
+Franklin Roosevelt: Moon separates from Saturn and applies to Jupiter 
+Figure is conjunctional and nocturnal. 
+If the waxing Moon, moving away from Saturn; comes into aspect with 
+Jupiter or is moving toward Jupiter, the natives will be wealthy, 
+generous, famous, noble, ruling great people or great estates. To some 
+is allotted large inheritance, to others treasure, to still others important 
+gifts. Matemus (1975, 123). 
+Evaluation: Roosevelt's biography could be summarized by the words 
+'wealthy, generous, famous, noble, and ruling great estates.' Highly accurate. 
+Usefulness in Rectification 
+The Moon's separation from and application to planets is a valuable 
+rectification tool but only for certain configurations. On days when the Moon 
+makes either few or no new aspects the technique is limited. On days when the 
+Moon makes several aspects, choosing which planet the Moon separates from and 
+applies to can help narrow the birth time to a discrete block of time, say 3 or 4 
+hours, from the day's 24 hour range. In order to confidently match life events to a 
+specific configuration of the Moon, one needs to understand life patterns of the 
+individual. Because some of these long-term trends may not be apparent until at 
+least middle age, this technique is probably not suitable for younger individuals 
+with limited history. 
+
+
+===== PDF PAGE 111 (printed ~102) =====
+Chapter 6 - temporal indicators 99 
+Case Study: Rectifying Pierce with the Moon's Aspects 
+Let's take the figure for Franklin Pierce set for 12:00 Noon; birth time unknown. 
+/ \ Ooi ^ 15 a 
+, V \ 5 29fib 19 29V 
+04 X il9fTb34 / 
+2X 1^04 7 25 X©
+107fib52 / 
+8 2 18^40 
+12^55 
+Q28V334 12 
+Natal Chart 
+4 Franklin Pierce - UNKNOWN 
+23 Nov1804 AD GC 
+12:00:00 PM 
+LMT+04:47:35 
+Hillsboro NH 
+USA 
+yiwss^s^snoe'so 
+Rectified 
+32 
+As13«35 
+03 
+n- 
+O 28 S 34 
+The Moon is in Leo. Consider the date and time of all the Moon's aspects 
+made following her Leo ingress and any other aspects made during 23 November: 
+Aspect 
+Date 
+Time 
+Moon Ingress Leo 
+21 November 
+2:59 PM 
+Moon sextile Saturn 
+22 November 
+1:15 PM 
+Moon conjunct Mars 
+22 November 
+4:47 PM 
+Moon sextile Venus 
+22 November 
+10:26 PM 
+Moon square Jupiter 
+23 November 
+1:04 AM 
+Moon square Mercury 
+23 November 
+7:50 PM 
+Moon Ingress Virgo 
+23 November 
+8:09 PM 
+Moon square Sun 
+23 November 
+11:21 PM 
+Moon sextile Jupiter 
+25 November 
+9:35 AM 
+Our job in using the Moon's separation and application as a rectification tool is 
+to match life patterns to one of the possible Moon's configurations. Because there 
+is no question of Pierce's actual birth date of 23 November, the first possible 
+combination is the Moon's separation from Venus and application to Jupiter 
+
+
+===== PDF PAGE 112 (printed ~103) =====
+100 
+A RECTIFICATION MANUAL 
+which implies a birth time between 12 midnight and 1:04 AM on 23 November. 
+The process moves down the list until a match is found. 
+As practical as this approach is, there are two other procedures I prefer to 
+employ before identifying the Moon's separation and application. The first is to 
+choose the Moon's sign based on evidence from the native's mother, wife, 
+daughter(s), and/or appearance/temperament. The second is Fidaria (see Chapter 
+7: Planetary Period Methods). 
+Choosing the Moon's sign. Pierce's mother had a distinct taste for flashy 
+clothing (Degregorio 2001, 198). Pierce himself was also known for his 
+handsome appearance. Both observations are consistent with a Leo Moon. If 
+correct, this step knocks out any possible birth time after 8:09 PM when the Moon 
+makes its Virgo Ingress. 
+Whether the figure is diurnal or nocturnal. The Planetary Period Method 
+known as Fidaria requires the choice of either a diurnal or nocturnal figure (e.g., 
+whether or not the Sun is above or below the horizon). Proper choice of the 
+figure's sect eliminates 12 hours - on average - from consideration as possible 
+birth times. For this reason it is an extremely powerful and robust tool. For those 
+new to Fidaria, I suggest jumping ahead to the Fidaria section in Chapter 7 before 
+continuing with this example based on Franklin Pierce. 
+My choice for the Fidaria's nocturnal series (e.g., Sun below horizon) is based 
+on two correspondences between life affairs and planetary periods. The first is a 
+match between the South Node period and Pierce's serious battle field injuries 
+sustained August 1847 while serving in the Mexican War. The second dates his 
+rise to the national political stage following the onset of his major Sun period 
+beginning 23 November 1848. 
+Choice of the nocturnal series eliminates all times when the Sun is above the 
+horizon from consideration. For this example: 7:08 AM - 4:24 PM is out. 
+What's left? Excluding 7:08 AM - 4:24 PM and 8:09 PM - 12:00 AM leaves 
+the following possible birth times for 23 November 1804: 
+12:00 AM-7:08 AM or 4:24 PM - 8:09 PM. 
+Matching these possibilities to the Moon's possible configurations leads to the 
+following possibilities: 
+Possible Birth Time 
+Moon's Configuration 
+12:00 AM-1:04 AM 
+Moon separates from Venus and applies to Jupiter 
+1:04 AM-7:08 AM 
+Moon separates from Jupiter and applies to Mercury 
+4:24 PM-7:50 PM 
+Moon separates from Jupiter and applies to Mercury 
+7:50 PM - 8:09 PM 
+Moon separates from Mercury and is void of course. 
+
+
+===== PDF PAGE 113 (printed ~104) =====
+Chapter 6 - temporal indicators 
+101 
+Matching life affairs to the Moon's configuration. 
+Step 1. Cite aphorisms by Mat emus and Pearce for all possible Moon 
+configurations. Understand the logic behind the aphorisms. [Note: the figure is 
+nocturnal and preventional.] 
+Moon separates from Venus and applies to Jupiter. 
+If the waning Moon is moving from Venus toward Jupiter, this will 
+provide financial help from individual women; and fame and good 
+fortune will be passed on from parents to natives at an early age; some 
+will receive an inheritance, others will discover means for the greatest 
+profit or hold honored office in temples. Matemus (1975, 129). 
+If the Moon decreases [editor's note: and separates from Venus and 
+apply to Jupiter], it signifies gain by the good friendship of ladies, 
+happiness, attainment of property or of an honourable o ffice in the 
+Church. Pearce (1970, 76). 
+Comment: Both aphorisms take Venus as the universal significator of women. 
+The aphorisms assign good fortune, inheritance, and property to Jupiter. In 
+addition, Matemus assigns holding an honored office in temples which Pearce 
+modifies to an honourable office in the Church. These statements emphasize 
+Jupiter's professional signification as a priest. Assuming both planets are in 
+positive zodiacal state, there is a flow from women to happiness, wealth, and 
+wisdom expressed professionally through the priesthood. 
+Moon separates from Jupiter and applies to Mercury. 
+If the Moon is waning in this situation [editor's note: moving from 
+Jupiter toward Mercury], the natives seek their livelihood from 
+literature, from teaching, business, or from granaries. Some obtain 
+some kind of inheritance; others make discoveries; others refuse to 
+return what has been entrusted to them so that from this treachery they 
+lay the foundation for a fortune. Matemus (1975, 125-126). 
+If the Moon separate from Jupiter and apply to Mercury, she signifies 
+judges, collectors of money, interpreters of law, religious and fortunate 
+persons. Pearce (1970, 74). 
+Comment: If Jupiter is happiness, wealth, wisdom, and the priesthood; then the 
+movement from Jupiter to Mercury suggests business and/or written/verbal 
+activities follow whatever Jupiter bestows. Matemus' mention of treachery 
+exemplifies Mercury's nature as the trickster. 
+
+
+===== PDF PAGE 114 (printed ~105) =====
+102 
+A RECTIFICATION MANUAL 
+Moon separates from Mercury and is void of course. 
+The waning Moon in this situation [editor's note: moving away from 
+Mercury toward nothing], indicates illness from body humors or 
+serious dangers from water; some she injures in mind, some in speech, 
+others in the ears; but all these are illiterate; others will prophesy, but 
+in temples; some become guardians of temples and still others servants 
+or assistants in temples. Matemus (1975. 133-134). 
+Pearce: no aphorism supplied. 
+Comment: With the Moon leaving Mercury void of course, Maternus gives the 
+idea of a babbling idiot running amok, a prescient soothsayer wandering temple 
+halls dishing out advice to anyone who will listen, or individuals whose end-use is 
+in the employ of others (e.g., not goal seekers). Which alternative depends on 
+Mercury's relative strength. 
+Step 2. Adapt the themes of each aphorism to Franklin Pierce's figure by 
+incorporating the state of each planet. 
+Venus/Libra. Signifies a pleasant, harmonizing, fair value quality to matters of 
+love, money, and art. 
+Jupiter/Scorpio. Philosophy/teaching of war, crime, and intense ethical decisions. 
+Mercury/Scorpio. Lying, deceit, and communications tinged with revenge ever so 
+because Mercury's ruler - Mars/Leo - fights for honor. Incensed messages. 
+Possible interpretations: 
+Moon moving from Venus/Libra to Jupiter/Scorpio suggests that sound finances 
+provide funds for study of philosophy/teaching of war, etc., and a professional 
+career based on the same significations of Jupiter. 
+Moon moving from Jupiter/Scorpio to Mercury/Scorpio signifies the bestowal 
+of philosophy/wisdom is dissipated through ill-mannered communications. This 
+is not too dissimilar from Matemus' cookbook statement that those with this 
+configuration refuse to return what has been entrusted to them so that from this 
+treachery they lay the foundation for a fortune (cited above). 
+Moon moving from Mercury/Scorpio to void of course. Mental illness is ruled 
+out because two conditions for mental illness (no Moon-Mercury aspect and the 
+presence of a Mercury-Saturn hard aspect) are not met (Schoener 1996, 134). The 
+best delineation for Pearce's configuration is incensed speech finds no outlet. 
+
+
+===== PDF PAGE 115 (printed ~106) =====
+Chapter 6 - temporal indicators 
+103 
+Step 3. Determine the closest match between the possible Moon configurations 
+and Pierce's actual life. 
+Moon moves from Venus to Jupiter? 
+If Venus signifies a woman, there is no evidence that Pierce was materially 
+helped by either his mother or his wife. His youth was dominated by his father 
+who was a Revolutionary War hero. His father did help establish Pierce's law 
+office by building the office and supplying funds for legal books. Matemus does 
+indicate that good fortune will be passed on from parents to natives (e.g., not just 
+from women). So the evidence is mixed for this configuration. 
+Moon moves from Jupiter to Mercury? 
+Pierce did study and practice law in his early professional life before politics. 
+His Presidency was marred by several incidents consistent with the 
+Mercury/Scorpio placement. The Ostend Manifesto, presented by Pierce's 
+ambassadors, stated that Spain should sell Cuba to the United States; if they 
+disagreed, then America would take Cuba by force. This warlike message tinged 
+with threats and revenge is a classic Mercury/Scorpio statement. Pierce's decision 
+to send the slave Anthony Bums back to Virginia in accordance with the Fugitive 
+Slave Act was another act consistent with Mercury/Scorpio. 
+These incidents are sufficient to confirm the Moon's separation from Jupiter to 
+Mercury. There is no need to consider the Moon's separation from Mercury to 
+void of course. There is no evidence that Pierce made incendiary messages to 
+anyone who would listen without effect. Incendiary messages were most definitely 
+the effect and appear to have dissipated his warlike philosophy. 
+Step 4. Narrow the possible birth time to the range from the Moon's separation 
+of Jupiter to the application of Mars. 
+That calculation has already been made: the birth time should fall within the 
+range of 4:24 PM to 7:50 PM. This makes Pierce's Ascendant range fall between 
+1GE27 and 20CA39. His Ascendant is either Gemini or Cancer. From here other 
+techniques are employed to narrow the range of the Ascendant. 
+Jumping ahead, the final rectification places 3CA15 on the Ascendant, with 
+both Jupiter and Mercury falling in the 5th house (WS). One signification of 
+Jupiter/Scorpio/5,h was discussions/teaching/leaming of war while as a child 
+listening to stories of his father's fellow comrades from the Revolutionary War. 
+The Pearce household was a busy place because it was also a tavern which housed 
+travelers. Placement in the 5,h of entertainment means Pearce acquires this 
+wisdom in a tavern which is a 5^ house signification. Mercury/Scorpio/5th 
+signifies incensed communications carried out by his diplomatic team, with the 
+Ostend Manifesto the best example. Ambassadors are assigned to the 5th house. 
