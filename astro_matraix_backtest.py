@@ -20,6 +20,7 @@ trading signals that can be compared against existing backtest_flow results.
 
 from __future__ import annotations
 import math
+import os
 import random
 import pandas as pd
 import yfinance as yf
@@ -160,7 +161,8 @@ def persona_backtest_flow(
     use_short_signals: bool = True, point_value: Optional[float] = None, verbose: bool = True,
     tp_multiplier: Optional[float] = None, stop_mult: Optional[float] = None,
 ) -> BacktestResult | None:
-    if ticker in ("GC", "NQ", "ES") and use_short_signals:
+    if ticker in ("GC", "NQ", "ES") and use_short_signals and \
+       os.environ.get("ALLOW_SHORTS", "0") != "1":
         if verbose: print(f"  ⚠ {ticker} SHORT signals disabled (empirically broken — long-only is robust)")
         use_short_signals = False
     inst = INSTRUMENTS.get(ticker)
