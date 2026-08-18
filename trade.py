@@ -256,7 +256,7 @@ def _run_group(label, tickers, date_str, show_tf=True):
         except Exception as e:
             print(f"  0DTE unavailable: {e}")
 
-    nq = all_sigs.get(("NQ", "daily"), {})
+    nq = all_sigs.get(("NQ", "daily")) or {}
     if "NQ" in tickers and nq.get("match_type") != "exact":
         print(f"\n  ⚠ NQ fallback — half size on NQ")
 
