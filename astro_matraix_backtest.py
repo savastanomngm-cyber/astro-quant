@@ -45,8 +45,16 @@ def simulate_persona_weighted(
     tca_points: float = 0.5,
     min_win_rate: float = 0.50,
     min_pf: float = 1.0,
+    tp_multiplier: Optional[float] = None,
+    stop_mult: Optional[float] = None,
 ) -> list[dict]:
-    """Execute trades using persona-derived parameters."""
+    """Execute trades using persona-derived parameters.
+
+    tp_multiplier / stop_mult (optional) override the persona's derived
+    TP multiple and stop-tightness scaling, for manual-sensible sensitivity
+    testing (SL stays persona-derived = delineation; only the R-multiple and
+    a scale factor are the hypothesis levers — NOT a free SL curve-fit).
+    """
     d2i = {d: i for i, d in enumerate(dates)}
     trades = []
     last_idx = -1
@@ -65,8 +73,11 @@ def simulate_persona_weighted(
             ticker_vol_map = {"NQ": 1.30, "ES": 0.85, "GC": 0.95}
             vol_scale = ticker_vol_map.get(persona.ticker, 1.0)
             stop_pct = stop_pct * vol_scale
+            if stop_mult is not None:
+                stop_pct = stop_pct * stop_mult
             pf = persona.historical_pf if persona.historical_pf > 0 else 1.0
-            tp_multiplier = min(6.0, max(1.2, 1.5 + math.log(pf + 0.5)))
+            tp_multiplier = tp_multiplier if tp_multiplier is not None else \
+                min(6.0, max(1.2, 1.5 + math.log(pf + 0.5)))
             tp_pct = stop_pct * tp_multiplier
             hold_days = persona.max_hold_days
             hold_days = max(1, min(hold_days, 60))
@@ -147,6 +158,7 @@ def persona_backtest_flow(
     ticker: str = "NQ", yahoo_start: str = "2010-01-01", train_ratio: float = 0.6,
     min_win_rate: float = 0.50, min_pf: float = 1.0, min_conviction: float = 0.4,
     use_short_signals: bool = True, point_value: Optional[float] = None, verbose: bool = True,
+    tp_multiplier: Optional[float] = None, stop_mult: Optional[float] = None,
 ) -> BacktestResult | None:
     if ticker in ("GC", "NQ", "ES") and use_short_signals:
         if verbose: print(f"  ⚠ {ticker} SHORT signals disabled (empirically broken — long-only is robust)")
@@ -247,8 +259,8 @@ def persona_backtest_flow(
     test_signals = gen_persona_signals(test_dates)
     if verbose: print(f"    Val signals: {len(val_signals)} | Test signals: {len(test_signals)}")
     tca = 0.5
-    val_trades = simulate_persona_weighted(val_signals, dd, val_dates, point_value, tca, min_win_rate=min_win_rate, min_pf=min_pf)
-    test_trades = simulate_persona_weighted(test_signals, dd, test_dates, point_value, tca, min_win_rate=min_win_rate, min_pf=min_pf)
+    val_trades = simulate_persona_weighted(val_signals, dd, val_dates, point_value, tca, min_win_rate=min_win_rate, min_pf=min_pf, tp_multiplier=tp_multiplier, stop_mult=stop_mult)
+    test_trades = simulate_persona_weighted(test_signals, dd, test_dates, point_value, tca, min_win_rate=min_win_rate, min_pf=min_pf, tp_multiplier=tp_multiplier, stop_mult=stop_mult)
     val_stats = compute_persona_trade_stats(val_trades, point_value)
     oos_stats = compute_persona_trade_stats(test_trades, point_value)
     if verbose:
