@@ -24,6 +24,24 @@ from pattern_engine_v3 import build_patterns as bp, learn_patterns as lp, get_st
 from astro_personas import generate_trader_personas_from_learned
 
 
+def manual_bias(st: dict) -> str:
+    """Manual directional bias (Rectification Manual Ch.6+7): the Fidaria
+    main/sub time-lords + Moon's application set the period's temper.
+    Expansion (Venus/Jupiter) = LONG, contraction (Mars/Saturn) = SHORT.
+    Returns 'LONG' / 'SHORT' / 'FLAT'."""
+    benef = {"Venus", "Jupiter"}
+    malf = {"Mars", "Saturn"}
+    score = 0
+    for k in ("main", "sub"):
+        r = st.get(k, "?")
+        if r in benef: score += 1
+        elif r in malf: score -= 1
+    ma = st.get("moon_applies", "void")
+    if ma in benef: score += 1
+    elif ma in malf: score -= 1
+    return "LONG" if score >= 1 else "SHORT" if score <= -1 else "FLAT"
+
+
 def generate_daily_signal(ticker, date_str=None, min_wr=0.50, min_pf=1.0):
     """Generate today's signal for one ticker."""
     # SHORT signals broken across all futures — long-only is the robust configuration.
@@ -76,28 +94,29 @@ def generate_daily_signal(ticker, date_str=None, min_wr=0.50, min_pf=1.0):
     persona = None; match_type = "exact"
     def _best(candidates):
         return max(candidates, key=lambda x: min(x[1].historical_pf, 20) * math.log(max(x[1].n_samples, 2)))[1]
+    # STRICT matching: only exact or prefix (same house + moon_phase).  The old
+    # cross-state fallbacks (moon / house / best-pf) manufactured a confident
+    # LONG from a persona learned for a DIFFERENT astro state, producing the
+    # "always long + absurd PF" effect.  Now: no clean match = NO SIGNAL.
     for hz in [3,5,7]:
         sk = state_key(st, hz)
         if sk in personas_dict: persona = personas_dict[sk]; match_type = "exact"; break
-    # Fast-only key (H{house}_{moon_phase}_MA{planet}_{horizon}d):
-    # fallbacks relax moon_applies first, then house, then moon_phase.
     if not persona:
-        # same house + moon_phase, any moon_applies (prefix by fast tuple)
         prefix = f"H{st['house']}_{st['moon_phase']}_"
         candidates = [(pid, p) for pid, p in personas_dict.items() if pid.startswith(prefix)]
         if candidates: persona = _best(candidates); match_type = "prefix"
-    if not persona:
-        # same moon_phase, any house/applies
-        candidates = [(pid, p) for pid, p in personas_dict.items() if f"_{st['moon_phase']}_" in pid]
-        if candidates: persona = _best(candidates); match_type = "moon"
-    if not persona:
-        # same house, any moon_phase/applies
-        candidates = [(pid, p) for pid, p in personas_dict.items() if pid.startswith(f"H{st['house']}_")]
-        if candidates: persona = _best(candidates); match_type = "house"
     if not persona: return None
     if persona.historical_win_rate < min_wr: return None
     if persona.historical_pf < min_pf: return None
     if not _use_s and persona.pattern_direction == "SHORT": return None
+
+    # MANUAL DIRECTIONAL BIAS (Ch.6+7): Fidaria time-lords + Moon application
+    # set the period's temper.  Persona LONG but manual FLAT/SHORT -> NO TRADE.
+    bias = manual_bias(st)
+    if persona.pattern_direction == "LONG" and bias == "FLAT":
+        return None
+    if persona.pattern_direction == "LONG" and bias == "SHORT":
+        return None
 
     # NQ trend gate: refuse LONG when below 200-day MA
     if ticker == "NQ" and persona.pattern_direction == "LONG":
@@ -170,6 +189,7 @@ def generate_daily_signal(ticker, date_str=None, min_wr=0.50, min_pf=1.0):
         "direction": persona.pattern_direction,
         "conviction": round(persona.conviction_mult * moon_mult * fid_mult * bound_mult, 2),
         "moon_applies": moon_applies,
+        "manual_bias": bias,
         "bound_rulers": bound_note,
         "fidaria_sub": fid_sub,
         "sl_pct": f"{stop_pct:.1%}",
