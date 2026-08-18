@@ -209,14 +209,15 @@ def _ask_float(prompt, default):
 # ACTION: Rectification (unchanged — uses rectify_v3)
 # ---------------------------------------------------------------
 def action_rectify():
-    """Full 3-stage rectification (Zoller, A Rectification Manual).
+    """Full 3-stage rectification (Zoller, A Rectification Manual) as a funnel.
 
-    STAGE I  Fidaria (coarse) + STAGE II solar arcs/progressions/transits
-    (±1-2h) + STAGE III Placidus PT primary directions (±min) vote on the full
-    24h grid.  The final time is reported WITH a power/status flag — never as
-    an unqualified literal, because the manual's Stage III is only "fine
-    sandpaper" after Stages I-II, and 30yr-old instruments are at the low end
-    of the method's power range.
+    STAGE I  Fidaria sect-cull + Moon config (separation/application) → ONE sign
+    STAGE II Arabic Parts + profections, only on the winner-sign candidates
+    STAGE III Placidus PT + Solar Arc directions, only on the Stage-II 1-4° band.
+    The final time is reported WITH a power/status flag — never as an
+    unqualified literal, because the manual's Stage III is only "fine sandpaper"
+    after Stages I-II, and 30yr-old instruments are at the low end of the
+    method's power range.  Writes rectified_times_v3.json.
     """
     box("RECTIFICATION — Full 3-stage method (Fidaria → Solar arcs → Placidus PD)",
         color=C)
@@ -225,6 +226,7 @@ def action_rectify():
 
     from event_db import get_events
     from rectify_full import rectify_full as _rectify_full
+    from rectify_stages import stage1_score
 
     json_path = os.path.join(os.path.dirname(__file__), "rectified_times_v3.json")
     try:
@@ -246,12 +248,26 @@ def action_rectify():
         combined = _rectify_full(t, grid_minutes=15)
         elapsed = _time.time() - t0
 
-        # combined rows: (c, s1, s2, s3pd, s3sa, sig, h, m, n1, n2, n3)
+        # combined rows: (c, s1, s2, s3pd, s3sa, sig, h, m, s3n)
         top = combined[0]
-        c, s1, s2, s3pd, s3sa, sig, bh, bm, n1, n2, n3 = top
-        c_gap = (combined[0][0] - combined[1][0]) if len(combined) > 1 else 0.0
-        power = ("HIGH" if c_gap > 0.25 else
-                 "MODERATE" if c_gap > 0.10 else "LOW")
+        c, s1, s2, s3pd, s3sa, sig, bh, bm, s3n = top
+
+        # POWER = Stage-I sign robustness across the FULL 24h grid: how far the
+        # winning Ascendant SIGN's top score is above the best runner-up sign's
+        # top score.  (The funnel's `combined` only holds 2-3 band survivors, so
+        # a winner-vs-runner-up gap inside that tiny set is meaningless.)
+        grid = [(h, m) for h in range(24) for m in range(0, 60, 15)]
+        sign_top = {}
+        for h, m in grid:
+            sc1, sig1 = stage1_score(t, h, m, events)
+            sname = sig1["asc_sign"]
+            sign_top[sname] = max(sign_top.get(sname, -1.0), sc1)
+        win = sign_top[sig["asc_sign"]]
+        others = [v for k, v in sign_top.items() if k != sig["asc_sign"]]
+        run = max(others) if others else 0.0
+        c_gap = win - run
+        power = ("HIGH" if c_gap > 0.35 else
+                 "MODERATE" if c_gap > 0.15 else "LOW")
 
         # persist with explicit status + manual stage labels
         existing[t] = {
@@ -259,7 +275,11 @@ def action_rectify():
             "asc_sign": sig["asc_sign"],
             "sect": sig["sect"],
             "moon_sign": sig["moon_sign"],
+            "moon_separates": sig["moon_separates"],
+            "moon_applies": sig["moon_applies"],
             "stage1_fidaria_match": f"{sig['fidaria_match']}/{sig['fidaria_total']}",
+            "stage1_moon_sep_match": f"{sig['moon_sep_match']}/{sig['event_total']}",
+            "stage1_moon_app_match": f"{sig['moon_app_match']}/{sig['event_total']}",
             "stage2_arabic_parts_profections": round(s2, 2),
             "stage3_placidus_pd": round(s3pd, 2),
             "stage3_solar_arcs": round(s3sa, 2),
