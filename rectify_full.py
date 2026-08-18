@@ -116,8 +116,8 @@ def rectify_full(ticker: str, grid_minutes: int = 15,
     print(f" {ticker} -- RECTIFICATION (manual 3-stage funnel)  |  {n_ev} events, {grid_minutes}min grid")
     print(f"{'=' * 82}")
     print(f"  STAGE I   SIGN          -> {win_sign}  ({win_sig['sect']}, Moon {win_sig['moon_sign']} "
-          f"applies to {win_sig['moon_applies']}; Fidaria {win_sig['fidaria_match']}/{win_sig['fidaria_total']}; "
-          f"Moon-nature {win_sig['moon_match']}/{win_sig['event_total']})")
+          f"{win_sig['moon_separates']}->{win_sig['moon_applies']}; Fidaria {win_sig['fidaria_match']}/{win_sig['fidaria_total']}; "
+          f"Moon-nature sep {win_sig['moon_sep_match']}/{win_sig['event_total']} app {win_sig['moon_app_match']}/{win_sig['event_total']})")
     print(f"  STAGE II  RANGE 1-4deg   {len(s2_candidates)} candidates in {win_sign} -> "
           f"{len(band)} within +-{stage2_band_deg}deg of best ASC")
     print(f"  STAGE III DEG/MIN       Placidus PT + Solar Arcs (CORROBORATION ONLY for assets)")
@@ -133,7 +133,7 @@ def rectify_full(ticker: str, grid_minutes: int = 15,
     top = combined[0]
     c, s1, s2, s3pd, s3sa, sig, h, m, s3n = top
     print(f"\n  WINNER {h:02d}:{m:02d} UTC  (ASC={sig['asc_sign']}, {sig['sect']}, "
-          f"Moon={sig['moon_sign']}->{sig['moon_applies']}, "
+          f"Moon={sig['moon_sign']}({sig['moon_separates']}->{sig['moon_applies']}), "
           f"Fidaria-match={sig['fidaria_match']}/{sig['fidaria_total']})")
     _, hits3 = stage3_pd(ticker, h, m, events)
     if hits3:
